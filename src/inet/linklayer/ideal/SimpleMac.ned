@@ -46,7 +46,7 @@ simple SimpleMac extends MACProtocolBase like ILinkLayer, IMACProtocol
         bool useAck = default(true);
         double ackTimeout @unit("s") = default(100ms);
 
-        @class(IdealMac);
+        @class(SimpleMac);
         @signal[dropPkNotForUs](type=IdealMacFrame);
         @signal[NF_LINK_BREAK](type=IdealMacFrame);
         @statistic[passedUpPk](title="packets passed to higher layer"; source=packetSentToUpper; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);

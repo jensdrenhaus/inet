@@ -18,30 +18,26 @@
 
 package inet.examples.phynettest;
 
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
-import inet.node.inet.AdhocHost;
+
+import inet.node.wsn.PhyNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 
 network Net
 {
     parameters:
-        int numHosts;
+        int numNodes;
         @display("bgb=600,400");
     submodules:
         visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
             parameters:
                 @display("p=100,50");
         }
-        configurator: IPv4NetworkConfigurator {
-            parameters:
-                @display("p=100,150");
-        }
         radioMedium: IdealRadioMedium {
             parameters:
                 @display("p=100,250");
         }
-        host[numHosts]: AdhocHost {
+        node[numNodes]: PhyNode {
             parameters:
                 @display("r=,,#707070;p=250,58");
         }

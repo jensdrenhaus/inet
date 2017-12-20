@@ -17,7 +17,7 @@ package inet.node.wsn;
 
 import inet.common.lifecycle.NodeStatus;
 import inet.linklayer.contract.IWirelessNic;
-import inet.node.inet.INetworkNode;
+import inet.node.wsn.ITinyNode;
 import inet.mobility.contract.IMobility;
 import inet.networklayer.common.InterfaceTable;
 import inet.power.contract.IEnergyGenerator;
@@ -28,7 +28,7 @@ import inet.power.contract.IEnergyStorage;
 //    - use this model only as a base type. In simulations use 
 //      TODO
 //
-module TinyNodeBase like INetworkNode
+module TinyNodeBase like ITinyNode
 {
     parameters:
         @display("bgb=,448");

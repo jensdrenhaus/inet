@@ -14,6 +14,7 @@
 // 
 
 #include <iostream>
+#include <string>
 
 #include "inet/applications/simpleapp/SimpleApp.h"
 
@@ -30,11 +31,11 @@ using std::cout;
 
 Define_Module(SimpleApp);
 
-simsignal_t PingApp::rttSignal = registerSignal("rtt");
-simsignal_t PingApp::numLostSignal = registerSignal("numLost");
-simsignal_t PingApp::numOutOfOrderArrivalsSignal = registerSignal("numOutOfOrderArrivals");
-simsignal_t PingApp::pingTxSeqSignal = registerSignal("pingTxSeq");
-simsignal_t PingApp::pingRxSeqSignal = registerSignal("pingRxSeq");
+simsignal_t SimpleApp::rttSignal = registerSignal("rtt");
+simsignal_t SimpleApp::numLostSignal = registerSignal("numLost");
+simsignal_t SimpleApp::numOutOfOrderArrivalsSignal = registerSignal("numOutOfOrderArrivals");
+simsignal_t SimpleApp::pingTxSeqSignal = registerSignal("pingTxSeq");
+simsignal_t SimpleApp::pingRxSeqSignal = registerSignal("pingRxSeq");
 
 enum PingSelfKinds {
     PING_FIRST_ADDR = 1001,
@@ -122,7 +123,11 @@ void SimpleApp::handleMessage(cMessage *msg)
     }
     if (msg->isSelfMessage()) {
         if (msg->getKind() == PING_FIRST_ADDR) {
-            srcAddr = MACAddress(par("srcAddr"));
+            const char* tmp = par("srcAddr");
+            if (strcmp(tmp, "") == 0)
+                srcAddr = MACAddress();
+            else
+                srcAddr = MACAddress(tmp);
             parseDestAddressesPar();
             if (destAddresses.empty()) {
                 return;
@@ -208,7 +213,7 @@ void SimpleApp::stopSendingPingRequests()
     pid = -1;
     lastStart = -1;
     sendSeqNo = expectedReplySeqNo = 0;
-    srcAddr = destAddr = L3Address();
+    srcAddr = destAddr = MACAddress();
     destAddresses.clear();
     destAddrIdx = -1;
     cancelNextPingRequest();
@@ -360,7 +365,7 @@ void SimpleApp::sendPing()
     emit(pingTxSeqSignal, sendSeqNo);
     sendSeqNo++;
     sentCount++;
-    SimpleLinkLayerControlInfo controlInfo = new SimpleLinkLayerControlInfo;
+    SimpleLinkLayerControlInfo* controlInfo = new SimpleLinkLayerControlInfo;
     controlInfo->setSourceAddress(srcAddr);
     controlInfo->setDestinationAddress(destAddr);
 

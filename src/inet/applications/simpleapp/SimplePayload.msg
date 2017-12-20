@@ -23,7 +23,7 @@ namespace inet;
 // Represents payload in an MAC Echo Request/Reply.
 //
 // TODO: move originator id and sequence number to ICMPMessage and use an ICMPControlInfo
-packet PingPayload
+packet SimplePayload
 {
     long originatorId; // sender module id
     long seqNo; // sequence number

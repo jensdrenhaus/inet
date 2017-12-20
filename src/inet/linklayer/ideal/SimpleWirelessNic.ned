@@ -56,7 +56,7 @@ module SimpleWirelessNic like IWirelessNic
             parameters:
                 @display("p=23,125;q=l2queue");
         }
-        mac: <radioType> like IMACProtocol {
+        mac: <macType> like IMACProtocol {
             parameters:
                 @display("p=98,207");
         }

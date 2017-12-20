@@ -44,4 +44,7 @@ simple SimpleApp like ISimpleApp
         @statistic[numOutOfOrderArrivals](title="ping out-of-order arrivals"; record=last,vector; interpolationmode=none);
         @statistic[pingTxSeq](title="ping tx seq"; record=count,vector; interpolationmode=none);
         @statistic[pingRxSeq](title="ping rx seq"; record=count,vector; interpolationmode=none);
+    gates:
+	    input appIn @labels(AppPayload/up);
+	    output appOut @labels(AppPayload/down);
 }

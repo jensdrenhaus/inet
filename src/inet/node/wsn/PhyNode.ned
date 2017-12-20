@@ -15,7 +15,7 @@
 
 package inet.node.wsn;
 
-import inet.applications.contract.IPingApp;
+import inet.applications.contract.ISimpleApp;
 
 //
 // TODO
@@ -25,11 +25,11 @@ module PhyNode extends TinyNodeBase
 	parameters:
 	    @display("i=msg/packet");
 	submodules:
-	    pingApp: <default("PingApp")> like IPingApp {
+	    pingApp: <default("SimpleApp")> like ISimpleApp {
             parameters:
                 @display("i=device/terminal;p=216,141,row,60");
         }
 	connections allowunconnected:
-	    nic.upperLayerOut --> pingApp.pingIn;
-        nic.upperLayerIn <-- pingApp.pingOut;
+	    nic.upperLayerOut --> pingApp.appIn;
+        nic.upperLayerIn <-- pingApp.appOut;
 }

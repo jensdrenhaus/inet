@@ -22,6 +22,7 @@
 #include "inet/common/lifecycle/ILifecycle.h"
 #include "inet/common/lifecycle/LifecycleOperation.h"
 #include "inet/common/lifecycle/NodeStatus.h"
+//#include "inet/applications/simpleapp/SimplePayload_m.h"
 
 namespace inet {
 
@@ -31,9 +32,9 @@ class SimplePayload;
 #define PING_HISTORY_SIZE    100
 
 /**
- * TODO
+ *
  */
-class INET_API SimpleApp : public cSimpleModule, public Ilifecycle
+class INET_API SimpleApp : public cSimpleModule, public ILifecycle
 {
   protected:
     // parameters: for more details, see the corresponding NED parameters' documentation
