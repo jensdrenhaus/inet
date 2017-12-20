@@ -70,7 +70,7 @@ module TinyNodeBase like INetworkNode
             parameters:
                 @display("p=53,300;is=s");
         }
-        nic: <default("IdealWirelessNic")> like IWirelessNic {
+        nic: <default("SimpleWirelessNic")> like IWirelessNic {
             parameters:
                 @display("p=216,406,row,60;q=queue");
         }
