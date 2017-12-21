@@ -88,6 +88,7 @@ class INET_API SimpleApp : public cSimpleModule, public ILifecycle
     virtual bool isEnabled();
     virtual void sendPing();
     virtual void processPingResponse(SimplePayload *msg);
+    virtual void processPingRequest(SimplePayload *msg);
     virtual void countPingResponse(int bytes, long seqNo, simtime_t rtt);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;

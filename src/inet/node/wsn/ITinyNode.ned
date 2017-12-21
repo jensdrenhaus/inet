@@ -13,20 +13,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-cplusplus {{
-#include "inet/common/INETDefs.h"
-}}
-
-namespace inet;
+package inet.node.wsn;
 
 //
-// Represents payload in an MAC Echo Request/Reply.
+// Contains the common interface for all node types in a network.
 //
-// TODO: move originator id and sequence number to ICMPMessage and use an ICMPControlInfo
-packet SimplePayload
+moduleinterface ITinyNode
 {
-    long originatorId; // sender module id
-    long seqNo; // sequence number
-    unsigned char data[];
-    bool isReply = false;
+    parameters:
+        @display("bgb=,448");
+        @networkNode;
+        @labels(node,wireless-node);
+    gates:
+        input radioIn @directIn;
 }

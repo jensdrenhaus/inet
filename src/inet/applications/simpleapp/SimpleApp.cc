@@ -165,8 +165,12 @@ void SimpleApp::handleMessage(cMessage *msg)
         scheduleNextPingRequest(simTime(), msg->getKind() == PING_CHANGE_ADDR);
     }
     else {
-        // process ping response
-        processPingResponse(check_and_cast<SimplePayload *>(msg));
+        SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
+        if(payload->getIsReply())
+            // process ping response
+            processPingResponse(payload);
+        else
+            processPingRequest(payload);
     }
 }
 
@@ -279,6 +283,20 @@ void SimpleApp::processPingResponse(SimplePayload *msg)
     // update statistics
     countPingResponse(msg->getByteLength(), msg->getSeqNo(), rtt);
     delete msg;
+}
+
+void SimpleApp::processPingRequest(SimplePayload *msg)
+{
+    // change addresses and send out reply
+    SimpleLinkLayerControlInfo *ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
+    //MACAddress src = ctrl->getSourceAddress();
+    //MACAddress dest = ctrl->getDestinationAddress();
+    ctrl->setDestinationAddress(MACAddress::BROADCAST_ADDRESS);
+    ctrl->setSourceAddress(MACAddress::UNSPECIFIED_ADDRESS);
+    msg->setName((std::string(msg->getName()) + "-reply").c_str());
+    msg->setIsReply(true);
+
+    send(msg, "appOut");
 }
 
 void SimpleApp::countPingResponse(int bytes, long seqNo, simtime_t rtt)
