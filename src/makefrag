@@ -77,6 +77,17 @@ endif
 # disable anoying "... hides overloaded virtual function" warning
 CFLAGS += -Wno-overloaded-virtual
 
+#
+# mono
+#
+ifeq ($(HAVE_PKGCFG), yes)
+  HAVE_MONO := $(shell $(PKGCFG) --exists mono-2 && echo yes || echo no)
+  ifeq ($(HAVE_MONO), yes)
+    LIBS += $(shell $(PKGCFG) --libs mono-2)
+    CFLAGS += -rdynamic $(shell $(PKGCFG) --cflags mono-2)
+  endif
+endif
+
 #########################################################################
 # precompiled header support for GCC and CLANG
 
