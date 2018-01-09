@@ -34,10 +34,29 @@ namespace inet {
  */
 class ApplicationAdapter : public cSimpleModule
 {
+  public:
+    ApplicationAdapter();
+
+
   protected:
-    virtual void initialize();
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void handleMessage(cMessage *msg);
+
+  /**
+   * class members and class functions
+   */
+  public:
+    static long createNode();
+
+  private:
+    static ApplicationAdapter* instance;
 };
+
+/**
+ * wrappers to be called from loaded assembly
+ */
+extern "C" long aa_createNode() {return ApplicationAdapter::createNode();}
 
 } //namespace
 
