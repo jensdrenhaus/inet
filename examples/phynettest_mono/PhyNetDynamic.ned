@@ -19,7 +19,7 @@
 package inet.examples.phynettest_mono;
 
 
-import inet.node.wsn.PhyNode;
+import inet.node.wsn.PhyNodeExternal;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.applications.external.ApplicationAdapter;
@@ -28,24 +28,28 @@ import inet.applications.external.ApplicationAdapter;
 network Net
 {
     parameters:
-        int numNodes;
+        //int numNodes;
         @display("bgb=600,400");
     submodules:
-        visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
-            parameters:
-                @display("p=100,50");
-        }
+//        visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
+//            parameters:
+//                @display("p=-100,50");
+//        }
         radioMedium: IdealRadioMedium {
             parameters:
-                @display("p=100,250");
+                @display("p=-100,250");
         }
         adapter: ApplicationAdapter {
         	parameters:
-        	    @display("p=100,150");
+        	    @display("p=-100,150");
         }
-        node[numNodes]: PhyNode {
+//        node[numNodes]: PhyNode {
+//            parameters:
+//                @display("r=,,#707070;p=250,58");
+//        }
+        node: PhyNodeExternal {
             parameters:
-                @display("r=,,#707070;p=250,58");
+                @dynamic;
         }
 }
 

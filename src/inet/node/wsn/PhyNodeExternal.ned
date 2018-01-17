@@ -20,12 +20,12 @@ import inet.applications.contract.ISimpleApp;
 //
 // TODO
 //
-module PhyNode extends TinyNodeBase
+module PhyNodeExternal extends TinyNodeBase
 {
 	parameters:
 	    @display("i=msg/packet");
 	submodules:
-	    app: <default("SimpleApp")> like ISimpleApp {
+	    app: <default("ExternalApp")> like ISimpleApp {
             parameters:
                 @display("i=device/terminal;p=216,141,row,60");
         }

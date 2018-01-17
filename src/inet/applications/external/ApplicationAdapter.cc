@@ -17,9 +17,9 @@
 
 namespace inet {
 
-Define_Module(ApplicationAdapter);
-
 ApplicationAdapter* ApplicationAdapter::instance = nullptr;
+
+Define_Module(ApplicationAdapter);
 
 void ApplicationAdapter::initialize(int stage)
 {
@@ -28,14 +28,13 @@ void ApplicationAdapter::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
 
         printf("Hello from Application Adapter\n");
+        printf("size of int = %d bytes \nsize of long = %d bytes\n", (int)sizeof(int), (int)sizeof(long));
+        creationCnt = 0;
+        instance = this;
+        assemblyName = par("assemblyName").stringValue();
+        namespaceName = par("namespaceName").stringValue();
+        className = par("className").stringValue();
 
-        MonoDomain* domain;
-        MonoAssembly* assembly;
-        MonoImage* image;
-        MonoClass* klass;
-        MonoObject* obj;
-        const char* file;
-        int retval;
 
         /*
          * Load the default Mono configuration file, this is needed
@@ -44,53 +43,43 @@ void ApplicationAdapter::initialize(int stage)
          */
         mono_config_parse (NULL);
 
-        file = par("assemblyName").stringValue();
-
         /*
          * mono_jit_init() creates a domain: each assembly is
          * loaded and run in a MonoDomain.
          * parameter name is arbitrary
          */
-        domain = mono_jit_init (file);
+        monoDomain = mono_jit_init (assemblyName);
 
         /*
          * Open the executable
          * This only loads the code, but it will not execute anything yet.
          */
         //assembly = mono_domain_assembly_open (domain, "SadPhyNetFlow.exe");
-        assembly = mono_domain_assembly_open (domain, file);
-        if (!assembly)
-            throw cRuntimeError("%s not found", file);
+        monoAssembly = mono_domain_assembly_open (monoDomain, assemblyName);
+        if (!monoAssembly)
+            throw cRuntimeError("%s not found", par("assemblyName").stringValue());
+
+    }
+
+    if (stage == INITSTAGE_LAST) {
 
         /*
          * run the Main() method in the assembly.
          */
         char* dummy = "dummy";
-        mono_jit_exec (domain, assembly, 1, &dummy); // treet argc as 1 and argv as file
-    }
-
-    if (stage == INITSTAGE_LAST) {
-        printf("Hello from Application Adapter again\n");
+        mono_jit_exec (monoDomain, monoAssembly, 1, &dummy); // treet argc as 1 and argv[0] as dummy
 
         /*
-         * ####### TEST #######
+         * get methods from assembly
          */
-        // find factory object
-        cModuleType *moduleType = cModuleType::get("inet.node.wsn.PhyNode");
-
-        // create (possibly compound) module and build its submodules (if any)
-        cModule *module = moduleType->create("node", this->getParentModule());
-        module->finalizeParameters();
-        module->buildInside();
-
-        // create activation message
-        module->scheduleStart(simTime());
-
-        /*
-         * ####### END #######
-         */
+        monoImage = mono_assembly_get_image (monoAssembly);
+        monoClass = mono_class_from_name (monoImage, namespaceName, className);
+        if (!monoClass) {
+            //fprintf (stderr, "Can't find Type in assembly %s\n", mono_image_get_filename (image));
+            throw cRuntimeError("Can't find Type '%s' in assembly %s\n", className, mono_image_get_filename(monoImage));
+        }
+        getExternalMethods(monoClass);
     }
-
 }
 
 void ApplicationAdapter::handleMessage(cMessage *msg)
@@ -98,37 +87,112 @@ void ApplicationAdapter::handleMessage(cMessage *msg)
     // no messages expected
 }
 
-long ApplicationAdapter::createNode()
+void ApplicationAdapter::send(unsigned long from_id)
 {
-//    // find factory object
-//    const char* moduleTypeName = ApplicationAdapter::instance->par("nodeType").stringValue();
-//    cModuleType *moduleType = cModuleType::get(moduleTypeName);
-//
-//    // create compound module and build its submodules
-//    cModule* parentModule = ApplicationAdapter::instance->getParentModule();
-//    const char* parentModuleName = parentModule->getFullName();
-//    printf("%s", parentModuleName);
-//    cModule *newNode = moduleType->create("DynNode", ApplicationAdapter::instance);
-//    newNode->finalizeParameters();
-//    newNode->buildInside();
-//
-//    //create activation message
-//    newNode->scheduleStart(simTime());
+    // TODO
+}
 
+unsigned long ApplicationAdapter::createNode()
+{
+    unsigned long id = getUniqueId();
+    createNode(id);
+    return id;
+}
 
+void ApplicationAdapter::createNode(unsigned long id)
+{
+    ExternalApp* appPtr = createNewNode();
+    saveNode(id, appPtr);
+    const char* name = appPtr->getParentModule()->getName();
+    printf("%s created with Id %ld\n", name, id);
+}
 
-    printf("Node createtd\n");
-    return 1;
+unsigned long ApplicationAdapter::getUniqueId()
+{
+    return getSimulation()->getUniqueNumber();
+}
+
+ExternalApp* ApplicationAdapter::createNewNode()
+{
+    creationCnt++;
+    const char* spacer = (creationCnt < 10) ? "000" : (creationCnt < 100) ? "00" : (creationCnt < 1000) ? "0" : "";;
+    char newNodeName[16];
+    sprintf(newNodeName, "node%s%d", spacer, creationCnt);
+
+    // find factory object
+    const char* moduleTypeName = par("nodeType").stringValue();
+    cModuleType *moduleType = cModuleType::get(moduleTypeName);
+
+    // create compound module and build its submodules
+    cModule* parentModule = getParentModule(); // parent of nodes must be the network
+    cModule *newNode = moduleType->create(newNodeName, parentModule);
+    newNode->finalizeParameters();
+    newNode->buildInside();
+
+    //create activation message and initialize
+    //newNode->scheduleStart(simTime());
+    newNode->callInitialize();
+
+    cModule* module = newNode->getSubmodule("app");
+    if(!module)
+        throw cRuntimeError("Cannot find Submodule 'app' in created Node");
+    ExternalApp* appPtr = check_and_cast<ExternalApp*>(module);
+    return appPtr;
+}
+
+void ApplicationAdapter::saveNode(unsigned long id, ExternalApp* nodeApp)
+{
+    using namespace std;
+    pair<unordered_map<unsigned long, ExternalApp*>::iterator, bool> retVal;
+    retVal = nodeMap.insert(pair<unsigned long,ExternalApp*>(id, nodeApp));
+    if(retVal.second == false)
+        throw cRuntimeError("Node with Id %d already exists", id);
+}
+
+void ApplicationAdapter::getExternalMethods(MonoClass* klass)
+{
+    MonoMethod* m = NULL;
+    MonoMethod* methodA = NULL;
+    MonoMethod* methodB = NULL;
+    MonoProperty* prop;
+    MonoObject* result;
+    void* it;
+    void* args[1];
+    int val;
+
+    /* retrieve all the methods we need */
+    it = NULL;
+    while (m = mono_class_get_methods (klass, &it)) {
+        if (strcmp (mono_method_get_name (m), "initSimulation") == 0) {
+            methodA = m;
+        } else if (strcmp (mono_method_get_name (m), "another_method") == 0) {
+            methodB = m;
+        }
+    }
+
+    /* Now we'll call method (): since it takes no arguments
+     * we can pass NULL as the third argument
+     * and since it is a static method we don't need to pass
+     * an object to mono_runtime_invoke ().
+     * The method will print the updated value.
+     */
+    mono_runtime_invoke (methodA, NULL, NULL, NULL);
+}
+
+void ApplicationAdapter::finish()
+{
+    instance = nullptr;
 }
 
 ApplicationAdapter::ApplicationAdapter()
 {
-    if(ApplicationAdapter::instance == nullptr)
-        ApplicationAdapter::instance = this;
-    else {
-        printf("ERROR : More then one instance of ApplicationAdapter!\n");
-        throw cRuntimeError("More then one instance of ApplicationAdapter!");
-    }
+    instance = nullptr;
+}
+
+ApplicationAdapter::~ApplicationAdapter()
+{
+    instance == nullptr;
+    mono_jit_cleanup (monoDomain);
 }
 
 } //namespace
