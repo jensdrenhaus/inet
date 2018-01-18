@@ -35,17 +35,20 @@ namespace inet {
 /**
  * TODO - Generated class
  */
+
 class ApplicationAdapter : public cSimpleModule
 {
+    // to be called by wrapper functions, see below
   public:
-    ApplicationAdapter();
-    ~ApplicationAdapter();
-
     unsigned long createNode();
     void createNode(unsigned long id);
     void send(unsigned long from_id);
 
+    // to be called by 'ExternalApp' module of the nodes
+  public:
+    void receptionNotify(unsigned long nodeId);
 
+    // to be called by omnet core
   protected:
     virtual void initialize(int stage) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
@@ -63,11 +66,12 @@ class ApplicationAdapter : public cSimpleModule
     const char* className;
 
     uint32 creationCnt;
+    cMessage* trigger;
     std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
     std::map<const char*, MonoMethod*> functionMap = {
             {"initSimulation", NULL},
             {"simulationReady", NULL},
-            //{"methodA", NULL},
+            {"receptionNotify", NULL},
     };
 
   private:
@@ -77,16 +81,12 @@ class ApplicationAdapter : public cSimpleModule
     void getExternalFunctioinPtrs(MonoClass* klass);
 
   public:
+    ApplicationAdapter();
+    ~ApplicationAdapter();
     static ApplicationAdapter* instance;
 };
 
-/**
- * wrappers to be called from loaded assembly
- */
-extern "C" unsigned long aa_createNodeAndId() {return ApplicationAdapter::instance->createNode();}
-extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->createNode(id);}
-extern "C" void aa_send(unsigned long from_id) {ApplicationAdapter::instance->send(from_id);}
 
 } //namespace
 
-#endif
+#endif // __INET_APPLICATIONADAPTER_H_

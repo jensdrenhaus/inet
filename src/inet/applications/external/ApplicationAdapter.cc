@@ -13,13 +13,28 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "ApplicationAdapter.h"
+#include "inet/applications/external/ApplicationAdapter.h"
 
 namespace inet {
+
+/**
+ * wrappers to be called from loaded assembly
+ */
+extern "C" unsigned long aa_createNodeAndId() {return ApplicationAdapter::instance->createNode();}
+extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->createNode(id);}
+extern "C" void aa_send(unsigned long from_id) {ApplicationAdapter::instance->send(from_id);}
 
 ApplicationAdapter* ApplicationAdapter::instance = nullptr;
 
 Define_Module(ApplicationAdapter);
+
+/*
+ *  ###########################################################################
+ *
+ *  functions to be called by omnet
+ *  ===============================
+ *  ###########################################################################
+ */
 
 void ApplicationAdapter::initialize(int stage)
 {
@@ -27,13 +42,13 @@ void ApplicationAdapter::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL) {
 
-        printf("\nApplication Adapter is loading %s\n", par("assemblyName").stringValue());
-        printf("size of int = %d bytes \nsize of long = %d bytes\n", (int)sizeof(int), (int)sizeof(long));
         creationCnt = 0;
         instance = this;
         assemblyName = par("assemblyName").stringValue();
         namespaceName = par("namespaceName").stringValue();
         className = par("className").stringValue();
+
+        printf("Application Adapter is loading %s\n", assemblyName);
 
         /*
          * Load the default Mono configuration file, this is needed
@@ -55,33 +70,72 @@ void ApplicationAdapter::initialize(int stage)
          */
         monoAssembly = mono_domain_assembly_open (monoDomain, assemblyName);
         if (!monoAssembly)
-            throw cRuntimeError("%s not found", par("assemblyName").stringValue());
+            throw cRuntimeError("%s not found", assemblyName);
 
     }
 
     if (stage == INITSTAGE_LAST) {
 
         // run the Main() method in the assembly.
+        printf("Application Adapter executes Main() in %s\n", assemblyName);
         char* dummy = "dummy";
         mono_jit_exec (monoDomain, monoAssembly, 1, &dummy); // treet argc as 1 and argv[0] as dummy
 
-        // get methods from assembly
+        // preparation to get methods from assembly
+        printf("Application Adapter is configured to retreve class '%s' in namespace '%s'\n", className, namespaceName);
         monoImage = mono_assembly_get_image (monoAssembly);
         monoClass = mono_class_from_name (monoImage, namespaceName, className);
         if (!monoClass)
             throw cRuntimeError("Can't find Type '%s' in assembly %s\n", className, mono_image_get_filename(monoImage));
+        printf("Application Adapter searches for required callback functions \n");
         getExternalFunctioinPtrs(monoClass);
+        printf("SUCCESS! Setup of external assembly done \n\n");
+
+        trigger = new cMessage("trigger");
+        scheduleAt(SimTime(),trigger); // schedule self message at begin
+
+        /* call a method in external assembly: since it takes no arguments
+         * we can pass NULL as the third argument
+         * and since it is a static method we don't need to pass
+         * an object to mono_runtime_invoke ().
+         */
+        mono_runtime_invoke (functionMap["initSimulation"], NULL, NULL, NULL);
     }
 }
 
 void ApplicationAdapter::handleMessage(cMessage *msg)
 {
-    // no messages expected
+    if (msg->isSelfMessage())
+        mono_runtime_invoke (functionMap["simulationReady"], NULL, NULL, NULL);
 }
+
+void ApplicationAdapter::finish()
+{
+    instance = nullptr;
+}
+
+/*
+ *  ###########################################################################
+ *
+ *  functions to be called by external code
+ *  =======================================
+ *  ###########################################################################
+ */
 
 void ApplicationAdapter::send(unsigned long from_id)
 {
-    // TODO
+    printf("received send for %ld\n", from_id);
+    nodeMap[from_id]->sendPing();
+}
+
+void ApplicationAdapter::createNode(unsigned long id)
+{
+    ExternalApp* appPtr = createNewNode();
+    appPtr->setNodeId(id);
+    appPtr->setAdapter(this);
+    saveNode(id, appPtr);
+    const char* name = appPtr->getParentModule()->getName();
+    printf("%s created with Id %ld\n", name, id);
 }
 
 unsigned long ApplicationAdapter::createNode()
@@ -91,13 +145,33 @@ unsigned long ApplicationAdapter::createNode()
     return id;
 }
 
-void ApplicationAdapter::createNode(unsigned long id)
+/*
+ *  ###########################################################################
+ *
+ *  functions to be called by the nodes of the simulation
+ *  =====================================================
+ *  ###########################################################################
+ */
+
+void ApplicationAdapter::receptionNotify(unsigned long nodeId)
 {
-    ExternalApp* appPtr = createNewNode();
-    saveNode(id, appPtr);
-    const char* name = appPtr->getParentModule()->getName();
-    printf("%s created with Id %ld\n", name, id);
+    Enter_Method("receptionNotify");
+
+    /* call a method in external assembly: since it takes no arguments
+     * we can pass NULL as the third argument
+     * and since it is a static method we don't need to pass
+     * an object to mono_runtime_invoke ().
+     */
+    mono_runtime_invoke (functionMap["receptionNotify"], NULL, NULL, NULL);
 }
+
+/*
+ *  ###########################################################################
+ *
+ *  private functions
+ *  =================
+ *  ###########################################################################
+ */
 
 unsigned long ApplicationAdapter::getUniqueId()
 {
@@ -156,31 +230,19 @@ void ApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
     for (iter=functionMap.begin(); iter!=functionMap.end(); ++iter) {
         iter->second = mono_class_get_method_from_name(klass, iter->first, -1);
         if (!iter->second)
-            throw cRuntimeError("Function %s not found in assembly", iter->first);
+            throw cRuntimeError("function '%s' not found in assembly", iter->first);
     }
-
-    /* Now we'll call method (): since it takes no arguments
-     * we can pass NULL as the third argument
-     * and since it is a static method we don't need to pass
-     * an object to mono_runtime_invoke ().
-     * The method will print the updated value.
-     */
-    mono_runtime_invoke (functionMap["initSimulation"], NULL, NULL, NULL);
-    mono_runtime_invoke (functionMap["simulationReady"], NULL, NULL, NULL);
-}
-
-void ApplicationAdapter::finish()
-{
-    instance = nullptr;
 }
 
 ApplicationAdapter::ApplicationAdapter()
 {
     instance = nullptr;
+    trigger = nullptr;
 }
 
 ApplicationAdapter::~ApplicationAdapter()
 {
+    cancelAndDelete(trigger);
     instance == nullptr;
     mono_jit_cleanup (monoDomain);
 }

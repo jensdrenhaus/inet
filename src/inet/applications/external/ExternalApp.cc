@@ -19,6 +19,8 @@
 #include "inet/applications/external/ExternalApp.h"
 
 #include "inet/applications/simpleapp/SimplePayload_m.h"
+#include "inet/applications/external/ApplicationAdapter.h"
+
 
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeOperations.h"
@@ -55,14 +57,10 @@ void ExternalApp::initialize(int stage)
         // (defer reading srcAddr/destAddr to when ping starts, maybe
         // addresses will be assigned later by some protocol)
         packetSize = par("packetSize");
-        startTime = par("startTime");
-        stopTime = par("stopTime");
-        if (stopTime >= SIMTIME_ZERO && stopTime < startTime)
-            throw cRuntimeError("Invalid startTime/stopTime parameters");
         printPing = par("printPing").boolValue();
 
         // state
-        pid = -1;
+        nodeId = 0;
         lastStart = -1;
         sendSeqNo = expectedReplySeqNo = 0;
         WATCH(sendSeqNo);
@@ -74,8 +72,6 @@ void ExternalApp::initialize(int stage)
         WATCH(lossCount);
         WATCH(outOfOrderArrivalCount);
         WATCH(numPongs);
-
-
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
         // startup
@@ -113,6 +109,7 @@ void ExternalApp::handleMessage(cMessage *msg)
         throw cRuntimeError("No self messages expected");
     }
     else {
+        adapter->receptionNotify(nodeId);
         SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
         if(payload->getIsReply())
             // process ping response
@@ -155,7 +152,7 @@ bool ExternalApp::handleOperationStage(LifecycleOperation *operation, int stage,
 void ExternalApp::startSendingPingRequests()
 {
     ASSERT(!timer->isScheduled());
-    pid = getSimulation()->getUniqueNumber();
+    //pid = getSimulation()->getUniqueNumber();
     lastStart = simTime();
     //timer->setKind(PING_FIRST_ADDR);
     sentCount = 0;
@@ -165,7 +162,7 @@ void ExternalApp::startSendingPingRequests()
 
 void ExternalApp::stopSendingPingRequests()
 {
-    pid = -1;
+    //pid = -1;
     lastStart = -1;
     sendSeqNo = expectedReplySeqNo = 0;
     srcAddr = destAddr = MACAddress();
@@ -202,7 +199,7 @@ bool ExternalApp::isEnabled()
 
 void ExternalApp::processPingResponse(SimplePayload *msg)
 {
-    if (msg->getOriginatorId() != pid) {
+    if (msg->getOriginatorId() != nodeId) {
         EV_WARN << "Received response was not sent by this application, dropping packet\n";
         delete msg;
         return;
@@ -322,8 +319,8 @@ void ExternalApp::sendPing()
     sprintf(name, "ping%ld", sendSeqNo);
 
     SimplePayload *msg = new SimplePayload(name);
-    ASSERT(pid != -1);
-    msg->setOriginatorId(pid);
+    //ASSERT(pid != -1);
+    msg->setOriginatorId(nodeId);
     msg->setSeqNo(sendSeqNo);
     msg->setByteLength(packetSize + 4);
 
@@ -335,7 +332,7 @@ void ExternalApp::sendPing()
     sentCount++;
     SimpleLinkLayerControlInfo* controlInfo = new SimpleLinkLayerControlInfo;
     controlInfo->setSourceAddress(srcAddr);
-    controlInfo->setDestinationAddress(destAddr);
+    controlInfo->setDestinationAddress(MACAddress::BROADCAST_ADDRESS);
 
     msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
     EV_INFO << "Sending ping request #" << msg->getSeqNo() << " to lower layer.\n";

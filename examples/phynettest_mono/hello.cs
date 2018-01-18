@@ -47,7 +47,14 @@ namespace CSProgram
         //method invoked by omnet++
         static void simulationReady()
         {
-        	Console.WriteLine("start something ...");
+        	Console.WriteLine("start something in C# ...");
+        	aa_send(111);
+        }
+        
+        //method invoked by omnet++
+        static void receptionNotify()
+        {
+        	Console.WriteLine("message received in C#");
         }
     }
 }

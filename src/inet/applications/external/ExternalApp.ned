@@ -26,8 +26,6 @@ simple ExternalApp like ISimpleApp
         string destAddr = default(""); // destination MAC address(es), separated by spaces 
         string srcAddr = default(""); // source address 
         double packetSize @unit("B") = default(0B); // of ping payload, in bytes
-        double startTime @unit("s") = default(uniform(0s, this.sleepDuration + this.sendInterval)); // send first ping at startTime
-        double stopTime @unit("s") = default(-1s); // time to finish sending, negative values mean forever
         bool printPing = default(false); // log to stdout
         @display("i=block/app");
         @signal[rtt](type=simtime_t);

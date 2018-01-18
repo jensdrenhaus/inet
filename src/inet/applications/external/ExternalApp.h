@@ -23,9 +23,11 @@
 #include "inet/common/lifecycle/LifecycleOperation.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
+
 namespace inet {
 
 class SimplePayload;
+class ApplicationAdapter;
 
 // how many ping request's send time is stored
 #define PING_HISTORY_SIZE    100
@@ -42,12 +44,12 @@ protected:
     std::vector<MACAddress> destAddresses;
     int packetSize = 0;
     int destAddrIdx = -1;
-    simtime_t startTime;
-    simtime_t stopTime;
     bool printPing = false;
+    ApplicationAdapter* adapter = nullptr;
+
 
     // state
-    int pid = 0;    // to determine which hosts are associated with the responses
+    unsigned long nodeId;    // to determine which hosts are associated with the responses
     cMessage *timer = nullptr;    // to schedule the next Ping request
     NodeStatus *nodeStatus = nullptr;    // lifecycle
     simtime_t lastStart;    // the last time when the app was started (lifecycle)
@@ -87,9 +89,10 @@ protected:
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
-
   public:
-    virtual void sendPing();
+    void setNodeId(unsigned long id) {nodeId = id;}
+    void setAdapter(ApplicationAdapter* applicationAdapter) {adapter = applicationAdapter;}
+    void sendPing();
 
     ExternalApp();
     virtual ~ExternalApp();
