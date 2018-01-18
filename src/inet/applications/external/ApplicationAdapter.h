@@ -61,15 +61,20 @@ class ApplicationAdapter : public cSimpleModule
     const char* assemblyName;
     const char* namespaceName;
     const char* className;
+
     uint32 creationCnt;
-    std::unordered_map<unsigned long, ExternalApp*> nodeMap;
-    std::unordered_map<unsigned long, ExternalApp*>::iterator it;
+    std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
+    std::map<const char*, MonoMethod*> functionMap = {
+            {"initSimulation", NULL},
+            {"simulationReady", NULL},
+            //{"methodA", NULL},
+    };
 
   private:
     ExternalApp* createNewNode();
     unsigned long getUniqueId();
     void saveNode(unsigned long id, ExternalApp* nodeApp);
-    void getExternalMethods(MonoClass* klass);
+    void getExternalFunctioinPtrs(MonoClass* klass);
 
   public:
     static ApplicationAdapter* instance;

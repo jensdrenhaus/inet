@@ -43,5 +43,11 @@ namespace CSProgram
             //ulong id = aa_createNodeAndId();
             //Console.WriteLine("received Id is {0}", id);
         }
+        
+        //method invoked by omnet++
+        static void simulationReady()
+        {
+        	Console.WriteLine("start something ...");
+        }
     }
 }

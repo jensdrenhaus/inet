@@ -27,14 +27,13 @@ void ApplicationAdapter::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL) {
 
-        printf("Hello from Application Adapter\n");
+        printf("\nApplication Adapter is loading %s\n", par("assemblyName").stringValue());
         printf("size of int = %d bytes \nsize of long = %d bytes\n", (int)sizeof(int), (int)sizeof(long));
         creationCnt = 0;
         instance = this;
         assemblyName = par("assemblyName").stringValue();
         namespaceName = par("namespaceName").stringValue();
         className = par("className").stringValue();
-
 
         /*
          * Load the default Mono configuration file, this is needed
@@ -54,7 +53,6 @@ void ApplicationAdapter::initialize(int stage)
          * Open the executable
          * This only loads the code, but it will not execute anything yet.
          */
-        //assembly = mono_domain_assembly_open (domain, "SadPhyNetFlow.exe");
         monoAssembly = mono_domain_assembly_open (monoDomain, assemblyName);
         if (!monoAssembly)
             throw cRuntimeError("%s not found", par("assemblyName").stringValue());
@@ -63,22 +61,16 @@ void ApplicationAdapter::initialize(int stage)
 
     if (stage == INITSTAGE_LAST) {
 
-        /*
-         * run the Main() method in the assembly.
-         */
+        // run the Main() method in the assembly.
         char* dummy = "dummy";
         mono_jit_exec (monoDomain, monoAssembly, 1, &dummy); // treet argc as 1 and argv[0] as dummy
 
-        /*
-         * get methods from assembly
-         */
+        // get methods from assembly
         monoImage = mono_assembly_get_image (monoAssembly);
         monoClass = mono_class_from_name (monoImage, namespaceName, className);
-        if (!monoClass) {
-            //fprintf (stderr, "Can't find Type in assembly %s\n", mono_image_get_filename (image));
+        if (!monoClass)
             throw cRuntimeError("Can't find Type '%s' in assembly %s\n", className, mono_image_get_filename(monoImage));
-        }
-        getExternalMethods(monoClass);
+        getExternalFunctioinPtrs(monoClass);
     }
 }
 
@@ -149,25 +141,22 @@ void ApplicationAdapter::saveNode(unsigned long id, ExternalApp* nodeApp)
         throw cRuntimeError("Node with Id %d already exists", id);
 }
 
-void ApplicationAdapter::getExternalMethods(MonoClass* klass)
+void ApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
 {
-    MonoMethod* m = NULL;
-    MonoMethod* methodA = NULL;
-    MonoMethod* methodB = NULL;
-    MonoProperty* prop;
-    MonoObject* result;
-    void* it;
-    void* args[1];
-    int val;
 
-    /* retrieve all the methods we need */
-    it = NULL;
-    while (m = mono_class_get_methods (klass, &it)) {
-        if (strcmp (mono_method_get_name (m), "initSimulation") == 0) {
-            methodA = m;
-        } else if (strcmp (mono_method_get_name (m), "another_method") == 0) {
-            methodB = m;
-        }
+    MonoMethod* m = NULL;
+    void* handle = NULL; // required by mono_class_get_methods
+    std::map<const char*, MonoMethod*>::iterator iter;
+
+    /*
+     * mono_class_get_method_from_name obtains a MonoMethod with a
+     * given name. It only works if there are no multiple signatures
+     * for any given method name. Last argument is number of parameters. -1 for any number.
+     */
+    for (iter=functionMap.begin(); iter!=functionMap.end(); ++iter) {
+        iter->second = mono_class_get_method_from_name(klass, iter->first, -1);
+        if (!iter->second)
+            throw cRuntimeError("Function %s not found in assembly", iter->first);
     }
 
     /* Now we'll call method (): since it takes no arguments
@@ -176,7 +165,8 @@ void ApplicationAdapter::getExternalMethods(MonoClass* klass)
      * an object to mono_runtime_invoke ().
      * The method will print the updated value.
      */
-    mono_runtime_invoke (methodA, NULL, NULL, NULL);
+    mono_runtime_invoke (functionMap["initSimulation"], NULL, NULL, NULL);
+    mono_runtime_invoke (functionMap["simulationReady"], NULL, NULL, NULL);
 }
 
 void ApplicationAdapter::finish()
