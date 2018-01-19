@@ -19,10 +19,10 @@
 #include "inet/common/INETDefs.h"
 
 #include <mono/jit/jit.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/environment.h>
-#include <mono/metadata/mono-config.h>
-#include <mono/utils/mono-publib.h>
+#include <mono/metadata/assembly.h>    // mono_assembly_... only
+#include <mono/metadata/environment.h> // exitcode_get
+#include <mono/metadata/mono-config.h> // mono_config_parse ..
+#include <mono/utils/mono-publib.h>  // minimal genaral purpose header for use in public mono headers
 
 #include <stdio.h>
 #include <unordered_map>
@@ -38,15 +38,11 @@ namespace inet {
 
 class ApplicationAdapter : public cSimpleModule
 {
-    // to be called by wrapper functions, see below
+    // to be called by wrapper functions
   public:
     unsigned long createNode();
     void createNode(unsigned long id);
     void send(unsigned long from_id);
-
-    // to be called by 'ExternalApp' module of the nodes
-  public:
-    void receptionNotify(unsigned long nodeId);
 
     // to be called by omnet core
   protected:
@@ -54,6 +50,18 @@ class ApplicationAdapter : public cSimpleModule
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void handleMessage(cMessage *msg);
     virtual void finish() override;
+
+    // to call external code
+  private:
+    std::map<const char*, MonoMethod*> functionMap = {       // fast iteration, slower access
+            {"initSimulation", NULL},
+            {"simulationReady", NULL},
+            {"receptionNotify", NULL},
+    };
+    void call_initSimulation();
+    void call_simulationReady();
+  public:
+    void call_receptionNotify(unsigned long nodeId);
 
 
   private:
@@ -68,17 +76,13 @@ class ApplicationAdapter : public cSimpleModule
     uint32 creationCnt;
     cMessage* trigger;
     std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
-    std::map<const char*, MonoMethod*> functionMap = {
-            {"initSimulation", NULL},
-            {"simulationReady", NULL},
-            {"receptionNotify", NULL},
-    };
 
   private:
     ExternalApp* createNewNode();
     unsigned long getUniqueId();
     void saveNode(unsigned long id, ExternalApp* nodeApp);
     void getExternalFunctioinPtrs(MonoClass* klass);
+    MonoMethod* checkFunctionPtr(const char* handle);
 
   public:
     ApplicationAdapter();

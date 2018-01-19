@@ -72,6 +72,9 @@ void ExternalApp::initialize(int stage)
         WATCH(lossCount);
         WATCH(outOfOrderArrivalCount);
         WATCH(numPongs);
+
+        cModule* module = getParentModule()->getParentModule()->getSubmodule("adapter");
+        adapter = check_and_cast<ApplicationAdapter*>(module);
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
         // startup
@@ -109,7 +112,7 @@ void ExternalApp::handleMessage(cMessage *msg)
         throw cRuntimeError("No self messages expected");
     }
     else {
-        adapter->receptionNotify(nodeId);
+        adapter->call_receptionNotify(nodeId);
         SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
         if(payload->getIsReply())
             // process ping response

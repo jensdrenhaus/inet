@@ -50,22 +50,19 @@ void ApplicationAdapter::initialize(int stage)
 
         printf("Application Adapter is loading %s\n", assemblyName);
 
-        /*
-         * Load the default Mono configuration file, this is needed
+        /* Load the default Mono configuration file, this is needed
          * if you are planning on using the dllmaps defined on the
          * system configuration
          */
         mono_config_parse (NULL);
 
-        /*
-         * mono_jit_init() creates a domain: each assembly is
+        /* mono_jit_init() creates a domain: each assembly is
          * loaded and run in a MonoDomain.
          * parameter name is arbitrary
          */
         monoDomain = mono_jit_init (assemblyName);
 
-        /*
-         * Open the executable
+        /* Open the executable
          * This only loads the code, but it will not execute anything yet.
          */
         monoAssembly = mono_domain_assembly_open (monoDomain, assemblyName);
@@ -92,21 +89,16 @@ void ApplicationAdapter::initialize(int stage)
         printf("SUCCESS! Setup of external assembly done \n\n");
 
         trigger = new cMessage("trigger");
-        scheduleAt(SimTime(),trigger); // schedule self message at begin
+        scheduleAt(SimTime(),trigger); // schedule self message right at the beginning
 
-        /* call a method in external assembly: since it takes no arguments
-         * we can pass NULL as the third argument
-         * and since it is a static method we don't need to pass
-         * an object to mono_runtime_invoke ().
-         */
-        mono_runtime_invoke (functionMap["initSimulation"], NULL, NULL, NULL);
+        call_initSimulation();
     }
 }
 
 void ApplicationAdapter::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
-        mono_runtime_invoke (functionMap["simulationReady"], NULL, NULL, NULL);
+        call_simulationReady();
 }
 
 void ApplicationAdapter::finish()
@@ -132,7 +124,6 @@ void ApplicationAdapter::createNode(unsigned long id)
 {
     ExternalApp* appPtr = createNewNode();
     appPtr->setNodeId(id);
-    appPtr->setAdapter(this);
     saveNode(id, appPtr);
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with Id %ld\n", name, id);
@@ -148,21 +139,35 @@ unsigned long ApplicationAdapter::createNode()
 /*
  *  ###########################################################################
  *
- *  functions to be called by the nodes of the simulation
- *  =====================================================
+ *  functions to call external code
+ *  ===============================
+ *  MonoObjekt* mono_runtime_invoke (1,2,3,4)
+ *  1) MonoMethod*  method
+ *  2) void*        obj   -> NULL if static function. MonoObject if member function
+ *  3) void**       param -> array with pointers to arguments
+ *  4) MonoObject** exc   -> NULL if no exeption handling
+ *  the return value is boxed in the retruned MonoObject*
  *  ###########################################################################
  */
 
-void ApplicationAdapter::receptionNotify(unsigned long nodeId)
+void ApplicationAdapter::call_initSimulation()
+{
+    MonoMethod* m = checkFunctionPtr("initSimulation");
+    mono_runtime_invoke (m, NULL, NULL, NULL);
+}
+
+void ApplicationAdapter::call_simulationReady()
+{
+    MonoMethod* m = checkFunctionPtr("simulationReady");
+    mono_runtime_invoke (m, NULL, NULL, NULL);
+}
+
+void ApplicationAdapter::call_receptionNotify(unsigned long nodeId)
 {
     Enter_Method("receptionNotify");
 
-    /* call a method in external assembly: since it takes no arguments
-     * we can pass NULL as the third argument
-     * and since it is a static method we don't need to pass
-     * an object to mono_runtime_invoke ().
-     */
-    mono_runtime_invoke (functionMap["receptionNotify"], NULL, NULL, NULL);
+    MonoMethod* m = checkFunctionPtr("receptionNotify");
+    mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
 /*
@@ -217,9 +222,6 @@ void ApplicationAdapter::saveNode(unsigned long id, ExternalApp* nodeApp)
 
 void ApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
 {
-
-    MonoMethod* m = NULL;
-    void* handle = NULL; // required by mono_class_get_methods
     std::map<const char*, MonoMethod*>::iterator iter;
 
     /*
@@ -232,6 +234,15 @@ void ApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
         if (!iter->second)
             throw cRuntimeError("function '%s' not found in assembly", iter->first);
     }
+}
+
+MonoMethod* ApplicationAdapter::checkFunctionPtr(const char* handle)
+{
+    if (functionMap.find(handle) == functionMap.end())
+        throw cRuntimeError("cannot find pointer associated with '%s'", handle);
+    else if (functionMap[handle] == NULL)
+        throw cRuntimeError("'%s' has no valid function pointer", handle);
+    return functionMap[handle];
 }
 
 ApplicationAdapter::ApplicationAdapter()
