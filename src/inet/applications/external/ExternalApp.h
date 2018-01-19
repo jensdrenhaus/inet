@@ -91,7 +91,6 @@ protected:
 
   public:
     void setNodeId(unsigned long id) {nodeId = id;}
-    void setAdapter(ApplicationAdapter* applicationAdapter) {adapter = applicationAdapter;}
     void sendPing();
 
     ExternalApp();

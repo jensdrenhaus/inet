@@ -24,7 +24,7 @@ namespace CSProgram
 		
         public static void Main(string[] args) 
         {
-            Console.WriteLine("Hello from C#");
+            Console.WriteLine("C# : Hello!");
         }
         
         // method invoked by omnet++
@@ -47,14 +47,18 @@ namespace CSProgram
         //method invoked by omnet++
         static void simulationReady()
         {
-        	Console.WriteLine("start something in C# ...");
+        	Console.WriteLine("C# : send first message from Node with Id 111");
         	aa_send(111);
         }
         
         //method invoked by omnet++
-        static void receptionNotify()
+        static void receptionNotify(ulong nodeId)
         {
-        	Console.WriteLine("message received in C#");
+        	Console.WriteLine("C# : got reception notification from {0}", nodeId);
+        	if (nodeId == 222) {
+        	Console.WriteLine("C# : send echo");
+        		aa_send(222);
+        	}
         }
     }
 }

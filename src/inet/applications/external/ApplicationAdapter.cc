@@ -116,7 +116,6 @@ void ApplicationAdapter::finish()
 
 void ApplicationAdapter::send(unsigned long from_id)
 {
-    printf("received send for %ld\n", from_id);
     nodeMap[from_id]->sendPing();
 }
 
@@ -166,8 +165,11 @@ void ApplicationAdapter::call_receptionNotify(unsigned long nodeId)
 {
     Enter_Method("receptionNotify");
 
+    void* args [1];
+    args[0] = &nodeId;
+
     MonoMethod* m = checkFunctionPtr("receptionNotify");
-    mono_runtime_invoke (m, NULL, NULL, NULL);
+    mono_runtime_invoke (m, NULL, args, NULL);
 }
 
 /*

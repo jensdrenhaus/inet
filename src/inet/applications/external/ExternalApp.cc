@@ -112,13 +112,14 @@ void ExternalApp::handleMessage(cMessage *msg)
         throw cRuntimeError("No self messages expected");
     }
     else {
-        adapter->call_receptionNotify(nodeId);
         SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
-        if(payload->getIsReply())
-            // process ping response
-            processPingResponse(payload);
-        else
-            processPingRequest(payload);
+        delete payload;
+        adapter->call_receptionNotify(nodeId);
+//        if(payload->getIsReply())
+//            // process ping response
+//            processPingResponse(payload);
+//        else
+//            processPingRequest(payload);
     }
 }
 
