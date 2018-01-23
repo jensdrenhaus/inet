@@ -38,6 +38,7 @@ namespace CSProgram
         {
         	aa_createNode(111);
             aa_createNode(222);
+            aa_createNode(333);
             
             //ulong id = 0;
             //for (int i = 1; i <= 1000; i++)
@@ -53,22 +54,23 @@ namespace CSProgram
         //method invoked by omnet++ at simulation start
         static void simulationReady()
         {
-        	for (int i = 0; i < 3; i++)
-        	{
-        		Console.WriteLine("C# : send message from Node with Id 111");
-        		aa_send(111);
-        	}
-        	aa_wait_s(111,2);
+        	//for (int i = 0; i < 3; i++)
+        	//{
+        	//	Console.WriteLine("C# : send message from Node with Id 111");
+        	//	aa_send(111);
+        	//}
+        	//aa_wait_s(111,2);
+        	aa_send(111);
         }
         
         //method invoked by omnet++ at reception events
         static void receptionNotify(ulong nodeId)
         {
         	Console.WriteLine("C# : got reception notification from {0}", nodeId);
-        	//if (nodeId == 222) {
-        	//Console.WriteLine("C# : send echo");
-        	//	aa_send(222);
-        	//}
+        	if (nodeId != 111) {
+        		Console.WriteLine("C# : send echo");
+        		aa_send(nodeId);
+        	}
         }
         
         //method invoked by omnet++ at reception events
