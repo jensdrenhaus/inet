@@ -21,13 +21,13 @@ namespace CSProgram
 		extern static void aa_send(ulong from_id);
 		
 		
-		
+		// NO INFINITY LOOP IN HERE !!! 
         public static void Main(string[] args) 
         {
             Console.WriteLine("C# : Hello!");
         }
         
-        // method invoked by omnet++
+        // method invoked by omnet++ before simulation starts
         static void initSimulation()
         {
         	aa_createNode(111);
@@ -44,14 +44,14 @@ namespace CSProgram
             //Console.WriteLine("received Id is {0}", id);
         }
         
-        //method invoked by omnet++
+        //method invoked by omnet++ at simulation start
         static void simulationReady()
         {
         	Console.WriteLine("C# : send first message from Node with Id 111");
         	aa_send(111);
         }
         
-        //method invoked by omnet++
+        //method invoked by omnet++ at reception events
         static void receptionNotify(ulong nodeId)
         {
         	Console.WriteLine("C# : got reception notification from {0}", nodeId);
