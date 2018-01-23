@@ -50,12 +50,12 @@ protected:
 
     // state
     unsigned long nodeId;    // to determine which hosts are associated with the responses
-    cMessage *timer = nullptr;    // to schedule the next Ping request
     NodeStatus *nodeStatus = nullptr;    // lifecycle
     simtime_t lastStart;    // the last time when the app was started (lifecycle)
     long sendSeqNo = 0;    // to match the response with the request that caused the response
     long expectedReplySeqNo = 0;
     simtime_t sendTimeHistory[PING_HISTORY_SIZE];    // times of when the requests were sent
+    cMessage* timer = nullptr;
 
     // statistics
     cStdDev rttStat;
@@ -92,6 +92,7 @@ protected:
   public:
     void setNodeId(unsigned long id) {nodeId = id;}
     void sendPing();
+    void wait(simtime_t duration);
 
     ExternalApp();
     virtual ~ExternalApp();

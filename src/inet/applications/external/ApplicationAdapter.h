@@ -43,6 +43,8 @@ class ApplicationAdapter : public cSimpleModule
     unsigned long createNode();
     void createNode(unsigned long id);
     void send(unsigned long from_id);
+    void wait_ms(unsigned long id, int duration);
+    void wait_s(unsigned long id, int duration);
 
     // to be called by omnet core
   protected:
@@ -57,11 +59,13 @@ class ApplicationAdapter : public cSimpleModule
             {"initSimulation", NULL},
             {"simulationReady", NULL},
             {"receptionNotify", NULL},
+            {"timerNotify", NULL},
     };
     void call_initSimulation();
     void call_simulationReady();
   public:
     void call_receptionNotify(unsigned long nodeId);
+    void call_timerNotify(unsigned long nodeID);
 
 
   private:
@@ -83,6 +87,7 @@ class ApplicationAdapter : public cSimpleModule
     void saveNode(unsigned long id, ExternalApp* nodeApp);
     void getExternalFunctioinPtrs(MonoClass* klass);
     MonoMethod* checkFunctionPtr(const char* handle);
+    ExternalApp* checkNodeId(unsigned long handle);
 
   public:
     ApplicationAdapter();

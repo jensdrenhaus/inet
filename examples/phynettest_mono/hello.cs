@@ -20,6 +20,12 @@ namespace CSProgram
 		[DllImport ("__Internal")]
 		extern static void aa_send(ulong from_id);
 		
+		[DllImport ("__Internal")]
+		extern static void aa_wait_ms(ulong id, int duration);
+		
+		[DllImport ("__Internal")]
+		extern static void aa_wait_s(ulong id, int duration);
+		
 		
 		// NO INFINITY LOOP IN HERE !!! 
         public static void Main(string[] args) 
@@ -47,17 +53,32 @@ namespace CSProgram
         //method invoked by omnet++ at simulation start
         static void simulationReady()
         {
-        	Console.WriteLine("C# : send first message from Node with Id 111");
-        	aa_send(111);
+        	for (int i = 0; i < 3; i++)
+        	{
+        		Console.WriteLine("C# : send message from Node with Id 111");
+        		aa_send(111);
+        	}
+        	aa_wait_s(111,2);
         }
         
         //method invoked by omnet++ at reception events
         static void receptionNotify(ulong nodeId)
         {
         	Console.WriteLine("C# : got reception notification from {0}", nodeId);
-        	if (nodeId == 222) {
-        	Console.WriteLine("C# : send echo");
-        		aa_send(222);
+        	//if (nodeId == 222) {
+        	//Console.WriteLine("C# : send echo");
+        	//	aa_send(222);
+        	//}
+        }
+        
+        //method invoked by omnet++ at reception events
+        static void timerNotify(ulong nodeID)
+        {
+        	Console.WriteLine("C# : got timer notification from {0}", nodeID);
+        	for (int i = 0; i < 3; i++)
+        	{
+        		Console.WriteLine("C# : send message from Node with Id 111");
+        		aa_send(111);
         	}
         }
     }

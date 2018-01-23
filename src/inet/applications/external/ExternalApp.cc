@@ -39,13 +39,17 @@ simsignal_t ExternalApp::numOutOfOrderArrivalsSignal = registerSignal("numOutOfO
 simsignal_t ExternalApp::pingTxSeqSignal = registerSignal("pingTxSeq");
 simsignal_t ExternalApp::pingRxSeqSignal = registerSignal("pingRxSeq");
 
+#define TIMER_KIND 999
+
 
 ExternalApp::ExternalApp()
 {
+    timer = nullptr;
 }
 
 ExternalApp::~ExternalApp()
 {
+    cancelAndDelete(timer);
 }
 
 void ExternalApp::initialize(int stage)
@@ -72,6 +76,9 @@ void ExternalApp::initialize(int stage)
         WATCH(lossCount);
         WATCH(outOfOrderArrivalCount);
         WATCH(numPongs);
+
+        timer = new cMessage("timer");
+        timer->setKind(TIMER_KIND);
 
         cModule* module = getParentModule()->getParentModule()->getSubmodule("adapter");
         adapter = check_and_cast<ApplicationAdapter*>(module);
@@ -108,8 +115,10 @@ void ExternalApp::handleMessage(cMessage *msg)
         }
     }
     if (msg->isSelfMessage()) {
-        // not expected
-        throw cRuntimeError("No self messages expected");
+        if (msg->getKind() == TIMER_KIND)
+            adapter->call_timerNotify(nodeId);
+        else
+            throw cRuntimeError("Unexpeced self message");
     }
     else {
         SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
@@ -341,6 +350,12 @@ void ExternalApp::sendPing()
     msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
     EV_INFO << "Sending ping request #" << msg->getSeqNo() << " to lower layer.\n";
     send(msg, "appOut");
+}
+
+void ExternalApp::wait(simtime_t duration)
+{
+    Enter_Method("wait");
+    scheduleAt(simTime()+duration, timer);
 }
 
 } //namespace

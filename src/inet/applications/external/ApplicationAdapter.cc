@@ -23,6 +23,8 @@ namespace inet {
 extern "C" unsigned long aa_createNodeAndId() {return ApplicationAdapter::instance->createNode();}
 extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->createNode(id);}
 extern "C" void aa_send(unsigned long from_id) {ApplicationAdapter::instance->send(from_id);}
+extern "C" void aa_wait_ms(unsigned long id, int duration) {ApplicationAdapter::instance->wait_ms(id, duration);}
+extern "C" void aa_wait_s(unsigned long id, int duration) {ApplicationAdapter::instance->wait_s(id, duration);}
 
 ApplicationAdapter* ApplicationAdapter::instance = nullptr;
 
@@ -116,7 +118,22 @@ void ApplicationAdapter::finish()
 
 void ApplicationAdapter::send(unsigned long from_id)
 {
-    nodeMap[from_id]->sendPing();
+    ExternalApp* app = checkNodeId(from_id);
+    app->sendPing();
+}
+
+void ApplicationAdapter::wait_ms(unsigned long id, int duration)
+{
+    simtime_t t = SimTime(duration, SIMTIME_MS);
+    ExternalApp* app = checkNodeId(id);
+    app->wait(t);
+}
+
+void ApplicationAdapter::wait_s(unsigned long id, int duration)
+{
+    simtime_t t = SimTime(duration, SIMTIME_S);
+    ExternalApp* app = checkNodeId(id);
+    app->wait(t);
 }
 
 void ApplicationAdapter::createNode(unsigned long id)
@@ -169,6 +186,17 @@ void ApplicationAdapter::call_receptionNotify(unsigned long nodeId)
     args[0] = &nodeId;
 
     MonoMethod* m = checkFunctionPtr("receptionNotify");
+    mono_runtime_invoke (m, NULL, args, NULL);
+}
+
+void ApplicationAdapter::call_timerNotify(unsigned long nodeId)
+{
+    Enter_Method("timerNotify");
+
+    void* args [1];
+    args[0] = &nodeId;
+
+    MonoMethod* m = checkFunctionPtr("timerNotify");
     mono_runtime_invoke (m, NULL, args, NULL);
 }
 
@@ -245,6 +273,15 @@ MonoMethod* ApplicationAdapter::checkFunctionPtr(const char* handle)
     else if (functionMap[handle] == NULL)
         throw cRuntimeError("'%s' has no valid function pointer", handle);
     return functionMap[handle];
+}
+
+ExternalApp* ApplicationAdapter::checkNodeId(unsigned long handle)
+{
+    if (nodeMap.find(handle) == nodeMap.end())
+        throw cRuntimeError("cannot find node accociatied with Id %ld", handle);
+    else if (nodeMap[handle] == NULL)
+        throw cRuntimeError("%ld has no valid node pointer", handle);
+    return nodeMap[handle];
 }
 
 ApplicationAdapter::ApplicationAdapter()
