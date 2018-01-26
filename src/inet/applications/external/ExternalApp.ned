@@ -23,9 +23,9 @@ import inet.applications.contract.ISimpleApp;
 simple ExternalApp like ISimpleApp
 {
     parameters:
-        string destAddr = default(""); // destination MAC address(es), separated by spaces 
-        string srcAddr = default(""); // source address 
-        double packetSize @unit("B") = default(0B); // of ping payload, in bytes
+        //string destAddr = default(""); // destination MAC address(es), separated by spaces 
+        //string srcAddr = default(""); // source address 
+        //double packetSize @unit("B") = default(0B); // of ping payload, in bytes
         bool printPing = default(false); // log to stdout
         @display("i=block/app");
         @signal[rtt](type=simtime_t);

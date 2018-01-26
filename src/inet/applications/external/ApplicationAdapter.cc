@@ -22,7 +22,7 @@ namespace inet {
  */
 extern "C" unsigned long aa_createNodeAndId() {return ApplicationAdapter::instance->createNode();}
 extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->createNode(id);}
-extern "C" void aa_send(unsigned long from_id) {ApplicationAdapter::instance->send(from_id);}
+extern "C" void aa_send(unsigned long srcId, unsigned long destId, int numBytes) {ApplicationAdapter::instance->send(srcId, destId, numBytes);}
 extern "C" void aa_wait_ms(unsigned long id, int duration) {ApplicationAdapter::instance->wait_ms(id, duration);}
 extern "C" void aa_wait_s(unsigned long id, int duration) {ApplicationAdapter::instance->wait_s(id, duration);}
 
@@ -116,10 +116,11 @@ void ApplicationAdapter::finish()
  *  ###########################################################################
  */
 
-void ApplicationAdapter::send(unsigned long from_id)
+void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes)
 {
-    ExternalApp* app = checkNodeId(from_id);
-    app->sendPing();
+    ExternalApp* app = checkNodeId(srcId);
+    //app->sendPing();
+    app->sendMsg(destId, numBytes);
 }
 
 void ApplicationAdapter::wait_ms(unsigned long id, int duration)
@@ -138,18 +139,25 @@ void ApplicationAdapter::wait_s(unsigned long id, int duration)
 
 void ApplicationAdapter::createNode(unsigned long id)
 {
-    ExternalApp* appPtr = createNewNode();
-    appPtr->setNodeId(id);
+    if (id == 0 || id == 0xFFFFFFFFFFFF)
+        throw cRuntimeError("invalid node id!");
+    ExternalApp* appPtr = createNewNode(id);
+    if (appPtr->getNodeId() != id)
+        throw cRuntimeError("error with node id");
     saveNode(id, appPtr);
+
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with Id %ld\n", name, id);
 }
 
 unsigned long ApplicationAdapter::createNode()
 {
-    unsigned long id = getUniqueId();
-    createNode(id);
-    return id;
+    ExternalApp* appPtr = createNewNode(0); // auto generate MAC address
+    unsigned long id = appPtr->getNodeId();
+    saveNode(id, appPtr);
+
+    const char* name = appPtr->getParentModule()->getName();
+    printf("%s created with auto-Id %ld\n", name, id);
 }
 
 /*
@@ -178,12 +186,13 @@ void ApplicationAdapter::call_simulationReady()
     mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
-void ApplicationAdapter::call_receptionNotify(unsigned long nodeId)
+void ApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId)
 {
     Enter_Method("receptionNotify");
 
-    void* args [1];
-    args[0] = &nodeId;
+    void* args [2];
+    args[0] = &destId;
+    args[1] = &srcId;
 
     MonoMethod* m = checkFunctionPtr("receptionNotify");
     mono_runtime_invoke (m, NULL, args, NULL);
@@ -210,10 +219,14 @@ void ApplicationAdapter::call_timerNotify(unsigned long nodeId)
 
 unsigned long ApplicationAdapter::getUniqueId()
 {
-    return getSimulation()->getUniqueNumber();
+    unsigned long id = 0;
+    while (id == 0) {
+        id = getSimulation()->getUniqueNumber();
+    }
+    return id;
 }
 
-ExternalApp* ApplicationAdapter::createNewNode()
+ExternalApp* ApplicationAdapter::createNewNode(unsigned long id)
 {
     creationCnt++;
     const char* spacer = (creationCnt < 10) ? "000" : (creationCnt < 100) ? "00" : (creationCnt < 1000) ? "0" : "";;
@@ -230,14 +243,23 @@ ExternalApp* ApplicationAdapter::createNewNode()
     newNode->finalizeParameters();
     newNode->buildInside();
 
-    //create activation message and initialize
-    //newNode->scheduleStart(simTime());
+    //manipulate parameter of submodules
+    cModule* tempModule = newNode->getSubmodule("nic")->getSubmodule("mac");
+    if (id != 0){
+        char addrStr[20];
+        sprintf(addrStr, "%012lx", id);
+        tempModule->par("address") = addrStr;
+    }
+    else
+        tempModule->par("address") = "auto"; // let MAC module create an address
+
+    //initialize
     newNode->callInitialize();
 
-    cModule* module = newNode->getSubmodule("app");
-    if(!module)
+    tempModule = newNode->getSubmodule("app");
+    if(!tempModule)
         throw cRuntimeError("Cannot find Submodule 'app' in created Node");
-    ExternalApp* appPtr = check_and_cast<ExternalApp*>(module);
+    ExternalApp* appPtr = check_and_cast<ExternalApp*>(tempModule);
     return appPtr;
 }
 

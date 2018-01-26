@@ -18,14 +18,15 @@
 
 #include "inet/applications/external/ExternalApp.h"
 
-#include "inet/applications/simpleapp/SimplePayload_m.h"
-#include "inet/applications/external/ApplicationAdapter.h"
-
-
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
+#include "inet/applications/simpleapp/SimplePayload_m.h"
+#include "inet/applications/external/ExternalAppPayload_m.h"
+#include "inet/applications/external/ApplicationAdapter.h"
+#include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/linklayer/common/SimpleLinkLayerControlInfo.h"
+
 
 namespace inet {
 
@@ -58,13 +59,11 @@ void ExternalApp::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL) {
         // read params
-        // (defer reading srcAddr/destAddr to when ping starts, maybe
-        // addresses will be assigned later by some protocol)
-        packetSize = par("packetSize");
+        // addresses will be assigned later by ApplicationAdapter)
+        packetSize = 0;
         printPing = par("printPing").boolValue();
 
         // state
-        nodeId = 0;
         lastStart = -1;
         sendSeqNo = expectedReplySeqNo = 0;
         WATCH(sendSeqNo);
@@ -82,24 +81,20 @@ void ExternalApp::initialize(int stage)
 
         cModule* module = getParentModule()->getParentModule()->getSubmodule("adapter");
         adapter = check_and_cast<ApplicationAdapter*>(module);
+        module = this->getParentModule()->getSubmodule("interfaceTable");
+        interfaceTable = check_and_cast<IInterfaceTable*>(module);
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
+        // generate nodeId from MAC Adress
+        InterfaceEntry* e = interfaceTable->getInterfaceByName("nic");
+        srcAddr = e->getMacAddress();
+        if (srcAddr.isUnspecified() || srcAddr.isBroadcast())
+            throw cRuntimeError("Invalid source address!");
+        nodeId = (unsigned long)srcAddr.getInt();
         // startup
         nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
 //        if (isEnabled() && isNodeUp())
 //            startSendingPingRequests();
-    }
-}
-
-void ExternalApp::parseDestAddressesPar()
-{
-    const char *destAddrs = par("destAddr");
-    cStringTokenizer tokenizer(destAddrs);
-    const char *token;
-
-    while ((token = tokenizer.nextToken()) != nullptr) {
-        MACAddress addr = MACAddress(token);
-        destAddresses.push_back(addr);
     }
 }
 
@@ -121,15 +116,21 @@ void ExternalApp::handleMessage(cMessage *msg)
             throw cRuntimeError("Unexpeced self message");
     }
     else {
-        SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
-        delete payload;
-        adapter->call_receptionNotify(nodeId);
+        //SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
+        ExternalAppPayload* receivedMsg = check_and_cast<ExternalAppPayload*>(msg);
+        processMsg(receivedMsg);
 //        if(payload->getIsReply())
 //            // process ping response
 //            processPingResponse(payload);
 //        else
 //            processPingRequest(payload);
     }
+}
+
+void ExternalApp::processMsg(ExternalAppPayload* msg)
+{
+    adapter->call_receptionNotify(nodeId, msg->getOriginatorId());
+    delete msg;
 }
 
 //void ExternalApp::refreshDisplay() const
@@ -165,39 +166,19 @@ bool ExternalApp::handleOperationStage(LifecycleOperation *operation, int stage,
 void ExternalApp::startSendingPingRequests()
 {
     ASSERT(!timer->isScheduled());
-    //pid = getSimulation()->getUniqueNumber();
     lastStart = simTime();
-    //timer->setKind(PING_FIRST_ADDR);
     sentCount = 0;
     sendSeqNo = 0;
-    //scheduleNextPingRequest(-1, false);
 }
 
 void ExternalApp::stopSendingPingRequests()
 {
-    //pid = -1;
     lastStart = -1;
     sendSeqNo = expectedReplySeqNo = 0;
     srcAddr = destAddr = MACAddress();
     destAddresses.clear();
     destAddrIdx = -1;
-    //cancelNextPingRequest();
 }
-
-//void ExternalApp::scheduleNextPingRequest(simtime_t previous, bool withSleep)
-//{
-//    simtime_t next;
-//    if (previous < SIMTIME_ZERO)
-//        next = simTime() <= startTime ? startTime : simTime();
-//    else {
-//        next = previous + sendIntervalPar->doubleValue();
-//        if (withSleep)
-//            next += sleepDurationPar->doubleValue();
-//    }
-//    if (stopTime < SIMTIME_ZERO || next < stopTime)
-//        scheduleAt(next, timer);
-//}
-
 
 bool ExternalApp::isNodeUp()
 {
@@ -324,6 +305,11 @@ void ExternalApp::finish()
     }
 }
 
+unsigned long ExternalApp::getNodeId()
+{
+    return nodeId;
+}
+
 void ExternalApp::sendPing()
 {
     Enter_Method("sendPing");
@@ -349,6 +335,31 @@ void ExternalApp::sendPing()
 
     msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
     EV_INFO << "Sending ping request #" << msg->getSeqNo() << " to lower layer.\n";
+    send(msg, "appOut");
+}
+
+void ExternalApp::sendMsg(unsigned long dest, int numBytes)
+{
+    Enter_Method("send");
+
+    char name[32];
+    sprintf(name, "msg%ld", sendSeqNo);
+
+    ExternalAppPayload *msg = new ExternalAppPayload(name);
+    //ASSERT(pid != -1);
+    msg->setOriginatorId(nodeId);
+    msg->setDestinationId(dest);
+    msg->setByteLength(numBytes);
+
+    sendSeqNo++;
+    sentCount++;
+
+    SimpleLinkLayerControlInfo* controlInfo = new SimpleLinkLayerControlInfo;
+    controlInfo->setSourceAddress(srcAddr);
+    controlInfo->setDestinationAddress(MACAddress(dest));
+
+    msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
+    EV_INFO << "Sending message #" << sendSeqNo-1 << " to lower layer.\n";
     send(msg, "appOut");
 }
 

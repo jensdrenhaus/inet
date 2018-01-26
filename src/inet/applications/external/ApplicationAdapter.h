@@ -42,7 +42,7 @@ class ApplicationAdapter : public cSimpleModule
   public:
     unsigned long createNode();
     void createNode(unsigned long id);
-    void send(unsigned long from_id);
+    void send(unsigned long srcId, unsigned long destId, int numBytes);
     void wait_ms(unsigned long id, int duration);
     void wait_s(unsigned long id, int duration);
 
@@ -64,8 +64,8 @@ class ApplicationAdapter : public cSimpleModule
     void call_initSimulation();
     void call_simulationReady();
   public:
-    void call_receptionNotify(unsigned long nodeId);
-    void call_timerNotify(unsigned long nodeID);
+    void call_receptionNotify(unsigned long destId, unsigned long srcId);
+    void call_timerNotify(unsigned long nodeId);
 
 
   private:
@@ -82,7 +82,7 @@ class ApplicationAdapter : public cSimpleModule
     std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
 
   private:
-    ExternalApp* createNewNode();
+    ExternalApp* createNewNode(unsigned long id);
     unsigned long getUniqueId();
     void saveNode(unsigned long id, ExternalApp* nodeApp);
     void getExternalFunctioinPtrs(MonoClass* klass);

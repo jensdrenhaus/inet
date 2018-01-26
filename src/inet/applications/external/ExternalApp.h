@@ -27,7 +27,9 @@
 namespace inet {
 
 class SimplePayload;
+class ExternalAppPayload;
 class ApplicationAdapter;
+class IInterfaceTable;
 
 // how many ping request's send time is stored
 #define PING_HISTORY_SIZE    100
@@ -45,7 +47,8 @@ protected:
     int packetSize = 0;
     int destAddrIdx = -1;
     bool printPing = false;
-    ApplicationAdapter* adapter = nullptr;
+    ApplicationAdapter* adapter;
+    IInterfaceTable* interfaceTable;
 
 
     // state
@@ -76,13 +79,11 @@ protected:
     virtual void finish() override;
     //virtual void refreshDisplay() const override;
 
-    virtual void parseDestAddressesPar();
     virtual void startSendingPingRequests();
     virtual void stopSendingPingRequests();
-    //virtual void scheduleNextPingRequest(simtime_t previous, bool withSleep);
-    //virtual void cancelNextPingRequest();
     virtual bool isNodeUp();
     virtual bool isEnabled();
+    virtual void processMsg(ExternalAppPayload* msg);
     virtual void processPingResponse(SimplePayload *msg);
     virtual void processPingRequest(SimplePayload *msg);
     virtual void countPingResponse(int bytes, long seqNo, simtime_t rtt);
@@ -90,8 +91,9 @@ protected:
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
   public:
-    void setNodeId(unsigned long id) {nodeId = id;}
+    unsigned long getNodeId();
     void sendPing();
+    void sendMsg(unsigned long dest, int numBytes);
     void wait(simtime_t duration);
 
     ExternalApp();

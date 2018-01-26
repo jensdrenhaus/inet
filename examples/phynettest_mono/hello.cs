@@ -5,10 +5,13 @@ using System;
 //for mono runtime P/Invoke system (calling C functions)
 using System.Runtime.InteropServices;
 
-namespace CSProgram
+namespace Omnet
 {
-    class Program 
+    class Adapter 
     {
+    	const ulong UNSPECIFIED_ADDRESS = 0;
+    	const ulong BROADCAST_ADDRESS = 0xffffffffffff;
+    	
     	//for mono runtime P/Invoke system (calling C functions)
     	
 		[DllImport ("__Internal")]
@@ -18,7 +21,7 @@ namespace CSProgram
 		extern static void aa_createNode(ulong id);
 		
 		[DllImport ("__Internal")]
-		extern static void aa_send(ulong from_id);
+		extern static void aa_send(ulong srcId, ulong destId, int numBytes);
 		
 		[DllImport ("__Internal")]
 		extern static void aa_wait_ms(ulong id, int duration);
@@ -36,7 +39,7 @@ namespace CSProgram
         // method invoked by omnet++ before simulation starts
         static void initSimulation()
         {
-        	aa_createNode(111);
+        	aa_createNode(111); // >0
             aa_createNode(222);
             aa_createNode(333);
             
@@ -60,16 +63,16 @@ namespace CSProgram
         	//	aa_send(111);
         	//}
         	//aa_wait_s(111,2);
-        	aa_send(111);
+        	aa_send(111, BROADCAST_ADDRESS, 16);
         }
         
         //method invoked by omnet++ at reception events
-        static void receptionNotify(ulong nodeId)
+        static void receptionNotify(ulong destId, ulong srcId)
         {
-        	Console.WriteLine("C# : got reception notification from {0}", nodeId);
-        	if (nodeId != 111) {
+        	Console.WriteLine("C# : got reception notification from {0}", destId);
+        	if (destId != 111) {
         		Console.WriteLine("C# : send echo");
-        		aa_send(nodeId);
+        		aa_send(destId, BROADCAST_ADDRESS, 16);
         	}
         }
         
@@ -80,7 +83,7 @@ namespace CSProgram
         	for (int i = 0; i < 3; i++)
         	{
         		Console.WriteLine("C# : send message from Node with Id 111");
-        		aa_send(111);
+        		aa_send(nodeID, BROADCAST_ADDRESS, 16);
         	}
         }
     }
