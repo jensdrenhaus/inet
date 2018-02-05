@@ -39,7 +39,7 @@ namespace Omnet
         // method invoked by omnet++ before simulation starts
         static void initSimulation()
         {
-        	aa_createNode(111); // >0
+        	aa_createNode(111); 
             aa_createNode(222);
             aa_createNode(333);
             
@@ -72,7 +72,7 @@ namespace Omnet
         	Console.WriteLine("C# : got reception notification from {0}", destId);
         	if (destId != 111) {
         		Console.WriteLine("C# : send echo");
-        		aa_send(destId, BROADCAST_ADDRESS, 16);
+        		aa_send(destId, srcId, 16);
         	}
         }
         
