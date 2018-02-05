@@ -15,7 +15,7 @@
 
 package inet.node.wsn;
 
-import inet.applications.contract.ISimpleApp;
+import inet.applications.contract.IMACApp;
 
 //
 // TODO
@@ -25,7 +25,7 @@ module PhyNodeExternal extends TinyNodeBase
 	parameters:
 	    @display("i=msg/packet");
 	submodules:
-	    app: <default("ExternalApp")> like ISimpleApp {
+	    app: <default("ExternalApp")> like IMACApp {
             parameters:
                 @display("i=device/terminal;p=216,141,row,60");
         }

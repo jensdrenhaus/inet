@@ -22,7 +22,7 @@ package inet.applications.contract;
 // It shows what gates an app needs.
 //
 
-moduleinterface ISimpleApp
+moduleinterface IMACApp
 {
 	parameters:
 	    @display("i=block/app");

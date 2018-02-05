@@ -15,12 +15,12 @@
 
 package inet.applications.external;
 
-import inet.applications.contract.ISimpleApp;
+import inet.applications.contract.IMACApp;
 
 //
 // TODO auto-generated module
 //
-simple ExternalApp like ISimpleApp
+simple ExternalApp like IMACApp
 {
     parameters:
         //string destAddr = default(""); // destination MAC address(es), separated by spaces 

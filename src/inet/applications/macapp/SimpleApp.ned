@@ -13,14 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.applications.simpleapp;
+package inet.applications.macapp;
 
-import inet.applications.contract.ISimpleApp;
+import inet.applications.contract.IMACApp;
 
 //
 // TODO 
 //
-simple SimpleApp like ISimpleApp
+simple SimpleApp like IMACApp
 {
     parameters:
         string destAddr = default(""); // destination MAC address(es), separated by spaces 

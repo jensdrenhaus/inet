@@ -18,10 +18,10 @@
 
 #include "inet/applications/external/ExternalApp.h"
 
+#include "../macapp/SimplePayload_m.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
-#include "inet/applications/simpleapp/SimplePayload_m.h"
 #include "inet/applications/external/ExternalAppPayload_m.h"
 #include "inet/applications/external/ApplicationAdapter.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"

@@ -22,7 +22,7 @@ import inet.linklayer.contract.IMACProtocol;
 
 // Like IdealMac, but using SimpleLinkLayerControllInfo instead of Ieee802Ctrl
 //
-// Implements a trivial MAC layer for use in ~IdealWirelessNic.
+// Implements a trivial MAC layer for use in ~SimpleWirelessNic.
 //
 // This module only provides encapsulation/decapsulation (into IdealMacFrame),
 // but no real medium access protocol.

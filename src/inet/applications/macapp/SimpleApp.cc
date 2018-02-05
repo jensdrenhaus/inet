@@ -13,13 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include "../macapp/SimpleApp.h"
+
 #include <iostream>
 #include <string>
 
-#include "inet/applications/simpleapp/SimpleApp.h"
-
-#include "inet/applications/simpleapp/SimplePayload_m.h"
-
+#include "../macapp/SimplePayload_m.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
