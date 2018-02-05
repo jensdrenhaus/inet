@@ -91,6 +91,11 @@ void ExternalApp::initialize(int stage)
         if (srcAddr.isUnspecified() || srcAddr.isBroadcast())
             throw cRuntimeError("Invalid source address!");
         nodeId = (unsigned long)srcAddr.getInt();
+
+        // visualize MAC Address
+        cDisplayString& dispStr = this->getParentModule()->getDisplayString();
+        dispStr.setTagArg("tt", 0, srcAddr.str().c_str());
+        dispStr.setTagArg("t", 0, srcAddr.str().c_str());
         // startup
         nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
 //        if (isEnabled() && isNodeUp())
