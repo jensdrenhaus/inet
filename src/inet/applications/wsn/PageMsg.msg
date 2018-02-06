@@ -20,9 +20,7 @@ cplusplus {{
 namespace inet;
 
 //
-// Represents payload in an MAC Echo Request/Reply.
-//
-// TODO: move originator id and sequence number to ICMPMessage and use an ICMPControlInfo
+// 
 packet PageMsg
 {
     long originatorId; // sender module id

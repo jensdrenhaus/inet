@@ -19,6 +19,7 @@
 package inet.examples.phynettest;
 
 
+import inet.node.wsn.AccessPoint;
 import inet.node.wsn.PhyNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
@@ -36,6 +37,9 @@ network Net
         radioMedium: IdealRadioMedium {
             parameters:
                 @display("p=100,250");
+        }
+        accessPoint: AccessPoint {
+        	
         }
         node[numNodes]: PhyNode {
             parameters:
