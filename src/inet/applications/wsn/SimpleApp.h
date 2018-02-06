@@ -26,7 +26,8 @@
 
 namespace inet {
 
-class SimplePayload;
+class PageMsg;
+class IInterfaceTable;
 
 // how many ping request's send time is stored
 #define PING_HISTORY_SIZE    100
@@ -40,25 +41,21 @@ class INET_API SimpleApp : public cSimpleModule, public ILifecycle
     // parameters: for more details, see the corresponding NED parameters' documentation
     MACAddress destAddr;
     MACAddress srcAddr;
-    std::vector<MACAddress> destAddresses;
     int packetSize = 0;
     cPar *sendIntervalPar = nullptr;
-    cPar *sleepDurationPar = nullptr;
     int count = 0;
-    int destAddrIdx = -1;
     simtime_t startTime;
     simtime_t stopTime;
-    bool printPing = false;
-    bool continuous = false;
+    bool printStat = false;
+
 
     // state
-    int pid = 0;    // to determine which hosts are associated with the responses
+    unsigned long nodeId = 0;    // to determine which hosts are associated with the responses
     cMessage *timer = nullptr;    // to schedule the next Ping request
     NodeStatus *nodeStatus = nullptr;    // lifecycle
     simtime_t lastStart;    // the last time when the app was started (lifecycle)
     long sendSeqNo = 0;    // to match the response with the request that caused the response
-    long expectedReplySeqNo = 0;
-    simtime_t sendTimeHistory[PING_HISTORY_SIZE];    // times of when the requests were sent
+    IInterfaceTable* interfaceTable;
 
     // statistics
     cStdDev rttStat;
@@ -79,16 +76,16 @@ class INET_API SimpleApp : public cSimpleModule, public ILifecycle
     virtual void finish() override;
     virtual void refreshDisplay() const override;
 
-    virtual void parseDestAddressesPar();
-    virtual void startSendingPingRequests();
-    virtual void stopSendingPingRequests();
-    virtual void scheduleNextPingRequest(simtime_t previous, bool withSleep);
-    virtual void cancelNextPingRequest();
+    virtual void startOperating();
+    virtual void stopOerating();
+    virtual void scheduleNextMsg(simtime_t previous);
+    virtual void cancelNextMsg();
     virtual bool isNodeUp();
     virtual bool isEnabled();
-    virtual void sendPing();
-    virtual void processPingResponse(SimplePayload *msg);
-    virtual void processPingRequest(SimplePayload *msg);
+    virtual void sendMsg();
+    virtual void handleSelfMessage(cMessage* msg);
+    virtual void processMessage(cPacket* msg);
+    //virtual void processPingResponse(SimplePayload *msg);
     virtual void countPingResponse(int bytes, long seqNo, simtime_t rtt);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;

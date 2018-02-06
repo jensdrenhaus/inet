@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.applications.macapp;
+package inet.applications.wsn;
 
 import inet.applications.contract.IMACApp;
 
@@ -23,16 +23,12 @@ import inet.applications.contract.IMACApp;
 simple SimpleApp like IMACApp
 {
     parameters:
-        string destAddr = default(""); // destination MAC address(es), separated by spaces 
-        string srcAddr = default(""); // source address 
-        double packetSize @unit("B") = default(56B); // of ping payload, in bytes
-        volatile double sendInterval @unit("s") = default(1s); // time to wait between pings (can be random)
-        double count = default(-1); // number of pings requests sent to a single destination address, -1 means continuously (only first address will be used from destAddr)
-        double startTime @unit("s") = default(uniform(0s, this.sleepDuration + this.sendInterval)); // send first ping at startTime
+        double packetSize @unit("B") = default(16B); // of payload, in bytes
+        volatile double sendInterval @unit("s") = default(10s); // time to wait between pings (can be random)
+        double count = default(-1); // number of messages sent, -1 means continuously
+        double startTime @unit("s") = default(0s); // send first message
         double stopTime @unit("s") = default(-1s); // time to finish sending, negative values mean forever
-        volatile double sleepDuration @unit(s) = default(0s); // time spent in sleep between switching destinations
-        bool continuous = default(false);  // whether to continuously ping the destinations in a round-robin fashion
-        bool printPing = default(false); // log to stdout
+        bool printStat = default(false); // log to stdout
         @display("i=block/app");
         @signal[rtt](type=simtime_t);
         @signal[numLost](type=long);
