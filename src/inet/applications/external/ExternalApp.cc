@@ -18,7 +18,6 @@
 
 #include "inet/applications/external/ExternalApp.h"
 
-#include "../macapp/SimplePayload_m.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
@@ -124,11 +123,6 @@ void ExternalApp::handleMessage(cMessage *msg)
         //SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
         ExternalAppPayload* receivedMsg = check_and_cast<ExternalAppPayload*>(msg);
         processMsg(receivedMsg);
-//        if(payload->getIsReply())
-//            // process ping response
-//            processPingResponse(payload);
-//        else
-//            processPingRequest(payload);
     }
 }
 
@@ -194,53 +188,6 @@ bool ExternalApp::isEnabled()
 {
     //return par("destAddr").stringValue()[0] && (count == -1 || sentCount < count);
     return true;
-}
-
-void ExternalApp::processPingResponse(SimplePayload *msg)
-{
-    if (msg->getOriginatorId() != nodeId) {
-        EV_WARN << "Received response was not sent by this application, dropping packet\n";
-        delete msg;
-        return;
-    }
-
-    // get src, hopCount etc from packet, and print them
-    SimpleLinkLayerControlInfo *ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
-    MACAddress src = ctrl->getSourceAddress();
-    //L3Address dest = ctrl->getDestinationAddress();
-
-    // calculate the RTT time by looking up the the send time of the packet
-    // if the send time is no longer available (i.e. the packet is very old and the
-    // sendTime was overwritten in the circular buffer) then we just return a 0
-    // to signal that this value should not be used during the RTT statistics)
-    simtime_t rtt = sendSeqNo - msg->getSeqNo() > PING_HISTORY_SIZE ?
-        0 : simTime() - sendTimeHistory[msg->getSeqNo() % PING_HISTORY_SIZE];
-
-    if (printPing) {
-        cout << getFullPath() << ": reply of " << std::dec << msg->getByteLength()
-             << " bytes from " << src
-             << " icmp_seq=" << msg->getSeqNo()
-             << " time=" << (rtt * 1000) << " msec"
-             << " (" << msg->getName() << ")" << endl;
-    }
-
-    // update statistics
-    countPingResponse(msg->getByteLength(), msg->getSeqNo(), rtt);
-    delete msg;
-}
-
-void ExternalApp::processPingRequest(SimplePayload *msg)
-{
-    // change addresses and send out reply
-    SimpleLinkLayerControlInfo *ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
-    //MACAddress src = ctrl->getSourceAddress();
-    //MACAddress dest = ctrl->getDestinationAddress();
-    ctrl->setDestinationAddress(MACAddress::BROADCAST_ADDRESS);
-    ctrl->setSourceAddress(MACAddress::UNSPECIFIED_ADDRESS);
-    msg->setName((std::string(msg->getName()) + "-reply").c_str());
-    msg->setIsReply(true);
-
-    send(msg, "appOut");
 }
 
 void ExternalApp::countPingResponse(int bytes, long seqNo, simtime_t rtt)
@@ -315,33 +262,6 @@ unsigned long ExternalApp::getNodeId()
     return nodeId;
 }
 
-void ExternalApp::sendPing()
-{
-    Enter_Method("sendPing");
-
-    char name[32];
-    sprintf(name, "ping%ld", sendSeqNo);
-
-    SimplePayload *msg = new SimplePayload(name);
-    //ASSERT(pid != -1);
-    msg->setOriginatorId(nodeId);
-    msg->setSeqNo(sendSeqNo);
-    msg->setByteLength(packetSize + 4);
-
-    // store the sending time in a circular buffer so we can compute RTT when the packet returns
-    sendTimeHistory[sendSeqNo % PING_HISTORY_SIZE] = simTime();
-
-    emit(pingTxSeqSignal, sendSeqNo);
-    sendSeqNo++;
-    sentCount++;
-    SimpleLinkLayerControlInfo* controlInfo = new SimpleLinkLayerControlInfo;
-    controlInfo->setSourceAddress(srcAddr);
-    controlInfo->setDestinationAddress(MACAddress::BROADCAST_ADDRESS);
-
-    msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
-    EV_INFO << "Sending ping request #" << msg->getSeqNo() << " to lower layer.\n";
-    send(msg, "appOut");
-}
 
 void ExternalApp::sendMsg(unsigned long dest, int numBytes)
 {

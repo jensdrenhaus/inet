@@ -26,7 +26,6 @@
 
 namespace inet {
 
-class SimplePayload;
 class ExternalAppPayload;
 class ApplicationAdapter;
 class IInterfaceTable;
@@ -84,15 +83,13 @@ protected:
     virtual bool isNodeUp();
     virtual bool isEnabled();
     virtual void processMsg(ExternalAppPayload* msg);
-    virtual void processPingResponse(SimplePayload *msg);
-    virtual void processPingRequest(SimplePayload *msg);
+
     virtual void countPingResponse(int bytes, long seqNo, simtime_t rtt);
 
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
   public:
     unsigned long getNodeId();
-    void sendPing();
     void sendMsg(unsigned long dest, int numBytes);
     void wait(simtime_t duration);
 
