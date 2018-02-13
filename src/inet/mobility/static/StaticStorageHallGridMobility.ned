@@ -13,23 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+package inet.mobility.static;
 
-import inet.applications.contract.IMACApp;
+import inet.mobility.base.MobilityBase;
 
 //
-// TODO
+// TODO auto-generated module
 //
-module AccessPoint extends TinyNodeBase
+simple StaticStorageHallGridMobility extends MobilityBase
 {
     parameters:
-	    @display("i=device/accesspoint");
-	submodules:
-	    app: <default("AccessPointApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
+        
+        @class(StaticStorageHallGridMobility);
 }

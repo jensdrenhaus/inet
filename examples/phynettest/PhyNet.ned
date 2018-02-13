@@ -24,26 +24,32 @@ import inet.node.wsn.PhyNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 
-network Net
+network PhyNet
 {
     parameters:
-        int numNodes;
-        @display("bgb=600,400");
+        @display("bgu=m;bgb=10,10");
+		int numNodes;
+		int zLevels;
     submodules:
         visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
             parameters:
-                @display("p=100,50");
+                @display("p=-0.3,1");
         }
         radioMedium: IdealRadioMedium {
             parameters:
-                @display("p=100,250");
+                @display("p=-0.3,0.5");
         }
         accessPoint: AccessPoint {
+            parameters:
+                @display("p=1,1;i=,black,40");
         	
         }
         node[numNodes]: PhyNode {
             parameters:
-                @display("r=,,#707070;p=250,58");
+                @display("i=-;b=0.3,0.4,rect,,black,1");
+                mobilityType = "StaticStorageHallGridMobility";
+                mobility.numItems = numNodes;  
+                mobility.zLevels = zLevels;  
         }
 }
 

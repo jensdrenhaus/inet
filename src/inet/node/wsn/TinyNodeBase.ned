@@ -72,7 +72,7 @@ module TinyNodeBase like ITinyNode
         }
         nic: <default("SimpleWirelessNic")> like IWirelessNic {
             parameters:
-                @display("p=216,406,row,60;q=queue");
+                @display("p=216,241,;q=queue");
         }
 	connections allowunconnected:
         radioIn --> { @display("m=s"); } --> nic.radioIn;

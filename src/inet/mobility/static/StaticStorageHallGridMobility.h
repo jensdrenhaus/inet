@@ -13,23 +13,32 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+#ifndef __INET_STATICSTORAGEHALLGRIDMOBILITY_H_
+#define __INET_STATICSTORAGEHALLGRIDMOBILITY_H_
 
-import inet.applications.contract.IMACApp;
+#include "inet/common/INETDefs.h"
 
-//
-// TODO
-//
-module AccessPoint extends TinyNodeBase
+#include "inet/mobility/static/StationaryMobility.h"
+
+namespace inet {
+
+/**
+ * TODO - Generated class
+ */
+class INET_API StaticStorageHallGridMobility : public StationaryMobility
 {
-    parameters:
-	    @display("i=device/accesspoint");
-	submodules:
-	    app: <default("AccessPointApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
-}
+  protected:
+
+
+  protected:
+    virtual void initialize(int stage) override;
+    /** @brief Initializes the position according to the mobility model. */
+    virtual void setInitialPosition() override;
+
+  public:
+    StaticStorageHallGridMobility() {};
+};
+
+} //namespace
+
+#endif

@@ -78,8 +78,8 @@ void WsnAppBase::initialize(int stage)
 
         // visualize MAC Address
         cDisplayString& dispStr = this->getParentModule()->getDisplayString();
-        dispStr.setTagArg("tt", 0, srcAddr.str().c_str());
-        dispStr.setTagArg("t", 0, srcAddr.str().c_str());
+        dispStr.setTagArg("tt", 0, srcAddr.str().c_str()); // tooltip
+        //dispStr.setTagArg("t", 0, srcAddr.str().c_str()); // text
 
         // startup
         nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));

@@ -27,7 +27,7 @@ module PhyNode extends TinyNodeBase
 	submodules:
 	    app: <default("NodeApp")> like IMACApp {
             parameters:
-                @display("i=device/terminal;p=216,141,row,60");
+                @display("i=device/terminal;p=216,141");
         }
 	connections allowunconnected:
 	    nic.upperLayerOut --> app.appIn;
