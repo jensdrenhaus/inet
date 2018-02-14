@@ -17,8 +17,6 @@
 
 #include "inet/common/geometry/common/Coord.h"
 
-#include "inet/"
-
 namespace inet {
 
 Define_Module(StorageHallCoordinator);
@@ -35,7 +33,7 @@ StorageHallCoordinator::~StorageHallCoordinator()
 
 void StorageHallCoordinator::initialize(int stage)
 {
-    MobilityBase::initialize(stage);
+    cSimpleModule::initialize(stage);
         EV_TRACE << "initializing StorageHallCoordinator stage " << stage << endl;
         if (stage == INITSTAGE_LOCAL) {
             numItems = par("numItems");
@@ -85,7 +83,7 @@ void StorageHallCoordinator::initialize(int stage)
         }
 }
 
-void StorageHallCoordinator::handleMessage(cMessage *msg)
+void StorageHallCoordinator::handleSelfMessage(cMessage *msg)
 {
     ASSERT(false);
 }

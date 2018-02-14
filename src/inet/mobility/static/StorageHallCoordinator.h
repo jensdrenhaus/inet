@@ -31,7 +31,7 @@ class Coord;
 /**
  * TODO - Generated class
  */
-class INET_API StorageHallCoordinator : public MobilityBase
+class INET_API StorageHallCoordinator : public cSimpleModule
 {
   protected:
     int numItems;
@@ -67,7 +67,7 @@ class INET_API StorageHallCoordinator : public MobilityBase
 
   protected:
     virtual void initialize(int stage) override;
-    virtual void handleMessage(cMessage *msg) override;
+    virtual void handleSelfMessage(cMessage *msg);
     virtual Coord getFreeSpot(bool includingExtraSpots = true);
 
   private:
