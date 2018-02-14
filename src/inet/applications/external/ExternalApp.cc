@@ -128,7 +128,7 @@ void ExternalApp::handleMessage(cMessage *msg)
 
 void ExternalApp::processMsg(ExternalAppPayload* msg)
 {
-    adapter->call_receptionNotify(nodeId, msg->getOriginatorId());
+    adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), 1);
     delete msg;
 }
 
@@ -231,30 +231,30 @@ void ExternalApp::countPingResponse(int bytes, long seqNo, simtime_t rtt)
 
 void ExternalApp::finish()
 {
-    if (sendSeqNo == 0) {
-        if (printPing)
-            EV_DETAIL << getFullPath() << ": No pings sent, skipping recording statistics and printing results.\n";
-        return;
-    }
-
-    lossCount += sendSeqNo - expectedReplySeqNo;
-    // record statistics
-    recordScalar("Pings sent", sendSeqNo);
-    recordScalar("ping loss rate (%)", 100 * lossCount / (double)sendSeqNo);
-    recordScalar("ping out-of-order rate (%)", 100 * outOfOrderArrivalCount / (double)sendSeqNo);
-
-    // print it to stdout as well
-    if (printPing) {
-        cout << "--------------------------------------------------------" << endl;
-        cout << "\t" << getFullPath() << endl;
-        cout << "--------------------------------------------------------" << endl;
-
-        cout << "sent: " << sendSeqNo << "   received: " << numPongs << "   loss rate (%): " << (100 * lossCount / (double)sendSeqNo) << endl;
-        cout << "round-trip min/avg/max (ms): " << (rttStat.getMin() * 1000.0) << "/"
-             << (rttStat.getMean() * 1000.0) << "/" << (rttStat.getMax() * 1000.0) << endl;
-        cout << "stddev (ms): " << (rttStat.getStddev() * 1000.0) << "   variance:" << rttStat.getVariance() << endl;
-        cout << "--------------------------------------------------------" << endl;
-    }
+//    if (sendSeqNo == 0) {
+//        if (printPing)
+//            EV_DETAIL << getFullPath() << ": No pings sent, skipping recording statistics and printing results.\n";
+//        return;
+//    }
+//
+//    lossCount += sendSeqNo - expectedReplySeqNo;
+//    // record statistics
+//    recordScalar("Pings sent", sendSeqNo);
+//    recordScalar("ping loss rate (%)", 100 * lossCount / (double)sendSeqNo);
+//    recordScalar("ping out-of-order rate (%)", 100 * outOfOrderArrivalCount / (double)sendSeqNo);
+//
+//    // print it to stdout as well
+//    if (printPing) {
+//        cout << "--------------------------------------------------------" << endl;
+//        cout << "\t" << getFullPath() << endl;
+//        cout << "--------------------------------------------------------" << endl;
+//
+//        cout << "sent: " << sendSeqNo << "   received: " << numPongs << "   loss rate (%): " << (100 * lossCount / (double)sendSeqNo) << endl;
+//        cout << "round-trip min/avg/max (ms): " << (rttStat.getMin() * 1000.0) << "/"
+//             << (rttStat.getMean() * 1000.0) << "/" << (rttStat.getMax() * 1000.0) << endl;
+//        cout << "stddev (ms): " << (rttStat.getStddev() * 1000.0) << "   variance:" << rttStat.getVariance() << endl;
+//        cout << "--------------------------------------------------------" << endl;
+//    }
 }
 
 unsigned long ExternalApp::getNodeId()
@@ -263,7 +263,7 @@ unsigned long ExternalApp::getNodeId()
 }
 
 
-void ExternalApp::sendMsg(unsigned long dest, int numBytes)
+void ExternalApp::sendMsg(unsigned long dest, int numBytes, int msgId)
 {
     Enter_Method("send");
 
@@ -275,6 +275,7 @@ void ExternalApp::sendMsg(unsigned long dest, int numBytes)
     msg->setOriginatorId(nodeId);
     msg->setDestinationId(dest);
     msg->setByteLength(numBytes);
+    msg->setExtMsgId(msgId);
 
     sendSeqNo++;
     sentCount++;

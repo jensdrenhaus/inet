@@ -90,7 +90,7 @@ protected:
 
   public:
     unsigned long getNodeId();
-    void sendMsg(unsigned long dest, int numBytes);
+    void sendMsg(unsigned long dest, int numBytes, int msgId);
     void wait(simtime_t duration);
 
     ExternalApp();

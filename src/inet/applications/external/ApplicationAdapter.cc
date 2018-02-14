@@ -22,7 +22,7 @@ namespace inet {
  */
 extern "C" unsigned long aa_createNodeAndId() {return ApplicationAdapter::instance->createNode();}
 extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->createNode(id);}
-extern "C" void aa_send(unsigned long srcId, unsigned long destId, int numBytes) {ApplicationAdapter::instance->send(srcId, destId, numBytes);}
+extern "C" void aa_send(unsigned long srcId, unsigned long destId, int numBytes, int msgId) {ApplicationAdapter::instance->send(srcId, destId, numBytes, msgId);}
 extern "C" void aa_wait_ms(unsigned long id, int duration) {ApplicationAdapter::instance->wait_ms(id, duration);}
 extern "C" void aa_wait_s(unsigned long id, int duration) {ApplicationAdapter::instance->wait_s(id, duration);}
 
@@ -105,6 +105,7 @@ void ApplicationAdapter::handleMessage(cMessage *msg)
 
 void ApplicationAdapter::finish()
 {
+    call_simulationFinished();
     instance = nullptr;
 }
 
@@ -116,11 +117,11 @@ void ApplicationAdapter::finish()
  *  ###########################################################################
  */
 
-void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes)
+void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
     ExternalApp* app = checkNodeId(srcId);
     //app->sendPing();
-    app->sendMsg(destId, numBytes);
+    app->sendMsg(destId, numBytes, msgId);
 }
 
 void ApplicationAdapter::wait_ms(unsigned long id, int duration)
@@ -186,13 +187,21 @@ void ApplicationAdapter::call_simulationReady()
     mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
-void ApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId)
+void ApplicationAdapter::call_simulationFinished()
+{
+    MonoMethod* m = checkFunctionPtr("simulationFinished");
+        mono_runtime_invoke (m, NULL, NULL, NULL);
+}
+
+void ApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
 {
     Enter_Method("receptionNotify");
 
-    void* args [2];
+    void* args [4];
     args[0] = &destId;
     args[1] = &srcId;
+    args[2] = &msgId;
+    args[3] = &status;
 
     MonoMethod* m = checkFunctionPtr("receptionNotify");
     mono_runtime_invoke (m, NULL, args, NULL);

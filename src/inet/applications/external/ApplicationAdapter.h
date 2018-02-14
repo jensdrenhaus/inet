@@ -42,7 +42,7 @@ class ApplicationAdapter : public cSimpleModule
   public:
     unsigned long createNode();
     void createNode(unsigned long id);
-    void send(unsigned long srcId, unsigned long destId, int numBytes);
+    void send(unsigned long srcId, unsigned long destId, int numBytes, int msgId);
     void wait_ms(unsigned long id, int duration);
     void wait_s(unsigned long id, int duration);
 
@@ -60,11 +60,13 @@ class ApplicationAdapter : public cSimpleModule
             {"simulationReady", NULL},
             {"receptionNotify", NULL},
             {"timerNotify", NULL},
+            {"simulationFinished", NULL},
     };
     void call_initSimulation();
     void call_simulationReady();
+    void call_simulationFinished();
   public:
-    void call_receptionNotify(unsigned long destId, unsigned long srcId);
+    void call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status);
     void call_timerNotify(unsigned long nodeId);
 
 

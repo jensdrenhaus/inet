@@ -22,8 +22,14 @@ simple ApplicationAdapter
 {
     parameters:
         @display("i=block/filter_s");
+        
         string assemblyName = default("hello.exe"); // assembly to load
         string namespaceName = default("Omnet"); // namespace used in the assembly
         string className = default("Adapter"); // class inside the assembly that implements the used methods
+        
+//        string assemblyName = default("PhyNetFlow.OMNeT.dll"); // assembly to load
+//        string namespaceName = default("PhyNetFlow.OMNeT"); // namespace used in the assembly
+//        string className = default("OMNeTInterface"); // class inside the assembly that implements the used methods
+        
         string nodeType = default("inet.node.wsn.PhyNodeExternal"); // fully qualified NED type name of the module which is to be dynamically instanciated
 }

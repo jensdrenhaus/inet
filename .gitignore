@@ -70,3 +70,7 @@ backups
 *~
 xxx
 /tmp/
+
+# ignore some files in phynettest_mono example
+/examples/phynettest_mono/.*
+/examples/phynettest_mono/*.json

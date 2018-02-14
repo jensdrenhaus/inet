@@ -21,7 +21,7 @@ namespace Omnet
 		extern static void aa_createNode(ulong id);
 		
 		[DllImport ("__Internal")]
-		extern static void aa_send(ulong srcId, ulong destId, int numBytes);
+		extern static void aa_send(ulong srcId, ulong destId, int numBytes, int msgId);
 		
 		[DllImport ("__Internal")]
 		extern static void aa_wait_ms(ulong id, int duration);
@@ -63,16 +63,23 @@ namespace Omnet
         	//	aa_send(111);
         	//}
         	//aa_wait_s(111,2);
-        	aa_send(111, BROADCAST_ADDRESS, 16);
+        	aa_send(111, BROADCAST_ADDRESS, 16, 0);
+        	aa_wait_s(111,10);
+        }
+        
+        //method invoked by omnet++ at simulation end
+        static void simulationFinished()
+        {
+        	Console.WriteLine("C# : END");
         }
         
         //method invoked by omnet++ at reception events
-        static void receptionNotify(ulong destId, ulong srcId)
+        static void receptionNotify(ulong destId, ulong srcId, int msgId, int status)
         {
-        	Console.WriteLine("C# : got reception notification from {0}", destId);
+        	Console.WriteLine("C# : got reception notification from {0} with msg-id {1} and status {2}", destId, msgId, status);
         	if (destId != 111) {
         		Console.WriteLine("C# : send echo");
-        		aa_send(destId, srcId, 16);
+        		aa_send(destId, srcId, 16, msgId+10);
         	}
         }
         
@@ -80,11 +87,8 @@ namespace Omnet
         static void timerNotify(ulong nodeID)
         {
         	Console.WriteLine("C# : got timer notification from {0}", nodeID);
-        	for (int i = 0; i < 3; i++)
-        	{
-        		Console.WriteLine("C# : send message from Node with Id 111");
-        		aa_send(nodeID, BROADCAST_ADDRESS, 16);
-        	}
+    		Console.WriteLine("C# : send message from Node with Id 111");
+    		aa_send(nodeID, BROADCAST_ADDRESS, 16, 1);
         }
     }
 }
