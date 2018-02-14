@@ -22,13 +22,14 @@
 
 namespace inet {
 
+class StorageHallCoordinator;
 /**
  * TODO - Generated class
  */
 class INET_API StaticStorageHallGridMobility : public StationaryMobility
 {
   protected:
-
+    StorageHallCoordinator* coordinator = nullptr;
 
   protected:
     virtual void initialize(int stage) override;

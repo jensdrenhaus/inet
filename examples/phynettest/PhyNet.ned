@@ -23,6 +23,7 @@ import inet.node.wsn.AccessPoint;
 import inet.node.wsn.PhyNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
+import inet.mobility.static.StorageHallCoordinator;
 
 network PhyNet
 {
@@ -38,6 +39,10 @@ network PhyNet
         radioMedium: IdealRadioMedium {
             parameters:
                 @display("p=-0.3,0.5");
+        }
+        coordinator: StorageHallCoordinator {
+        	parameters:
+        	    @display("p=-0.3,1.5");
         }
         accessPoint: AccessPoint {
             parameters:

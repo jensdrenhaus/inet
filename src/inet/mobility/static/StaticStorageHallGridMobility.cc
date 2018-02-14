@@ -16,6 +16,7 @@
 #include <stdio.h>
 
 #include "inet/mobility/static/StaticStorageHallGridMobility.h"
+#include "inet/mobility/static/StorageHallCoordinator.h"
 
 namespace inet {
 
@@ -30,7 +31,8 @@ void StaticStorageHallGridMobility::initialize(int stage)
         ;
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
-
+        cModule* module = getModuleByPath("^.^.coordinator");
+        coordinator = check_and_cast<StorageHallCoordinator*>(module);
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
         ;
@@ -43,8 +45,7 @@ void StaticStorageHallGridMobility::initialize(int stage)
 void StaticStorageHallGridMobility::setInitialPosition()
 {
     //int index = visualRepresentation->getIndex();
-
-
+    //lastPosition = coordinator->getFreeSpot;
 }
 
 } //namespace
