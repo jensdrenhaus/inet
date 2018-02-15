@@ -65,10 +65,12 @@ class INET_API StorageHallCoordinator : public cSimpleModule
     double totalYdim;
     double totalZdim;
 
+  public:
+    Coord getFreeSpot(bool includingExtraSpots = true);
+
   protected:
     virtual void initialize(int stage) override;
     virtual void handleSelfMessage(cMessage *msg);
-    virtual Coord getFreeSpot(bool includingExtraSpots = true);
 
   private:
     void checkDimensions();

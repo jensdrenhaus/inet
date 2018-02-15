@@ -56,8 +56,10 @@ void StorageHallCoordinator::initialize(int stage)
             rows = par("rows");
 
             numSpots = zLevels*columns*rows;
-            numFreeSpots = spots-numItems;
+            numFreeSpots = numSpots-numItems;
             numExtraSpots = 2;
+            spots = vector<Coord>(numSpots);
+            spots.reserve(numSpots+numExtraSpots);
             checkDimensions();
             calculateSpots();
 
@@ -100,21 +102,20 @@ void StorageHallCoordinator::checkDimensions()
 }
 void StorageHallCoordinator::calculateSpots()
 {
-    spots.reserve(numSpots+numExtraSpots);
     for(int index = 0; index < numSpots; index++) {
-        int z = index / (rows*columns);
+        int lev = index / (rows*columns);
         int row = (index/columns) % rows;
         int col = index % columns;
 
         double x = marginX+col*(itemYdim+back2backDist)+((itemYdim+back2backDist)/2);
         double y = marginY+row*(itemXdim+side2sideDist)+((itemXdim+side2sideDist)/2);
-        double z = marginZ+z*(itemZdim+top2bottomDist)+((itemZdim+top2bottomDist)/2);
+        double z = marginZ+lev*(itemZdim+top2bottomDist)+((itemZdim+top2bottomDist)/2);
 
         Coord spot = Coord(x,y,z);
         spots[index] = spot;
     }
     for(int i = 1; i <= numExtraSpots; i++) {
-        double x = itemXdim/2;
+        double x = itemXdim/2+ side2sideDist/2;
         double y = itemYdim/2*i+back2backDist;
         double z = itemZdim/2;
 
@@ -123,17 +124,16 @@ void StorageHallCoordinator::calculateSpots()
     }
 }
 
-virtual Coord getFreeSpot(bool includingExtraSpots)
+Coord StorageHallCoordinator::getFreeSpot(bool includingExtraSpots)
 {
-    pair<set<int>, bool> ret;
-    int index = intuniform(0, numSpots);
+    pair<set<int>::iterator, bool> ret;
+    int index = intuniform(0, numSpots-1);
     ret = occupied.insert(index);
     while(ret.second==false){
-        index = intuniform(0, numSpots);
+        index = intuniform(0, numSpots-1);
         ret = occupied.insert(index);
     }
-    return spots[ret.first];
-
+    return spots[index];
 }
 
 } //namespace

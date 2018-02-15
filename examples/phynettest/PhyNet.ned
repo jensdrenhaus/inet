@@ -40,9 +40,11 @@ network PhyNet
             parameters:
                 @display("p=-0.3,0.5");
         }
-        coordinator: StorageHallCoordinator {
+        mobilityCoordinator: StorageHallCoordinator {
         	parameters:
-        	    @display("p=-0.3,1.5");
+        	    @display("p=-0.3,1.5;is=s");
+        	    numItems = numNodes;  
+                zLevels = zLevels;  
         }
         accessPoint: AccessPoint {
             parameters:
@@ -53,8 +55,6 @@ network PhyNet
             parameters:
                 @display("i=-;b=0.3,0.4,rect,,black,1");
                 mobilityType = "StaticStorageHallGridMobility";
-                mobility.numItems = numNodes;  
-                mobility.zLevels = zLevels;  
         }
 }
 
