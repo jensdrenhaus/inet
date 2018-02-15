@@ -107,8 +107,8 @@ void StorageHallCoordinator::calculateSpots()
         int row = (index/columns) % rows;
         int col = index % columns;
 
-        double x = marginX+col*(itemYdim+back2backDist)+((itemYdim+back2backDist)/2);
-        double y = marginY+row*(itemXdim+side2sideDist)+((itemXdim+side2sideDist)/2);
+        double x = marginX+col*(itemXdim+side2sideDist)+((itemXdim+side2sideDist)/2);
+        double y = marginY+row*(itemYdim+back2backDist)+((itemYdim+back2backDist)/2);
         double z = marginZ+lev*(itemZdim+top2bottomDist)+((itemZdim+top2bottomDist)/2);
 
         Coord spot = Coord(x,y,z);
