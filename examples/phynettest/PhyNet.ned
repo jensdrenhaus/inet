@@ -28,7 +28,7 @@ import inet.mobility.static.StorageHallCoordinator;
 network PhyNet
 {
     parameters:
-        @display("bgu=m;bgb=10,10");
+        //@display("bgu=m;bgb=10,10,black");
 		int numNodes;
 		int zLevels;
     submodules:
@@ -40,12 +40,6 @@ network PhyNet
             parameters:
                 @display("p=-0.3,0.5");
         }
-        mobilityCoordinator: StorageHallCoordinator {
-        	parameters:
-        	    @display("p=-0.3,1.5;is=s");
-        	    numItems = numNodes;  
-                zLevels = zLevels;  
-        }
         accessPoint: AccessPoint {
             parameters:
                 @display("p=1,1;i=,black,40");
@@ -55,6 +49,12 @@ network PhyNet
             parameters:
                 @display("i=-;b=0.3,0.4,rect,,black,1");
                 mobilityType = "StaticStorageHallGridMobility";
+        }
+        mobilityCoordinator: StorageHallCoordinator {
+        	parameters:
+        	    @display("p=-0.3,1.5;is=s");
+        	    numItems = numNodes;  
+                zLevels = zLevels;  
         }
 }
 

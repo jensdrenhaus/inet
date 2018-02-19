@@ -70,7 +70,7 @@ void StorageHallCoordinator::initialize(int stage)
         }
 
         else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
-
+            ;
         }
 
         else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
@@ -78,10 +78,12 @@ void StorageHallCoordinator::initialize(int stage)
         }
 
         else if (stage == INITSTAGE_LAST) {
-            cModule* module = this->getParentModule()->getParentModule();
+            cModule* module = this->getParentModule();
             cDisplayString dispStr = module->getDisplayString();
-            dispStr.setTagArg("bgb", 0, totalXdim);
-            dispStr.setTagArg("bgb", 1, totalYdim);
+            //dispStr.setTagArg("bgb", 0, 2);
+            //dispStr.setTagArg("bgb", 1, 2);
+            dispStr.setTagArg("bgb", 2, "black");
+            //dispStr.parse("bgu=m;bgb=100,100");
         }
 }
 
