@@ -28,9 +28,8 @@ import inet.mobility.static.StorageHallCoordinator;
 network PhyNet
 {
     parameters:
-        //@display("bgu=m;bgb=10,10,black");
+        @display("bgu=m");
 		int numNodes;
-		int zLevels;
     submodules:
         visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
             parameters:
@@ -39,6 +38,11 @@ network PhyNet
         radioMedium: IdealRadioMedium {
             parameters:
                 @display("p=-0.3,0.5");
+        }
+        mobilityCoordinator: StorageHallCoordinator {
+        	parameters:
+        	    @display("p=-0.3,1.5;is=s");
+        	    numItems = numNodes;          
         }
         accessPoint: AccessPoint {
             parameters:
@@ -49,12 +53,6 @@ network PhyNet
             parameters:
                 @display("i=-;b=0.3,0.4,rect,,black,1");
                 mobilityType = "StaticStorageHallGridMobility";
-        }
-        mobilityCoordinator: StorageHallCoordinator {
-        	parameters:
-        	    @display("p=-0.3,1.5;is=s");
-        	    numItems = numNodes;  
-                zLevels = zLevels;  
         }
 }
 

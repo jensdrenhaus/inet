@@ -71,7 +71,7 @@ class INET_API StorageHallCoordinator : public cSimpleModule
   protected:
     virtual void initialize(int stage) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
-    virtual void handleSelfMessage(cMessage *msg);
+    virtual void handleMessage(cMessage *msg) override;
 
   private:
     void checkDimensions();

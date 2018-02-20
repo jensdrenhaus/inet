@@ -34,60 +34,57 @@ StorageHallCoordinator::~StorageHallCoordinator()
 void StorageHallCoordinator::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
-        EV_TRACE << "initializing StorageHallCoordinator stage " << stage << endl;
-        if (stage == INITSTAGE_LOCAL) {
-            numItems = par("numItems");
+    EV_TRACE << "initializing StorageHallCoordinator stage " << stage << endl;
+    if (stage == INITSTAGE_LOCAL) {
+        numItems = par("numItems");
 
-            itemXdim = par("itemXdim");
-            itemYdim = par("itemYdim");
-            itemZdim = par("itemZdim");
+        itemXdim = par("itemXdim");
+        itemYdim = par("itemYdim");
+        itemZdim = par("itemZdim");
 
-            side2sideDist = par("side2sideDist");
-            back2backDist = par("back2backDist");
-            top2bottomDist = par("top2bottomDist");
-            interRowDist = par("interRowDist");
+        side2sideDist = par("side2sideDist");
+        back2backDist = par("back2backDist");
+        top2bottomDist = par("top2bottomDist");
+        interRowDist = par("interRowDist");
 
-            marginX = par("marginX");
-            marginY = par("marginY");
-            marginZ = par("marginZ");
+        marginX = par("marginX");
+        marginY = par("marginY");
+        marginZ = par("marginZ");
 
-            zLevels = par("zLevels");
-            columns = par("columns");
-            rows = par("rows");
+        zLevels = par("zLevels");
+        columns = par("columns");
+        rows = par("rows");
 
-            numSpots = zLevels*columns*rows;
-            numFreeSpots = numSpots-numItems;
-            numExtraSpots = 2;
-            spots = vector<Coord>(numSpots);
-            spots.reserve(numSpots+numExtraSpots);
-            checkDimensions();
-            calculateSpots();
+        numSpots = zLevels*columns*rows;
+        numFreeSpots = numSpots-numItems;
+        numExtraSpots = 2;
+        spots = vector<Coord>(numSpots);
+        spots.reserve(numSpots+numExtraSpots);
+        checkDimensions();
+        calculateSpots();
 
-            totalXdim = 2*marginX+columns*(itemXdim+side2sideDist);
-            totalYdim = 2*marginY+rows*(itemYdim+back2backDist);
-            totalZdim = 2*marginZ+zLevels*(itemZdim+top2bottomDist);
+        totalXdim = 2*marginX+columns*(itemXdim+side2sideDist);
+        totalYdim = 2*marginY+rows*(itemYdim+back2backDist)+(ceil(double(rows/2)) -1)*interRowDist;
+        totalZdim = 2*marginZ+zLevels*(itemZdim+top2bottomDist);
+        printf("total x: %.1f m \n", totalXdim);
+        printf("total y: %.1f m \n", totalYdim);
 
-        }
+    }
 
         else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
             ;
         }
 
-        else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
-            ;
-        }
-
-        else if (stage == INITSTAGE_LAST) {
-            cModule* module = this->getParentModule();
-            cDisplayString dispStr = module->getDisplayString();
-            //dispStr.setTagArg("bgb", 0, 2);
-            //dispStr.setTagArg("bgb", 1, 2);
-            dispStr.setTagArg("bgb", 2, "black");
-            //dispStr.parse("bgu=m;bgb=100,100");
-        }
+    else if (stage == INITSTAGE_LAST) {
+        cModule* module = check_and_cast<cModule*>(this->getParentModule());
+        cDisplayString& dispStr = module->getDisplayString();
+        char str[32];
+        sprintf(str, "bgu=m;bgb=%.1f,%.1f;bgg=1,2", totalXdim, totalYdim);
+        dispStr.parse(str);
+    }
 }
 
-void StorageHallCoordinator::handleSelfMessage(cMessage *msg)
+void StorageHallCoordinator::handleMessage(cMessage *msg)
 {
     ASSERT(false);
 }
@@ -98,7 +95,7 @@ void StorageHallCoordinator::checkDimensions()
            "columns: %i \n"
            "rows:    %i \n", zLevels,columns,rows);
     if(numItems > columns*rows*zLevels)
-        cRuntimeError("ERROR: numItems(%i)> columns(%i)*rows(%i)*zLevel(%i) = %i \n", numItems, columns, rows, zLevels, numSpots);
+        throw cRuntimeError("ERROR: numItems(%i)> columns(%i)*rows(%i)*zLevel(%i) = %i \n", numItems, columns, rows, zLevels, numSpots);
     else
         printf("OK: %i items, %i places -> %i free + %i extra spots\n\n", numItems, numSpots, numFreeSpots, numExtraSpots);
 }
@@ -108,9 +105,10 @@ void StorageHallCoordinator::calculateSpots()
         int lev = index / (rows*columns);
         int row = (index/columns) % rows;
         int col = index % columns;
+        int corridors = row/2;
 
         double x = marginX+col*(itemXdim+side2sideDist)+((itemXdim+side2sideDist)/2);
-        double y = marginY+row*(itemYdim+back2backDist)+((itemYdim+back2backDist)/2);
+        double y = marginY+row*(itemYdim+back2backDist)+((itemYdim+back2backDist)/2)+corridors*interRowDist;
         double z = marginZ+lev*(itemZdim+top2bottomDist)+((itemZdim+top2bottomDist)/2);
 
         Coord spot = Coord(x,y,z);
