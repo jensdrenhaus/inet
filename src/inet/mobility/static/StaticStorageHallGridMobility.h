@@ -18,7 +18,7 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "inet/mobility/static/StationaryMobility.h"
+#include "inet/mobility/base/LineSegmentsMobilityBase.h"
 
 namespace inet {
 
@@ -26,19 +26,31 @@ class StorageHallCoordinator;
 /**
  * TODO - Generated class
  */
-class INET_API StaticStorageHallGridMobility : public StationaryMobility
+class INET_API StaticStorageHallGridMobility : public LineSegmentsMobilityBase
 {
   protected:
     StorageHallCoordinator* coordinator = nullptr;
     long mySpotIndex;
+    bool nextMoveIsWait;
 
   protected:
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+
+    /** @brief Initializes mobility model parameters.*/
     virtual void initialize(int stage) override;
+
     /** @brief Initializes the position according to the mobility model. */
     virtual void setInitialPosition() override;
 
+    /** @brief Overridden from LineSegmentsMobilityBase.*/
+    virtual void setTargetPosition() override;
+
+    /** @brief Overridden from LineSegmentsMobilityBase.*/
+    virtual void move() override;
+
   public:
     StaticStorageHallGridMobility() {};
+    virtual double getMaxSpeed() const override;
 };
 
 } //namespace

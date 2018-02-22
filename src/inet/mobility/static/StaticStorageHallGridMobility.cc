@@ -25,18 +25,21 @@ Define_Module(StaticStorageHallGridMobility);
 
 void StaticStorageHallGridMobility::initialize(int stage)
 {
-    StationaryMobility::initialize(stage);
+    LineSegmentsMobilityBase::initialize(stage);
     EV_TRACE << "initializing StaticStorageHallGridMobility stage " << stage << endl;
     if (stage == INITSTAGE_LOCAL) {
+        stationary = (par("speed").getType() == 'L' || par("speed").getType() == 'D') && (double)par("speed") == 0;
         mySpotIndex = -1;
+        nextMoveIsWait = true;
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
         cModule* module = getModuleByPath("^.^.mobilityCoordinator");
         coordinator = check_and_cast<StorageHallCoordinator*>(module);
-    }
-    else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
         constraintAreaMin = coordinator->getConstraintAreaMin();
         constraintAreaMax = coordinator->getConstraintAreaMax();
+    }
+    else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
+        ;
     }
     else if (stage == INITSTAGE_LAST) {
         ;
@@ -46,6 +49,33 @@ void StaticStorageHallGridMobility::initialize(int stage)
 void StaticStorageHallGridMobility::setInitialPosition()
 {
     lastPosition = coordinator->getFreeSpot(&mySpotIndex, false);
+}
+
+void StaticStorageHallGridMobility::setTargetPosition()
+{
+    if (nextMoveIsWait) {
+        simtime_t waitTime = par("waitTime");
+        nextChange = simTime() + waitTime;
+    }
+    else {
+        targetPosition = getRandomPosition();
+        double speed = par("speed");
+        double distance = lastPosition.distance(targetPosition);
+        simtime_t travelTime = distance / speed;
+        nextChange = simTime() + travelTime;
+    }
+    nextMoveIsWait = !nextMoveIsWait;
+}
+
+void StaticStorageHallGridMobility::move()
+{
+    LineSegmentsMobilityBase::move();
+    raiseErrorIfOutside();
+}
+
+double StaticStorageHallGridMobility::getMaxSpeed() const
+{
+    return NaN;
 }
 
 } //namespace

@@ -15,14 +15,15 @@
 
 package inet.mobility.static;
 
-import inet.mobility.base.MobilityBase;
+import inet.mobility.base.MovingMobilityBase;
 
 //
 // TODO auto-generated module
 //
-simple StaticStorageHallGridMobility extends MobilityBase
+simple StaticStorageHallGridMobility extends MovingMobilityBase
 {
     parameters:
-        
+        volatile double speed @unit(mps) = default(0.5mps); // use uniform(minSpeed, maxSpeed) or another distribution
+        volatile double waitTime @unit(s) = default(10s); // wait time between reaching a target and choosing a new one
         @class(StaticStorageHallGridMobility);
 }
