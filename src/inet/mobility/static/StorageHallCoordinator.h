@@ -34,7 +34,7 @@ class Coord;
 class INET_API StorageHallCoordinator : public cSimpleModule
 {
   protected:
-    int numItems;
+    long numItems;
 
     double itemXdim;
     double itemYdim;
@@ -53,20 +53,20 @@ class INET_API StorageHallCoordinator : public cSimpleModule
     int columns;
     int rows;
 
-    int numSpots;
-    int numFreeSpots;
+    long numSpots;
+    long numFreeSpots;
     int numExtraSpots;
     vector<Coord> spots;
     set<int> occupied;
-
-
 
     double totalXdim;
     double totalYdim;
     double totalZdim;
 
   public:
-    Coord getFreeSpot(bool includingExtraSpots = true);
+    Coord getFreeSpot(long* spotIndex, bool includingExtraSpots = true);
+    Coord getConstraintAreaMax();
+    Coord getConstraintAreaMin();
 
   protected:
     virtual void initialize(int stage) override;

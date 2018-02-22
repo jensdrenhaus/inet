@@ -30,6 +30,7 @@ class INET_API StaticStorageHallGridMobility : public StationaryMobility
 {
   protected:
     StorageHallCoordinator* coordinator = nullptr;
+    long mySpotIndex;
 
   protected:
     virtual void initialize(int stage) override;

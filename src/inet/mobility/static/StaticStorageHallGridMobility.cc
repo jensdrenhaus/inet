@@ -28,14 +28,15 @@ void StaticStorageHallGridMobility::initialize(int stage)
     StationaryMobility::initialize(stage);
     EV_TRACE << "initializing StaticStorageHallGridMobility stage " << stage << endl;
     if (stage == INITSTAGE_LOCAL) {
-        ;
+        mySpotIndex = -1;
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
         cModule* module = getModuleByPath("^.^.mobilityCoordinator");
         coordinator = check_and_cast<StorageHallCoordinator*>(module);
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
-        ;
+        constraintAreaMin = coordinator->getConstraintAreaMin();
+        constraintAreaMax = coordinator->getConstraintAreaMax();
     }
     else if (stage == INITSTAGE_LAST) {
         ;
@@ -44,8 +45,7 @@ void StaticStorageHallGridMobility::initialize(int stage)
 
 void StaticStorageHallGridMobility::setInitialPosition()
 {
-    //int index = visualRepresentation->getIndex();
-    lastPosition = coordinator->getFreeSpot(false);
+    lastPosition = coordinator->getFreeSpot(&mySpotIndex, false);
 }
 
 } //namespace

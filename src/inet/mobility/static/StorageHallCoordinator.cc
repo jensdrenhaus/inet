@@ -63,17 +63,22 @@ void StorageHallCoordinator::initialize(int stage)
         checkDimensions();
         calculateSpots();
 
+        int corridors = (ceil((double(rows)/2)) -1);
+        double interRowOffset = corridors*interRowDist;
+
         totalXdim = 2*marginX+columns*(itemXdim+side2sideDist);
-        totalYdim = 2*marginY+rows*(itemYdim+back2backDist)+(ceil(double(rows/2)) -1)*interRowDist;
+        totalYdim = 2*marginY+rows*(itemYdim+back2backDist)+interRowOffset;
         totalZdim = 2*marginZ+zLevels*(itemZdim+top2bottomDist);
         printf("total x: %.1f m \n", totalXdim);
         printf("total y: %.1f m \n", totalYdim);
+        printf("total z: %.1f m \n", totalZdim);
+
 
     }
 
-        else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
-            ;
-        }
+    else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
+        ;
+    }
 
     else if (stage == INITSTAGE_LAST) {
         cModule* module = check_and_cast<cModule*>(this->getParentModule());
@@ -95,10 +100,11 @@ void StorageHallCoordinator::checkDimensions()
            "columns: %i \n"
            "rows:    %i \n", zLevels,columns,rows);
     if(numItems > columns*rows*zLevels)
-        throw cRuntimeError("ERROR: numItems(%i)> columns(%i)*rows(%i)*zLevel(%i) = %i \n", numItems, columns, rows, zLevels, numSpots);
+        throw cRuntimeError("ERROR: numItems(%li)> columns(%i)*rows(%i)*zLevel(%i) = %i \n", numItems, columns, rows, zLevels, numSpots);
     else
-        printf("OK: %i items, %i places -> %i free + %i extra spots\n\n", numItems, numSpots, numFreeSpots, numExtraSpots);
+        printf("OK: %li items, %li places -> %li free + %i extra spots\n\n", numItems, numSpots, numFreeSpots, numExtraSpots);
 }
+
 void StorageHallCoordinator::calculateSpots()
 {
     for(int index = 0; index < numSpots; index++) {
@@ -124,16 +130,30 @@ void StorageHallCoordinator::calculateSpots()
     }
 }
 
-Coord StorageHallCoordinator::getFreeSpot(bool includingExtraSpots)
+Coord StorageHallCoordinator::getFreeSpot(long* spotIndex, bool includingExtraSpots)
 {
+    double x = *spotIndex==-1 ? numSpots-1 : occupied.size()-1;
+
     pair<set<int>::iterator, bool> ret;
-    int index = intuniform(0, numSpots-1);
+    int index = intuniform(0, x);
     ret = occupied.insert(index);
     while(ret.second==false){
-        index = intuniform(0, numSpots-1);
+        index = intuniform(0, x);
         ret = occupied.insert(index);
     }
+    occupied.erase(*spotIndex);
+    *spotIndex = index;
     return spots[index];
+}
+
+Coord StorageHallCoordinator::getConstraintAreaMax()
+{
+    return Coord(totalXdim, totalYdim, totalZdim);
+}
+
+Coord StorageHallCoordinator::getConstraintAreaMin()
+{
+    return Coord(0,0,0);
 }
 
 } //namespace
