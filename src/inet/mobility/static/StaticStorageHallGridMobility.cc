@@ -31,6 +31,7 @@ void StaticStorageHallGridMobility::initialize(int stage)
         stationary = (par("speed").getType() == 'L' || par("speed").getType() == 'D') && (double)par("speed") == 0;
         mySpotIndex = -1;
         nextMoveIsWait = true;
+        updateInterval = 0;
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
         cModule* module = getModuleByPath("^.^.mobilityCoordinator");
@@ -49,6 +50,7 @@ void StaticStorageHallGridMobility::initialize(int stage)
 void StaticStorageHallGridMobility::setInitialPosition()
 {
     lastPosition = coordinator->getFreeSpot(&mySpotIndex, false);
+    targetPosition = lastPosition;
 }
 
 void StaticStorageHallGridMobility::setTargetPosition()
@@ -56,13 +58,15 @@ void StaticStorageHallGridMobility::setTargetPosition()
     if (nextMoveIsWait) {
         simtime_t waitTime = par("waitTime");
         nextChange = simTime() + waitTime;
+        updateInterval = 0;
     }
     else {
-        targetPosition = getRandomPosition();
+        targetPosition = coordinator->getFreeSpot(&mySpotIndex, true); //getRandomPosition();
         double speed = par("speed");
         double distance = lastPosition.distance(targetPosition);
         simtime_t travelTime = distance / speed;
         nextChange = simTime() + travelTime;
+        updateInterval = par("updateInterval");
     }
     nextMoveIsWait = !nextMoveIsWait;
 }

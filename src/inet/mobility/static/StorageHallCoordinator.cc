@@ -132,6 +132,8 @@ void StorageHallCoordinator::calculateSpots()
 
 Coord StorageHallCoordinator::getFreeSpot(long* spotIndex, bool includingExtraSpots)
 {
+    Enter_Method("get free spot");
+
     double x = *spotIndex==-1 ? numSpots-1 : occupied.size()-1;
 
     pair<set<int>::iterator, bool> ret;
@@ -148,11 +150,13 @@ Coord StorageHallCoordinator::getFreeSpot(long* spotIndex, bool includingExtraSp
 
 Coord StorageHallCoordinator::getConstraintAreaMax()
 {
+    Enter_Method_Silent();
     return Coord(totalXdim, totalYdim, totalZdim);
 }
 
 Coord StorageHallCoordinator::getConstraintAreaMin()
 {
+    Enter_Method_Silent();
     return Coord(0,0,0);
 }
 
