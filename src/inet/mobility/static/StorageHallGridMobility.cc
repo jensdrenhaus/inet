@@ -15,15 +15,16 @@
 
 #include <stdio.h>
 
-#include "inet/mobility/static/StaticStorageHallGridMobility.h"
+#include "inet/mobility/static/StorageHallGridMobility.h"
+
 #include "inet/mobility/static/StorageHallCoordinator.h"
 
 namespace inet {
 
 
-Define_Module(StaticStorageHallGridMobility);
+Define_Module(StorageHallGridMobility);
 
-void StaticStorageHallGridMobility::initialize(int stage)
+void StorageHallGridMobility::initialize(int stage)
 {
     LineSegmentsMobilityBase::initialize(stage);
     EV_TRACE << "initializing StaticStorageHallGridMobility stage " << stage << endl;
@@ -47,13 +48,13 @@ void StaticStorageHallGridMobility::initialize(int stage)
     }
 }
 
-void StaticStorageHallGridMobility::setInitialPosition()
+void StorageHallGridMobility::setInitialPosition()
 {
     lastPosition = coordinator->getFreeSpot(&mySpotIndex);
     targetPosition = lastPosition;
 }
 
-void StaticStorageHallGridMobility::setTargetPosition()
+void StorageHallGridMobility::setTargetPosition()
 {
     if (nextMoveIsWait) {
         simtime_t waitTime = par("waitTime");
@@ -71,13 +72,13 @@ void StaticStorageHallGridMobility::setTargetPosition()
     nextMoveIsWait = !nextMoveIsWait;
 }
 
-void StaticStorageHallGridMobility::move()
+void StorageHallGridMobility::move()
 {
     LineSegmentsMobilityBase::move();
     raiseErrorIfOutside();
 }
 
-double StaticStorageHallGridMobility::getMaxSpeed() const
+double StorageHallGridMobility::getMaxSpeed() const
 {
     return NaN;
 }

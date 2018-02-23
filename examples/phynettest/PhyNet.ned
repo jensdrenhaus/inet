@@ -52,7 +52,7 @@ network PhyNet
         node[numNodes]: PhyNode {
             parameters:
                 @display("i=-;b=0.3,0.4,rect,,black,1");
-                mobilityType = "StaticStorageHallGridMobility";
+                mobilityType = "StorageHallGridMobility";
         }
 }
 

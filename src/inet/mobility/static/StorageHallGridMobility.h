@@ -26,7 +26,7 @@ class StorageHallCoordinator;
 /**
  * TODO - Generated class
  */
-class INET_API StaticStorageHallGridMobility : public LineSegmentsMobilityBase
+class INET_API StorageHallGridMobility : public LineSegmentsMobilityBase
 {
   protected:
     StorageHallCoordinator* coordinator = nullptr;
@@ -49,7 +49,7 @@ class INET_API StaticStorageHallGridMobility : public LineSegmentsMobilityBase
     virtual void move() override;
 
   public:
-    StaticStorageHallGridMobility() {};
+    StorageHallGridMobility() {};
     virtual double getMaxSpeed() const override;
 };
 

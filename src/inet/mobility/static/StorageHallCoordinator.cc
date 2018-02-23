@@ -124,7 +124,7 @@ void StorageHallCoordinator::calculateSpots()
         spots[index] = spot;
     }
     for(int i = 0; i < numExtraSpots; i++) {
-        double x = itemXdim/2+ side2sideDist/2;
+        double x = itemXdim/2+side2sideDist/2;
         double y = itemYdim/2+back2backDist/2 + i*(itemYdim+back2backDist);
         double z = itemZdim/2;
 
