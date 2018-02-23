@@ -13,11 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include "../group/StorageHallGridMobility.h"
+
 #include <stdio.h>
 
-#include "inet/mobility/static/StorageHallGridMobility.h"
-
-#include "inet/mobility/static/StorageHallCoordinator.h"
+#include "../group/StorageHallCoordinator.h"
 
 namespace inet {
 

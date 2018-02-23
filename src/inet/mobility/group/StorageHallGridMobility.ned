@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.mobility.static;
+package inet.mobility.group;
 
 import inet.mobility.base.MovingMobilityBase;
 

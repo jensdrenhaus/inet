@@ -23,7 +23,7 @@ import inet.node.wsn.AccessPoint;
 import inet.node.wsn.PhyNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
-import inet.mobility.static.StorageHallCoordinator;
+import inet.mobility.group.StorageHallCoordinator;
 
 network PhyNet
 {
