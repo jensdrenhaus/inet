@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <set>
+#include <iterator>
 
 #include "inet/common/INETDefs.h"
 
@@ -34,7 +35,7 @@ class Coord;
 class INET_API StorageHallCoordinator : public cSimpleModule
 {
   protected:
-    long numItems;
+    int numItems;
 
     double itemXdim;
     double itemYdim;
@@ -53,18 +54,18 @@ class INET_API StorageHallCoordinator : public cSimpleModule
     int columns;
     int rows;
 
-    long numSpots;
-    long numFreeSpots;
+    int numSpots;
+    int numFreeSpots;
     int numExtraSpots;
     vector<Coord> spots;
-    set<int> occupied;
+    list<int> free;
 
     double totalXdim;
     double totalYdim;
     double totalZdim;
 
   public:
-    Coord getFreeSpot(long* spotIndex, bool includingExtraSpots = true);
+    Coord getFreeSpot(int* spotIndex);
     Coord getConstraintAreaMax();
     Coord getConstraintAreaMin();
 

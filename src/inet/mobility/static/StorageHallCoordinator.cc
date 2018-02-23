@@ -60,6 +60,7 @@ void StorageHallCoordinator::initialize(int stage)
         numExtraSpots = 2;
         spots = vector<Coord>(numSpots);
         spots.reserve(numSpots+numExtraSpots);
+        free = list<int>();
         checkDimensions();
         calculateSpots();
 
@@ -102,11 +103,13 @@ void StorageHallCoordinator::checkDimensions()
     if(numItems > columns*rows*zLevels)
         throw cRuntimeError("ERROR: numItems(%li)> columns(%i)*rows(%i)*zLevel(%i) = %i \n", numItems, columns, rows, zLevels, numSpots);
     else
-        printf("OK: %li items, %li places -> %li free + %i extra spots\n\n", numItems, numSpots, numFreeSpots, numExtraSpots);
+        printf("OK: %i items, %i places -> %i free + %i extra spots\n\n", numItems, numSpots, numFreeSpots, numExtraSpots);
 }
 
 void StorageHallCoordinator::calculateSpots()
 {
+    for (int i = 0; i < numSpots+numExtraSpots; i++)
+                free.push_back(i);
     for(int index = 0; index < numSpots; index++) {
         int lev = index / (rows*columns);
         int row = (index/columns) % rows;
@@ -120,9 +123,9 @@ void StorageHallCoordinator::calculateSpots()
         Coord spot = Coord(x,y,z);
         spots[index] = spot;
     }
-    for(int i = 1; i <= numExtraSpots; i++) {
+    for(int i = 0; i < numExtraSpots; i++) {
         double x = itemXdim/2+ side2sideDist/2;
-        double y = itemYdim/2*i+back2backDist;
+        double y = itemYdim/2+back2backDist/2 + i*(itemYdim+back2backDist);
         double z = itemZdim/2;
 
         Coord spot = Coord(x,y,z);
@@ -130,21 +133,27 @@ void StorageHallCoordinator::calculateSpots()
     }
 }
 
-Coord StorageHallCoordinator::getFreeSpot(long* spotIndex, bool includingExtraSpots)
+Coord StorageHallCoordinator::getFreeSpot(int* spotIndex)
 {
     Enter_Method("get free spot");
 
-    double x = *spotIndex==-1 ? numSpots-1 : occupied.size()-1;
-
-    pair<set<int>::iterator, bool> ret;
-    int index = intuniform(0, x);
-    ret = occupied.insert(index);
-    while(ret.second==false){
-        index = intuniform(0, x);
-        ret = occupied.insert(index);
+    int x = free.size()-1;
+    int i = intuniform(0, x);
+    list<int>::iterator it = next(free.begin(), i); // it points to the ith element
+    if (*spotIndex == -1) { // initial placement
+        // check for extra spot
+        while (*it >= numSpots) {
+            i = intuniform(0, x);
+            it = next(free.begin(), i);
+        }
     }
-    occupied.erase(*spotIndex);
-    *spotIndex = index;
+    else { // add previous position to free
+        free.push_back(*spotIndex);
+    }
+    int index = *it;
+    free.erase(it);
+
+    *spotIndex = index; // save new spotIndex
     return spots[index];
 }
 

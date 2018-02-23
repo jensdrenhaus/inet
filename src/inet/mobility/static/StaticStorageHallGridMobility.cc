@@ -49,7 +49,7 @@ void StaticStorageHallGridMobility::initialize(int stage)
 
 void StaticStorageHallGridMobility::setInitialPosition()
 {
-    lastPosition = coordinator->getFreeSpot(&mySpotIndex, false);
+    lastPosition = coordinator->getFreeSpot(&mySpotIndex);
     targetPosition = lastPosition;
 }
 
@@ -61,7 +61,7 @@ void StaticStorageHallGridMobility::setTargetPosition()
         updateInterval = 0;
     }
     else {
-        targetPosition = coordinator->getFreeSpot(&mySpotIndex, true); //getRandomPosition();
+        targetPosition = coordinator->getFreeSpot(&mySpotIndex); //getRandomPosition();
         double speed = par("speed");
         double distance = lastPosition.distance(targetPosition);
         simtime_t travelTime = distance / speed;

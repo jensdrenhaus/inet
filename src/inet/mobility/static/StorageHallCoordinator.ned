@@ -39,7 +39,7 @@ simple StorageHallCoordinator extends MobilityBase
 		double marginZ @unit("m") = default(1m);
 		
 		int zLevels = default(1);
-		int columns = default(ceil(sqrt(numItems/zLevels)));
+		int columns = default(ceil(sqrt(numItems/zLevels*2)));
 		int rows = default((ceil(numItems/zLevels) + columns -1) / columns);
     
     	@class(StorageHallCoordinator);

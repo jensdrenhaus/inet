@@ -30,7 +30,7 @@ class INET_API StaticStorageHallGridMobility : public LineSegmentsMobilityBase
 {
   protected:
     StorageHallCoordinator* coordinator = nullptr;
-    long mySpotIndex;
+    int mySpotIndex;
     bool nextMoveIsWait;
 
   protected:

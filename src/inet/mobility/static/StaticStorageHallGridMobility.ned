@@ -24,7 +24,7 @@ simple StaticStorageHallGridMobility extends MovingMobilityBase
 {
     parameters:
         volatile double speed @unit(mps) = default(0.5mps); // use uniform(minSpeed, maxSpeed) or another distribution
-        volatile double waitTime @unit(s) = default(10s); // wait time between reaching a target and choosing a new one
-        updateInterval @unit(s) = 0.1s; // the simulation time interval used to regularly signal mobility state changes and update the display
+        volatile double waitTime @unit(s) = default(uniform(30s,90s)); // wait time between reaching a target and choosing a new one
+        updateInterval @unit(s) = 1s; // the simulation time interval used to regularly signal mobility state changes and update the display
         @class(StaticStorageHallGridMobility);
 }
