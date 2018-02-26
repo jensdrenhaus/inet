@@ -169,4 +169,9 @@ Coord StorageHallCoordinator::getConstraintAreaMin()
     return Coord(0,0,0);
 }
 
+Coord StorageHallCoordinator::getMargin()
+{
+    return Coord(marginX, marginY, marginZ);
+}
+
 } //namespace

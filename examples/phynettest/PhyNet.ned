@@ -47,12 +47,16 @@ network PhyNet
         accessPoint: AccessPoint {
             parameters:
                 @display("p=1,1;i=,black,40");
-        	
+                //mobilityType = "StorageHallTractorMobility";
+                mobilityType = "StorageHallRandomMobility";
+                mobility.initAtCenter = true;
+                mobility.speed = 1mps; // stationary
         }
         node[numNodes]: PhyNode {
             parameters:
                 @display("i=-;b=0.3,0.4,rect,,black,1");
                 mobilityType = "StorageHallGridMobility";
+                mobility.speed = 0mps; // stationary
         }
 }
 

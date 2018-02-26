@@ -13,34 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __INET_STORAGEHALLTRACTORMOBILITY_H_
-#define __INET_STORAGEHALLTRACTORMOBILITY_H_
+package inet.mobility.group;
 
-#include "inet/common/INETDefs.h"
+import inet.mobility.single.MassMobility;
 
-#include "inet/mobility/single/TractorMobility.h"
-
-namespace inet {
-
-class StorageHallCoordinator;
-/**
- * TODO - Generated class
- */
-class INET_API StorageHallTractorMobility : public TractorMobility
+//
+// TODO auto-generated module
+//
+simple StorageHallRandomMobility extends MassMobility
 {
-  protected:
-    StorageHallCoordinator* coordinator;
-
-  protected:
-    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
-
-    /** @brief Initializes mobility model parameters. */
-    virtual void initialize(int) override;
-
-  public:
-    StorageHallTractorMobility();
-};
-
-} //namespace
-
-#endif
+    parameters:
+        changeInterval = normal(5s, 0.1s);
+        changeAngleBy = normal(0deg, 30deg);
+        speed = default(0.5mps);
+        bool initAtCenter = default(false);
+        @class(StorageHallRandomMobility);
+}

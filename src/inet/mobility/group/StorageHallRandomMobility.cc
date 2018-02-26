@@ -13,39 +13,43 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "inet/mobility/group/StorageHallTractorMobility.h"
+#include "inet/mobility/group/StorageHallRandomMobility.h"
 
 #include "inet/mobility/group/StorageHallCoordinator.h"
 
 namespace inet {
 
-Define_Module(StorageHallTractorMobility);
+Define_Module(StorageHallRandomMobility);
 
-StorageHallTractorMobility::StorageHallTractorMobility()
+void StorageHallRandomMobility::initialize(int stage)
 {
-    coordinator = nullptr;
-}
-
-void StorageHallTractorMobility::initialize(int stage)
-{
-    TractorMobility::initialize(stage);
-
-    EV_TRACE << "initializing StorageHallTractorMobility stage " << stage << endl;
-    if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
+    MassMobility::initialize(stage);
+    EV_TRACE << "initializing StorageHallRandomMobility stage " << stage << endl;
+    if (stage == INITSTAGE_LOCAL) {
+        initAtCenter = par("initAtCenter").boolValue();
+    }
+    else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
         cModule* module = getModuleByPath("^.^.mobilityCoordinator");
         coordinator = check_and_cast<StorageHallCoordinator*>(module);
         constraintAreaMin = coordinator->getConstraintAreaMin();
         constraintAreaMax = coordinator->getConstraintAreaMax();
-
-        double offsetX = coordinator->getMargin().x/2;
-        double offsetY = coordinator->getMargin().y/2;
-        x1 = coordinator->getConstraintAreaMin().x + offsetX;
-        y1 = coordinator->getConstraintAreaMin().y + offsetY;
-        x2 = coordinator->getConstraintAreaMax().x - offsetX;
-        y2 = coordinator->getConstraintAreaMax().y - offsetY;
-        double rows = ceil(double(coordinator->getNumRows())/2.0);
-        rowCount = rows;
+    }
+    else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
+        if(speedParameter->doubleValue() == 0)
+            cancelEvent(moveTimer);
     }
 }
+
+void StorageHallRandomMobility::setInitialPosition()
+{
+    if (initAtCenter) {
+        lastPosition.x = coordinator->getConstraintAreaMax().x / 2;
+        lastPosition.y = coordinator->getConstraintAreaMax().y / 2;
+        lastPosition.z = coordinator->getConstraintAreaMax().z / 2;
+    }
+    else
+        lastPosition = getRandomPosition();
+}
+
 
 } //namespace
