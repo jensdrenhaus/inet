@@ -70,6 +70,7 @@ class INET_API StorageHallCoordinator : public cSimpleModule
     Coord getConstraintAreaMin();
     int getNumRows() {return rows;}
     Coord getMargin();
+    void stopMoving();
 
   protected:
     virtual void initialize(int stage) override;

@@ -78,6 +78,12 @@ void StorageHallGridMobility::move()
     raiseErrorIfOutside();
 }
 
+void StorageHallGridMobility::stopMoving()
+{
+    Enter_Method_Silent();
+    cancelEvent(moveTimer);
+}
+
 double StorageHallGridMobility::getMaxSpeed() const
 {
     return NaN;

@@ -48,4 +48,10 @@ void StorageHallTractorMobility::initialize(int stage)
     }
 }
 
+void StorageHallTractorMobility::stopMoving()
+{
+    Enter_Method_Silent();
+    cancelEvent(moveTimer);
+}
+
 } //namespace

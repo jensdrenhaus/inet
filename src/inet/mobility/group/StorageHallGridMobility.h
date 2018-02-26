@@ -19,6 +19,7 @@
 #include "inet/common/INETDefs.h"
 
 #include "inet/mobility/base/LineSegmentsMobilityBase.h"
+#include "inet/mobility/group/StorageHallMemberBase.h"
 
 namespace inet {
 
@@ -26,7 +27,7 @@ class StorageHallCoordinator;
 /**
  * TODO - Generated class
  */
-class INET_API StorageHallGridMobility : public LineSegmentsMobilityBase
+class INET_API StorageHallGridMobility : public LineSegmentsMobilityBase,  public StorageHallMemberBase
 {
   protected:
     StorageHallCoordinator* coordinator = nullptr;
@@ -51,6 +52,7 @@ class INET_API StorageHallGridMobility : public LineSegmentsMobilityBase
   public:
     StorageHallGridMobility() {};
     virtual double getMaxSpeed() const override;
+    void stopMoving() override;
 };
 
 } //namespace

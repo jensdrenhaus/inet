@@ -16,6 +16,7 @@
 #include "../group/StorageHallCoordinator.h"
 
 #include "inet/common/geometry/common/Coord.h"
+#include "inet/mobility/group/StorageHallMemberBase.h"
 
 namespace inet {
 
@@ -172,6 +173,19 @@ Coord StorageHallCoordinator::getConstraintAreaMin()
 Coord StorageHallCoordinator::getMargin()
 {
     return Coord(marginX, marginY, marginZ);
+}
+
+void StorageHallCoordinator::stopMoving()
+{
+    Enter_Method_Silent();
+    cModule* netModule = check_and_cast<cModule*>(this->getParentModule());
+    for (cModule::SubmoduleIterator it(netModule); !it.end(); it++)
+    {
+        StorageHallMemberBase* member = dynamic_cast<StorageHallMemberBase*>(*it);
+        if (member) {
+            member->stopMoving();
+        }
+    }
 }
 
 } //namespace

@@ -19,6 +19,7 @@
 #include "inet/common/INETDefs.h"
 
 #include "inet/mobility/single/MassMobility.h"
+#include "inet/mobility/group/StorageHallMemberBase.h"
 
 namespace inet {
 
@@ -27,11 +28,14 @@ class StorageHallCoordinator;
 /**
  * TODO - Generated class
  */
-class INET_API StorageHallRandomMobility : public MassMobility
+class INET_API StorageHallRandomMobility : public MassMobility, public StorageHallMemberBase
 {
   protected:
     bool initAtCenter;
     StorageHallCoordinator* coordinator;
+
+  public:
+    void stopMoving() override;
 
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
@@ -40,7 +44,7 @@ class INET_API StorageHallRandomMobility : public MassMobility
     virtual void initialize(int stage) override;
 
     /** @brief Initializes the position from the display string or from module parameters. */
-        virtual void setInitialPosition() override;
+    virtual void setInitialPosition() override;
 
   public:
     StorageHallRandomMobility() {}

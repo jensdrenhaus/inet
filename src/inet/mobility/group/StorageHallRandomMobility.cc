@@ -51,5 +51,11 @@ void StorageHallRandomMobility::setInitialPosition()
         lastPosition = getRandomPosition();
 }
 
+void StorageHallRandomMobility::stopMoving()
+{
+    Enter_Method_Silent();
+    cancelEvent(moveTimer);
+}
+
 
 } //namespace

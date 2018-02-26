@@ -17,6 +17,7 @@
 
 #include "inet/applications/wsn/PageMsg_m.h"
 #include "inet/linklayer/common/SimpleLinkLayerControlInfo.h"
+#include "inet/mobility/group/StorageHallCoordinator.h"
 
 namespace inet {
 
@@ -124,6 +125,11 @@ void AccessPointApp::handleSelfMessage(cMessage *msg)
     sendMsg();
     if (isEnabled())
         scheduleNextMsg(simTime());
+    else {
+        cModule* module = getModuleByPath("^.^.mobilityCoordinator");
+        StorageHallCoordinator* mobilityCoordinator = check_and_cast<StorageHallCoordinator*>(module);
+        mobilityCoordinator->stopMoving();
+    }
 }
 
 void AccessPointApp::sendMsg()
