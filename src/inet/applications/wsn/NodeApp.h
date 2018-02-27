@@ -16,6 +16,8 @@
 #ifndef __INET_NODEAPP_H_
 #define __INET_NODEAPP_H_
 
+#include <map>
+
 #include "inet/common/INETDefs.h"
 
 #include "inet/applications/wsn/WsnAppBase.h"
@@ -23,6 +25,7 @@
 
 namespace inet {
 
+using namespace std;
 /**
  * TODO - Generated class
  */
@@ -31,6 +34,8 @@ class INET_API NodeApp : public WsnAppBase
   protected:
     //parameters
     cPar* processDelay = nullptr;
+    int productNr;
+    map<int, const char*>colorMap;
 
     //state
     cMessage* timer = nullptr;
@@ -51,6 +56,7 @@ class INET_API NodeApp : public WsnAppBase
     virtual void sendMsg();
 
     virtual void refreshDisplay() const override;
+    virtual void initColorMap();
 
   public:
     NodeApp();

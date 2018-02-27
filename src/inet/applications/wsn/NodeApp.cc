@@ -44,14 +44,21 @@ void NodeApp::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
         // read params
         processDelay = &par("processDelay");
+        productNr = par("productNr");
 
         // state
+        if(hasGUI())
+            initColorMap;
 
         // statistics
 
         // references
         timer = new cMessage("sendPageResponse", SEND);
 
+    }
+    else if (stage == INITSTAGE_LAST) {
+        cDisplayString& dispStr = this->getParentModule()->getDisplayString();
+        dispStr.setTagArg("b", 3, "red");
     }
 }
 
@@ -170,6 +177,20 @@ void NodeApp::finish()
 //        cout << "stddev (ms): " << (rttStat.getStddev() * 1000.0) << "   variance:" << rttStat.getVariance() << endl;
 //        cout << "--------------------------------------------------------" << endl;
 //    }
+}
+
+void NodeApp::initColorMap()
+{
+    colorMap[1]="steelblue";
+    colorMap[2]="tomato";
+    colorMap[3]="yellowgreen";
+    colorMap[4]="sandybrown";
+    colorMap[5]="plum";
+    colorMap[6]="moccasin";
+    colorMap[7]="navi";
+    colorMap[8]="olive";
+    colorMap[9]="wheat";
+    colorMap[10]="indianred";
 }
 
 } //namespace

@@ -29,6 +29,9 @@ simple NodeApp extends WsnAppBase
         stopTime @unit("s") = default(-1s);
         packetSize @unit("B") = default(16B);
         
+        int numProducts = default(4);
+        int productNr = default(uniform(1,numProducts));
+        
         double fixProcessDelay @unit("ms") = default(0ms);
         volatile double randomProcessDelay @unit("us") = default(0us);
         volatile double processDelay = fixProcessDelay + randomProcessdelay;
