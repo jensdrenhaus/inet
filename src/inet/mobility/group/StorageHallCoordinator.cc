@@ -181,9 +181,14 @@ void StorageHallCoordinator::stopMoving()
     cModule* netModule = check_and_cast<cModule*>(this->getParentModule());
     for (cModule::SubmoduleIterator it(netModule); !it.end(); it++)
     {
-        StorageHallMemberBase* member = dynamic_cast<StorageHallMemberBase*>(*it);
-        if (member) {
-            member->stopMoving();
+        cModule* submodule = *it;
+        printf("%s \n", submodule->getFullName());
+        cModule* mobility = submodule->getModuleByPath(".mobility");
+        if (mobility) {
+            StorageHallMemberBase* member = dynamic_cast<StorageHallMemberBase*>(mobility);
+            if (member) {
+                member->stopMoving();
+            }
         }
     }
 }
