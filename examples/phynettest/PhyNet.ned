@@ -33,15 +33,15 @@ network PhyNet
     submodules:
         visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
             parameters:
-                @display("p=-0.3,1");
+                @display("p=0.5,-0.8;is=s");
         }
         radioMedium: IdealRadioMedium {
             parameters:
-                @display("p=-0.3,0.5");
+                @display("p=1.5,-0.8;is=s");
         }
         mobilityCoordinator: StorageHallCoordinator {
         	parameters:
-        	    @display("p=-0.3,1.5;is=s");
+        	    @display("p=2.5,-0.8;is=s");
         	    numItems = numNodes;          
         }
         accessPoint: AccessPoint {

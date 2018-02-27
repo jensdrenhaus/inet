@@ -45,10 +45,13 @@ void NodeApp::initialize(int stage)
         // read params
         processDelay = &par("processDelay");
         productNr = par("productNr");
+        if (productNr <= 0)
+            throw cRuntimeError("productNr must be greater than 0");
 
         // state
         if(hasGUI())
-            initColorMap;
+            colorMap = map<int, const char*>();
+            initColorMap();
 
         // statistics
 
@@ -58,7 +61,13 @@ void NodeApp::initialize(int stage)
     }
     else if (stage == INITSTAGE_LAST) {
         cDisplayString& dispStr = this->getParentModule()->getDisplayString();
-        dispStr.setTagArg("b", 3, "red");
+        int size = colorMap.size();
+        if (productNr > size)
+            dispStr.setTagArg("b", 3, colorMap[productNr]);
+        else
+            dispStr.setTagArg("b", 3, "black");
+        dispStr.setTagArg("t", 0, productNr);
+        dispStr.setTagArg("t", 1, "r");
     }
 }
 
@@ -181,16 +190,16 @@ void NodeApp::finish()
 
 void NodeApp::initColorMap()
 {
-    colorMap[1]="steelblue";
-    colorMap[2]="tomato";
-    colorMap[3]="yellowgreen";
-    colorMap[4]="sandybrown";
-    colorMap[5]="plum";
-    colorMap[6]="moccasin";
-    colorMap[7]="navi";
-    colorMap[8]="olive";
-    colorMap[9]="wheat";
-    colorMap[10]="indianred";
+    colorMap.insert(pair<int, const char*>(1,"steelblue"));
+    colorMap.insert(pair<int, const char*>(2,"tomato"));
+    colorMap.insert(pair<int, const char*>(3,"yellowgreen"));
+    colorMap.insert(pair<int, const char*>(4,"sandybrown"));
+    colorMap.insert(pair<int, const char*>(5,"plum"));
+    colorMap.insert(pair<int, const char*>(6,"gold"));
+    colorMap.insert(pair<int, const char*>(7,"navi"));
+    colorMap.insert(pair<int, const char*>(8,"olive"));
+    colorMap.insert(pair<int, const char*>(9,"moccasin"));
+    colorMap.insert(pair<int, const char*>(10,"indianred"));
 }
 
 } //namespace
