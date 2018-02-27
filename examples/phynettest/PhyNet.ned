@@ -50,13 +50,13 @@ network PhyNet
                 //mobilityType = "StorageHallTractorMobility";
                 mobilityType = "StorageHallRandomMobility";
                 mobility.initAtCenter = true;
-                mobility.speed = 1mps; // stationary
+                mobility.speed = 0mps; // stationary
         }
         node[numNodes]: PhyNode {
             parameters:
                 @display("i=-;b=0.3,0.4,rect,,black,1");
                 mobilityType = "StorageHallGridMobility";
-                mobility.speed = 0.5mps; // stationary
+                mobility.speed = 0mps; // stationary
         }
 }
 

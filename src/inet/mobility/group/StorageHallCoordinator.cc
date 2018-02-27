@@ -71,11 +71,7 @@ void StorageHallCoordinator::initialize(int stage)
         totalXdim = 2*marginX+columns*(itemXdim+side2sideDist);
         totalYdim = 2*marginY+rows*(itemYdim+back2backDist)+interRowOffset;
         totalZdim = 2*marginZ+zLevels*(itemZdim+top2bottomDist);
-        printf("total x: %.1f m \n", totalXdim);
-        printf("total y: %.1f m \n", totalYdim);
-        printf("total z: %.1f m \n", totalZdim);
-
-
+        printf("dimensions x = %.1fm y = %.1fm z = %.1fm \n \n", totalXdim, totalYdim, totalZdim);
     }
 
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT) {
@@ -182,7 +178,6 @@ void StorageHallCoordinator::stopMoving()
     for (cModule::SubmoduleIterator it(netModule); !it.end(); it++)
     {
         cModule* submodule = *it;
-        printf("%s \n", submodule->getFullName());
         cModule* mobility = submodule->getModuleByPath(".mobility");
         if (mobility) {
             StorageHallMemberBase* member = dynamic_cast<StorageHallMemberBase*>(mobility);

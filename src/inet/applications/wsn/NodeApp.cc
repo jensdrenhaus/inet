@@ -111,6 +111,7 @@ void NodeApp::processMessage(cPacket *msg)
 //    msg->setIsReply(true);
 //
 //    send(msg, "appOut");
+    delete(msg);
 }
 
 void NodeApp::handleSelfMessage(cMessage *msg)
