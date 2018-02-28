@@ -33,13 +33,18 @@ class INET_API AccessPointApp : public WsnAppBase
   protected:
     //parameters
     cPar* sendIntervalPar = nullptr;
-    int count = 0;
+    int sendCount = 0;
+    cPar* sleepTime = nullptr;
+    int changeCount = 0;
     vector<unsigned int> productList;
+    int productIndex;
+    unsigned int productNr;
 
     //state
     cMessage *timer = nullptr;    // to schedule the next message
     long sendSeqNo = 0;    // to match the response with the request that caused the response
     long expectedReplySeqNo = 0;
+    bool random;
 
   protected:
     virtual void initialize(int stage) override;

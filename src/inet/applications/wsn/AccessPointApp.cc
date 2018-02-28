@@ -26,7 +26,9 @@ using std::cout;
 Define_Module(AccessPointApp);
 
 enum SelfKinds {
-    SEND = 1001,
+    PAGE_FIRST_PRODUCT = 1001,
+    PAGE_CHANGE_PRODUCT,
+    PAGE_SEND
 };
 
 AccessPointApp::AccessPointApp()
@@ -45,8 +47,13 @@ void AccessPointApp::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
         // read params
         sendIntervalPar = &par("sendInterval");
-        count = par("count");
+        sendCount = par("sendCount");
+        sleepTimePar = &par("sleepTime");
+        changeCount = par("changeCount");
         parseProductNumbers();
+        random = par("random");
+        productIndex = -1;
+        productNr = 0;
 
         // state
         sendSeqNo = expectedReplySeqNo = 0;
@@ -56,7 +63,7 @@ void AccessPointApp::initialize(int stage)
         // statistics
 
         // references
-        timer = new cMessage("sendPage", SEND);
+        timer = new cMessage("sendPage", PAGE_FIRST_PRODUCT);
     }
 }
 
@@ -121,10 +128,23 @@ void AccessPointApp::processMessage(cPacket *msg)
 
 void AccessPointApp::handleSelfMessage(cMessage *msg)
 {
-    ASSERT2(msg->getKind() == SEND, "Unknown kind in self message.");
+    if (msg->getKind() == PAGE_FIRST_PRODUCT) {
+        productIndex = random ? intuniform(0, (int)productList.size()-1) : 0;
+        msg->setKind(PAGE_CHANGE_PRODUCT);
+    }
+    if (msg->getKind(PAGE_CHANGE_PRODUCT)) {
+        if (productIndex >= (int)productList.size())
+            throw cRuntimeError("Something is wrong here! productIndex is out of range");
+        productNr = productList[productIndex];
+        EV_INFO << "Paging product" << productNr << endl;
+        msg->setKind(PAGE_SEND);
+    }
+
+    ASSERT2(msg->getKind() == PAGE_SEND, "Unknown kind in self message.");
     // send a message
     sendMsg();
     if (isEnabled())
+        //
         scheduleNextMsg(simTime());
     else {
         cModule* module = getModuleByPath("^.^.mobilityCoordinator");

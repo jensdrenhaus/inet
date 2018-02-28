@@ -34,5 +34,8 @@ simple AccessPointApp extends WsnAppBase
         bool random = default(false); // whether to randomly change the product number or change it in a round-robin fashion
         
         volatile double sendInterval @unit("s") = default(10s); // time to wait between requests (can be random)
-        double count = default(-1); // number of messages sent, -1 means continuously
+        int sendCount = default(1); // number of messages sent before change the product nr (> 0)
+        
+        volatile double sleepTime @unit("s") = default(10s); // time spend before paging the next product
+        int changeCount = default(-1) // number of product paging changes, -1 means forever
 }
