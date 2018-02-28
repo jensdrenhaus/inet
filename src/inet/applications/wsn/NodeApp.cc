@@ -44,9 +44,9 @@ void NodeApp::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
         // read params
         processDelay = &par("processDelay");
+        if (par("productNr").longValue() < 1)
+            throw cRuntimeError("productCount must be greater than 0!. Got: %i \n", int(par("productNr")));
         productNr = par("productNr");
-        if (productNr <= 0)
-            throw cRuntimeError("productNr must be greater than 0");
 
         // state
         if(hasGUI())
@@ -62,7 +62,7 @@ void NodeApp::initialize(int stage)
     else if (stage == INITSTAGE_LAST) {
         cDisplayString& dispStr = this->getParentModule()->getDisplayString();
         int size = colorMap.size();
-        if (productNr > size)
+        if (productNr <= size)
             dispStr.setTagArg("b", 3, colorMap[productNr]);
         else
             dispStr.setTagArg("b", 3, "black");

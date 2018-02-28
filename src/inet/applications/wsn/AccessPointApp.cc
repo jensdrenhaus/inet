@@ -46,6 +46,7 @@ void AccessPointApp::initialize(int stage)
         // read params
         sendIntervalPar = &par("sendInterval");
         count = par("count");
+        parseProductNumbers();
 
         // state
         sendSeqNo = expectedReplySeqNo = 0;
@@ -153,6 +154,48 @@ void AccessPointApp::sendMsg()
     msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
     EV_INFO << "Sending PageMsg #" << msg->getSeqNo() << " to lower layer.\n";
     send(msg, "appOut");
+}
+
+void AccessPointApp::parseProductNumbers()
+{
+    const char* productNrs = par("productNrs");
+    if (!strcmp(productNrs, "*")) {
+        if (par("productCount").longValue() < 1)
+            throw cRuntimeError("productCount must be greater than 0!. Got %i", int(par("productCount")));
+        unsigned int productCount = par("productCount");
+        for (unsigned int i=1; i<= productCount; i++)
+            productList.push_back(i);
+    }
+    else {
+        if (!strcmp(productNrs, ""))
+            throw cRuntimeError("You must specify at least one product number or use '*'! \n");
+        cStringTokenizer tokenizer(productNrs);
+        const char* token;
+        while ((token = tokenizer.nextToken()) != nullptr) {
+            int nr = toInt(token);
+            productList.push_back(nr);
+        }
+    }
+}
+
+unsigned int AccessPointApp::toInt(const char* s)
+{
+    unsigned int num = 0;
+    while (true) {
+        if (*s < '0' || *s > '9')
+            throw cRuntimeError("Cannot parse product number. Illegal character: '%c' ! \n", *s);
+        while (*s >= '0' && *s <= '9') {
+            num = 10*num + (*s - '0');
+            if (num > 65535)
+                throw cRuntimeError("Cannot parse product number. Number too big: '%i' ! \n", num);
+            s++;
+        }
+        if (num < 1)
+            throw cRuntimeError("Cannot parse product number. Must be greater the 0. Got: '%i' ! \n", num);
+        if (!*s)
+            break; //end of string
+    }
+    return num;
 }
 
 void AccessPointApp::finish()

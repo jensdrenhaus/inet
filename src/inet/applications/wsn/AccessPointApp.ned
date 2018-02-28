@@ -29,6 +29,10 @@ simple AccessPointApp extends WsnAppBase
         stopTime @unit("s") = default(-1s);
         packetSize @unit("B") = default(16B);
         
-        volatile double sendInterval @unit("s") = default(10s); // time to wait between pings (can be random)
+        int productCount = default(20);
+        string productNrs = default("1 2 3 4 5 6 7 8 9 022 03 3003 7777"); // product numbers to be requested, separated by spaces, "*" means every number from 1 to 'productCount'
+        bool random = default(false); // whether to randomly change the product number or change it in a round-robin fashion
+        
+        volatile double sendInterval @unit("s") = default(10s); // time to wait between requests (can be random)
         double count = default(-1); // number of messages sent, -1 means continuously
 }

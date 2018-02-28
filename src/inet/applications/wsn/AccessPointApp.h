@@ -16,12 +16,15 @@
 #ifndef __INET_ACCESSPOINTAPP_H_
 #define __INET_ACCESSPOINTAPP_H_
 
+#include <vector>
+
 #include "inet/common/INETDefs.h"
 
 #include "inet/applications/wsn/WsnAppBase.h"
 
 namespace inet {
 
+using namespace std;
 /**
  * TODO
  */
@@ -31,6 +34,7 @@ class INET_API AccessPointApp : public WsnAppBase
     //parameters
     cPar* sendIntervalPar = nullptr;
     int count = 0;
+    vector<unsigned int> productList;
 
     //state
     cMessage *timer = nullptr;    // to schedule the next message
@@ -53,6 +57,8 @@ class INET_API AccessPointApp : public WsnAppBase
     virtual void sendMsg();
 
     virtual void refreshDisplay() const override;
+    virtual void parseProductNumbers();
+    virtual unsigned int toInt(const char* s);
 
   public:
     AccessPointApp();

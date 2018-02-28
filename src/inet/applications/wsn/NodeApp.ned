@@ -29,7 +29,7 @@ simple NodeApp extends WsnAppBase
         stopTime @unit("s") = default(-1s);
         packetSize @unit("B") = default(16B);
         
-        int numProducts = default(10);
+        int numProducts = default(3);
         int productNr = default(intuniform(1,numProducts));
         
         double fixProcessDelay @unit("ms") = default(0ms);
