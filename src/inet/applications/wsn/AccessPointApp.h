@@ -40,7 +40,7 @@ class INET_API AccessPointApp : public WsnAppBase
     int numChanges = 0;
     vector<unsigned int> productList;
     int productIndex;
-    unsigned int productNr;
+    unsigned int productNo;
 
     //state
     cMessage *timer = nullptr;    // to schedule the next message

@@ -25,5 +25,6 @@ packet PageResponseMsg
 {
     long originatorId; // sender module id
     long seqNo; // sequence number
+    int productNo;
     int type;
 }

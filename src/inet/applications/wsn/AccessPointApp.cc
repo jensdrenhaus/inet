@@ -57,7 +57,7 @@ void AccessPointApp::initialize(int stage)
         parseProductNumbers();
         random = par("random");
         productIndex = -1;
-        productNr = 0;
+        productNo = 0;
 
         // state
         sendSeqNo = expectedReplySeqNo = 0;
@@ -152,8 +152,8 @@ void AccessPointApp::handleSelfMessage(cMessage *msg)
     if (msg->getKind() == PAGE_CHANGE_PRODUCT) {
         if (productIndex >= (int)productList.size())
             throw cRuntimeError("Something is wrong here! productIndex is out of range");
-        productNr = productList[productIndex];
-        EV_INFO << "Paging product" << productNr << endl;
+        productNo = productList[productIndex];
+        EV_INFO << "Paging product" << productNo << endl;
         msg->setKind(PAGE_SEND);
         sendSeqNo = 0;
     }
@@ -184,7 +184,7 @@ void AccessPointApp::handleSelfMessage(cMessage *msg)
 void AccessPointApp::sendMsg()
 {
     char name[32];
-    sprintf(name, "PAGE%i-seq%li",productNr, sendSeqNo);
+    sprintf(name, "PAGE%i-seq%li",productNo, sendSeqNo);
 
     PageMsg *msg = new PageMsg(name);
     ASSERT(nodeId != 0);
@@ -206,22 +206,22 @@ void AccessPointApp::sendMsg()
 
 void AccessPointApp::parseProductNumbers()
 {
-    const char* productNrs = par("productNrs");
-    if (!strcmp(productNrs, "*")) {
-        if (par("productCount").longValue() < 1)
-            throw cRuntimeError("productCount must be greater than 0!. Got %i", int(par("productCount")));
-        unsigned int productCount = par("productCount");
-        for (unsigned int i=1; i<= productCount; i++)
+    const char* productNumbers = par("productNumbers");
+    if (!strcmp(productNumbers, "*")) {
+        if (par("numProducts").longValue() < 1)
+            throw cRuntimeError("numProducts must be greater than 0!. Got %i", int(par("numProducts")));
+        unsigned int numProducts = par("numProducts");
+        for (unsigned int i=1; i<= numProducts; i++)
             productList.push_back(i);
     }
     else {
-        if (!strcmp(productNrs, ""))
+        if (!strcmp(productNumbers, ""))
             throw cRuntimeError("You must specify at least one product number or use '*'! \n");
-        cStringTokenizer tokenizer(productNrs);
+        cStringTokenizer tokenizer(productNumbers);
         const char* token;
         while ((token = tokenizer.nextToken()) != nullptr) {
-            int nr = toInt(token);
-            productList.push_back(nr);
+            int number = toInt(token);
+            productList.push_back(number);
         }
     }
 }

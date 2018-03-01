@@ -24,6 +24,7 @@ namespace inet;
 packet PageMsg
 {
     long originatorId; // sender module id
+    int productNo;
     long seqNo; // sequence number
     unsigned char data[];
 }

@@ -34,7 +34,7 @@ class INET_API NodeApp : public WsnAppBase
   protected:
     //parameters
     cPar* processDelay = nullptr;
-    unsigned int productNr;
+    unsigned int productNo;
     map<int, const char*>colorMap;
 
     //state

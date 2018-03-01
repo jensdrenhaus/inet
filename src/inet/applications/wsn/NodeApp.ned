@@ -30,7 +30,7 @@ simple NodeApp extends WsnAppBase
         packetSize @unit("B") = default(16B);
         
         int numProducts = default(3);
-        int productNr = default(intuniform(1,numProducts));
+        int productNo = default(intuniform(1,numProducts));
         
         double fixProcessDelay @unit("ms") = default(0ms);
         volatile double randomProcessDelay @unit("us") = default(0us);
