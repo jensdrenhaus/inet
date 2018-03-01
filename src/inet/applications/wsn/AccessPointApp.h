@@ -34,8 +34,10 @@ class INET_API AccessPointApp : public WsnAppBase
     //parameters
     cPar* sendIntervalPar = nullptr;
     int sendCount = 0;
-    cPar* sleepTime = nullptr;
+    int numSent = 0;
+    cPar* sleepTimePar = nullptr;
     int changeCount = 0;
+    int numChanges = 0;
     vector<unsigned int> productList;
     int productIndex;
     unsigned int productNr;
@@ -57,7 +59,7 @@ class INET_API AccessPointApp : public WsnAppBase
     virtual void stopOperating() override;
     virtual bool isEnabled() override;
 
-    virtual void scheduleNextMsg(simtime_t previous);
+    virtual void scheduleNextMsg(simtime_t previous, bool withProductChange);
     virtual void cancelNextMsg();
     virtual void sendMsg();
 

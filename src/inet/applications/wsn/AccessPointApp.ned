@@ -29,13 +29,13 @@ simple AccessPointApp extends WsnAppBase
         stopTime @unit("s") = default(-1s);
         packetSize @unit("B") = default(16B);
         
-        int productCount = default(20);
-        string productNrs = default("1 2 3 4 5 6 7 8 9 022 03 3003 7777"); // product numbers to be requested, separated by spaces, "*" means every number from 1 to 'productCount'
+        int productCount = default(3);
+        string productNrs = default("*"); // product numbers to be requested, separated by spaces, "*" means every number from 1 to 'productCount'
         bool random = default(false); // whether to randomly change the product number or change it in a round-robin fashion
         
-        volatile double sendInterval @unit("s") = default(10s); // time to wait between requests (can be random)
-        int sendCount = default(1); // number of messages sent before change the product nr (> 0)
+        volatile double sendInterval @unit("s") = default(3s); // time to wait between requests (can be random)
+        int sendCount = default(2); // number of messages sent before change the product nr (> 0)
         
-        volatile double sleepTime @unit("s") = default(10s); // time spend before paging the next product
-        int changeCount = default(-1) // number of product paging changes, -1 means forever
+        volatile double sleepTime @unit("s") = default(10s); // sleep time before paging the next product (in addition to sendInterval)
+        int changeCount = default(0); // number of product paging changes, -1 means forever (2 changes meas paging 3 products)
 }

@@ -48,8 +48,12 @@ void AccessPointApp::initialize(int stage)
         // read params
         sendIntervalPar = &par("sendInterval");
         sendCount = par("sendCount");
+        numSent = 0;
+        if (sendCount <= 0)
+            throw cRuntimeError("Invalid sendCount. Must be greater than 0!");
         sleepTimePar = &par("sleepTime");
         changeCount = par("changeCount");
+        numChanges = 0;
         parseProductNumbers();
         random = par("random");
         productIndex = -1;
@@ -78,10 +82,10 @@ void AccessPointApp::startOperating()
 {
     ASSERT(!timer->isScheduled());
     lastStart = simTime();
-    timer->setKind(SEND);
-    sentCount = 0;
+    timer->setKind(PAGE_FIRST_PRODUCT);
+    numSent = 0;
     sendSeqNo = 0;
-    scheduleNextMsg(-1);
+    scheduleNextMsg(-1, false);
 }
 
 void AccessPointApp::stopOperating()
@@ -91,13 +95,16 @@ void AccessPointApp::stopOperating()
     cancelNextMsg();
 }
 
-void AccessPointApp::scheduleNextMsg(simtime_t previous)
+void AccessPointApp::scheduleNextMsg(simtime_t previous, bool withProductChange)
 {
     simtime_t next;
     if (previous < SIMTIME_ZERO)
         next = simTime() <= startTime ? startTime : simTime();
-    else
+    else {
         next = previous + sendIntervalPar->doubleValue();
+        if (withProductChange)
+            next += sleepTimePar->doubleValue();
+    }
     if (stopTime < SIMTIME_ZERO || next < stopTime)
         scheduleAt(next, timer);
 }
@@ -109,7 +116,16 @@ void AccessPointApp::cancelNextMsg()
 
 bool AccessPointApp::isEnabled()
 {
-    return (count == -1 || sentCount < count);
+    if (changeCount == -1)
+        return true;
+    else {
+        if (numChanges < changeCount)
+            return true;
+        else if (sendSeqNo < sendCount)
+            return true;
+        else
+            return false;
+    }
 }
 
 void AccessPointApp::processMessage(cPacket *msg)
@@ -124,6 +140,7 @@ void AccessPointApp::processMessage(cPacket *msg)
 //    msg->setIsReply(true);
 //
 //    send(msg, "appOut");
+    delete(msg);
 }
 
 void AccessPointApp::handleSelfMessage(cMessage *msg)
@@ -132,21 +149,32 @@ void AccessPointApp::handleSelfMessage(cMessage *msg)
         productIndex = random ? intuniform(0, (int)productList.size()-1) : 0;
         msg->setKind(PAGE_CHANGE_PRODUCT);
     }
-    if (msg->getKind(PAGE_CHANGE_PRODUCT)) {
+    if (msg->getKind() == PAGE_CHANGE_PRODUCT) {
         if (productIndex >= (int)productList.size())
             throw cRuntimeError("Something is wrong here! productIndex is out of range");
         productNr = productList[productIndex];
         EV_INFO << "Paging product" << productNr << endl;
         msg->setKind(PAGE_SEND);
+        sendSeqNo = 0;
     }
 
     ASSERT2(msg->getKind() == PAGE_SEND, "Unknown kind in self message.");
     // send a message
     sendMsg();
-    if (isEnabled())
-        //
-        scheduleNextMsg(simTime());
+
+    if (isEnabled()) {
+        if (numSent % sendCount == 0) {
+            //change product
+            productIndex = random ? intuniform(0, (int)productList.size()-1) : productIndex+1;
+            if (productIndex >= productList.size())
+                productIndex = 0;
+            msg->setKind(PAGE_CHANGE_PRODUCT);
+            numChanges++;
+        }
+        scheduleNextMsg(simTime(), msg->getKind() == PAGE_CHANGE_PRODUCT);
+    }
     else {
+        // cancel all moving events
         cModule* module = getModuleByPath("^.^.mobilityCoordinator");
         StorageHallCoordinator* mobilityCoordinator = check_and_cast<StorageHallCoordinator*>(module);
         mobilityCoordinator->stopMoving();
@@ -156,7 +184,7 @@ void AccessPointApp::handleSelfMessage(cMessage *msg)
 void AccessPointApp::sendMsg()
 {
     char name[32];
-    sprintf(name, "page%ld", sendSeqNo);
+    sprintf(name, "PAGE%i-seq%li",productNr, sendSeqNo);
 
     PageMsg *msg = new PageMsg(name);
     ASSERT(nodeId != 0);
@@ -166,7 +194,7 @@ void AccessPointApp::sendMsg()
 
     emit(pingTxSeqSignal, sendSeqNo);
     sendSeqNo++;
-    sentCount++;
+    numSent++;
     SimpleLinkLayerControlInfo* controlInfo = new SimpleLinkLayerControlInfo;
     controlInfo->setSourceAddress(srcAddr);
     controlInfo->setDestinationAddress(MACAddress::BROADCAST_ADDRESS);
