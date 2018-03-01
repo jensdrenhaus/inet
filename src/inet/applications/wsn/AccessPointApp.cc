@@ -16,6 +16,7 @@
 #include "inet/applications/wsn/AccessPointApp.h"
 
 #include "inet/applications/wsn/PageMsg_m.h"
+#include "inet/applications/wsn/PageResponseMsg_m.h"
 #include "inet/linklayer/common/SimpleLinkLayerControlInfo.h"
 #include "inet/mobility/group/StorageHallCoordinator.h"
 
@@ -130,16 +131,6 @@ bool AccessPointApp::isEnabled()
 
 void AccessPointApp::processMessage(cPacket *msg)
 {
-//    // change addresses and send out reply
-//    SimpleLinkLayerControlInfo *ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
-//    //MACAddress src = ctrl->getSourceAddress();
-//    //MACAddress dest = ctrl->getDestinationAddress();
-//    ctrl->setDestinationAddress(MACAddress::BROADCAST_ADDRESS);
-//    ctrl->setSourceAddress(MACAddress::UNSPECIFIED_ADDRESS);
-//    msg->setName((std::string(msg->getName()) + "-reply").c_str());
-//    msg->setIsReply(true);
-//
-//    send(msg, "appOut");
     delete(msg);
 }
 
@@ -189,6 +180,7 @@ void AccessPointApp::sendMsg()
     PageMsg *msg = new PageMsg(name);
     ASSERT(nodeId != 0);
     msg->setOriginatorId(nodeId);
+    msg->setProductNo(productNo);
     msg->setSeqNo(sendSeqNo);
     msg->setByteLength(packetSize);
 

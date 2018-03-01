@@ -15,6 +15,8 @@
 
 #include "inet/applications/wsn/NodeApp.h"
 
+#include "inet/applications/wsn/PageMsg_m.h"
+#include "inet/applications/wsn/PageResponseMsg_m.h"
 #include "inet/applications/wsn/PageResponseMsg_m.h"
 #include "inet/linklayer/common/SimpleLinkLayerControlInfo.h"
 
@@ -117,6 +119,28 @@ bool NodeApp::isEnabled()
 
 void NodeApp::processMessage(cPacket *msg)
 {
+    PageMsg* request = dynamic_cast<PageMsg*>(msg);
+    if (request) {
+        if (request->getProductNo() == productNo) {
+            char name[32];
+            sprintf(name, "RESPONSE%i-seq%li",productNo, request->getSeqNo());
+            PageResponseMsg *response = new PageResponseMsg(name);
+            response->setProductNo(productNo);
+            response->setOriginatorId(nodeId);
+            response->setByteLength(request->getByteLength());
+
+            SimpleLinkLayerControlInfo* req_ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
+            SimpleLinkLayerControlInfo* new_ctrl = new SimpleLinkLayerControlInfo();
+            new_ctrl->setDestinationAddress(req_ctrl->getSourceAddress());
+            new_ctrl->setSourceAddress(srcAddr);
+
+            response->setControlInfo(new_ctrl);
+            EV_INFO << "Sending Response" <<  " to lower layer.\n";
+            send(response, "appOut");
+        }
+
+    }
+
 //    // change addresses and send out reply
 //    SimpleLinkLayerControlInfo *ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
 //    //MACAddress src = ctrl->getSourceAddress();
