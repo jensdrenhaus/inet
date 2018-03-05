@@ -21,7 +21,7 @@ package inet.examples.phynettest;
 
 import inet.node.wsn.AccessPoint;
 import inet.node.wsn.PhyNode;
-import inet.physicallayer.idealradio.IdealRadioMedium;
+import inet.physicallayer.contract.packetlevel.IRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.mobility.group.StorageHallCoordinator;
 
@@ -30,12 +30,13 @@ network PhyNet
     parameters:
         @display("bgu=m");
 		int numNodes;
+		string radioMediumType = default("IdealRadioMedium");
     submodules:
         visualizer: <default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
             parameters:
                 @display("p=0.5,-0.8;is=s");
         }
-        radioMedium: IdealRadioMedium {
+        radioMedium: <radioMediumType> like IRadioMedium {
             parameters:
                 @display("p=1.5,-0.8;is=s");
         }
