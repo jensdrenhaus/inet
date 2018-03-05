@@ -58,10 +58,10 @@ void WsnAppBase::initialize(int stage)
 
         // statistics
         rttStat.setName("pingRTT");
-        sentCount = lossCount = outOfOrderArrivalCount = numPongs = 0;
+        sentCount = lossCount = outOfOrderArrivalCount = numReplies = 0;
         WATCH(lossCount);
         WATCH(outOfOrderArrivalCount);
-        WATCH(numPongs);
+        WATCH(numReplies);
 
         // references
         cModule* module = this->getParentModule()->getSubmodule("interfaceTable");
@@ -111,7 +111,7 @@ void WsnAppBase::handleMessage(cMessage *msg)
 //void WsnAppBase::refreshDisplay() const
 //{
 //    char buf[40];
-//    sprintf(buf, "sent: %ld pks\nrcvd: %ld pks", sentCount, numPongs);
+//    sprintf(buf, "sent: %ld pks\nrcvd: %ld pks", sentCount, numReplies);
 //    getDisplayString().setTagArg("t", 0, buf);
 //}
 
@@ -139,78 +139,6 @@ bool WsnAppBase::isNodeUp()
 {
     return !nodeStatus || nodeStatus->getState() == NodeStatus::UP;
 }
-
-//void WsnAppBase::processPingResponse(SimplePayload *msg)
-//{
-//    if (msg->getOriginatorId() != pid) {
-//        EV_WARN << "Received response was not sent by this application, dropping packet\n";
-//        delete msg;
-//        return;
-//    }
-//
-//    // get src, hopCount etc from packet, and print them
-//    SimpleLinkLayerControlInfo *ctrl = check_and_cast<SimpleLinkLayerControlInfo *>(msg->getControlInfo());
-//    MACAddress src = ctrl->getSourceAddress();
-//    //L3Address dest = ctrl->getDestinationAddress();
-//
-//    // calculate the RTT time by looking up the the send time of the packet
-//    // if the send time is no longer available (i.e. the packet is very old and the
-//    // sendTime was overwritten in the circular buffer) then we just return a 0
-//    // to signal that this value should not be used during the RTT statistics)
-//    simtime_t rtt = sendSeqNo - msg->getSeqNo() > PING_HISTORY_SIZE ?
-//        0 : simTime() - sendTimeHistory[msg->getSeqNo() % PING_HISTORY_SIZE];
-//
-//    if (printStat) {
-//        cout << getFullPath() << ": reply of " << std::dec << msg->getByteLength()
-//             << " bytes from " << src
-//             << " icmp_seq=" << msg->getSeqNo()
-//             << " time=" << (rtt * 1000) << " msec"
-//             << " (" << msg->getName() << ")" << endl;
-//    }
-//
-//    // update statistics
-//    countPingResponse(msg->getByteLength(), msg->getSeqNo(), rtt);
-//    delete msg;
-//}
-
-//void WsnAppBase::countPingResponse(int bytes, long seqNo, simtime_t rtt)
-//{
-//    EV_INFO << "Ping reply #" << seqNo << " arrived, rtt=" << rtt << "\n";
-//    emit(pingRxSeqSignal, seqNo);
-//
-//    numPongs++;
-//
-//    // count only non 0 RTT values as 0s are invalid
-//    if (rtt > 0) {
-//        rttStat.collect(rtt);
-//        emit(rttSignal, rtt);
-//    }
-//
-//    if (seqNo == expectedReplySeqNo) {
-//        // expected ping reply arrived; expect next sequence number
-//        expectedReplySeqNo++;
-//    }
-//    else if (seqNo > expectedReplySeqNo) {
-//        EV_DETAIL << "Jump in seq numbers, assuming pings since #" << expectedReplySeqNo << " got lost\n";
-//
-//        // jump in the sequence: count pings in gap as lost for now
-//        // (if they arrive later, we'll decrement back the loss counter)
-//        long jump = seqNo - expectedReplySeqNo;
-//        lossCount += jump;
-//        emit(numLostSignal, lossCount);
-//
-//        // expect sequence numbers to continue from here
-//        expectedReplySeqNo = seqNo + 1;
-//    }
-//    else {    // seqNo < expectedReplySeqNo
-//              // ping reply arrived too late: count as out-of-order arrival (not loss after all)
-//        EV_DETAIL << "Arrived out of order (too late)\n";
-//        outOfOrderArrivalCount++;
-//        lossCount--;
-//        emit(numOutOfOrderArrivalsSignal, outOfOrderArrivalCount);
-//        emit(numLostSignal, lossCount);
-//    }
-//}
 
 
 } //namespace

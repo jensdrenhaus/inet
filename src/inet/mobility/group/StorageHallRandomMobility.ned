@@ -23,8 +23,8 @@ import inet.mobility.single.MassMobility;
 simple StorageHallRandomMobility extends MassMobility
 {
     parameters:
-        changeInterval = normal(5s, 0.1s);
-        changeAngleBy = normal(0deg, 30deg);
+        changeInterval = default(normal(4s, 0.1s));
+        changeAngleBy = default(normal(0deg, 40deg));
         speed = default(0.5mps);
         bool initAtCenter = default(false);
         @class(StorageHallRandomMobility);

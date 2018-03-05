@@ -39,7 +39,7 @@ class INET_API AccessPointApp : public WsnAppBase
     int changeCount = 0;
     int numChanges = 0;
     vector<unsigned int> productList;
-    int productIndex;
+    unsigned int productIndex;
     unsigned int productNo;
 
     //state

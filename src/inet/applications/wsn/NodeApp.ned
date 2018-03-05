@@ -26,7 +26,7 @@ simple NodeApp extends WsnAppBase
         @class(NodeApp);
         
         startTime @unit("s") = default(0s);
-        stopTime @unit("s") = default(-1s);
+        stopTime @unit("s") = default(-1s); // -1 means no stop time
         packetSize @unit("B") = default(16B);
         
         int numProducts = default(3);

@@ -24,10 +24,10 @@ simple StorageHallTractorMobility extends TractorMobility
 {
     parameters:
         speed = default(0.5mps);
-        x1 = 0m; // will be set during init
-        y1 = 0m; // will be set during init
-        x2 = 1m; // will be set during init
-        y2 = 1m; // will be set during init
-        rowCount = 1; // will be set during init
+        x1 = 0m; // will be reset during network initialisation
+        y1 = 0m; // will be reset during network initialisation
+        x2 = 1m; // will be reset during network initialisation
+        y2 = 1m; // will be reset during network initialisation
+        rowCount = 1; // will be reset during network initialisation
         @class(StorageHallTractorMobility);
 }

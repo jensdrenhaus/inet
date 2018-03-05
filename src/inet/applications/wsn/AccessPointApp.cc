@@ -75,7 +75,7 @@ void AccessPointApp::initialize(int stage)
 void AccessPointApp::refreshDisplay() const
 {
     char buf[40];
-    sprintf(buf, "sent: %ld pks\nrcvd: %ld pks", sentCount, numPongs);
+    sprintf(buf, "sent: %ld pks\nrcvd: %ld pks", sentCount, numReplies);
     getDisplayString().setTagArg("t", 0, buf);
 }
 
@@ -131,6 +131,7 @@ bool AccessPointApp::isEnabled()
 
 void AccessPointApp::processMessage(cPacket *msg)
 {
+    numReplies++;
     delete(msg);
 }
 
@@ -141,7 +142,7 @@ void AccessPointApp::handleSelfMessage(cMessage *msg)
         msg->setKind(PAGE_CHANGE_PRODUCT);
     }
     if (msg->getKind() == PAGE_CHANGE_PRODUCT) {
-        if (productIndex >= (int)productList.size())
+        if (productIndex >= productList.size())
             throw cRuntimeError("Something is wrong here! productIndex is out of range");
         productNo = productList[productIndex];
         EV_INFO << "Paging product" << productNo << endl;
@@ -258,7 +259,7 @@ void AccessPointApp::finish()
         cout << "\t" << getFullPath() << endl;
         cout << "--------------------------------------------------------" << endl;
 
-        cout << "sent: " << sendSeqNo << "   received: " << numPongs << "   loss rate (%): " << (100 * lossCount / (double)sendSeqNo) << endl;
+        cout << "sent: " << sendSeqNo << "   received: " << numReplies << "   loss rate (%): " << (100 * lossCount / (double)sendSeqNo) << endl;
         cout << "round-trip min/avg/max (ms): " << (rttStat.getMin() * 1000.0) << "/"
              << (rttStat.getMean() * 1000.0) << "/" << (rttStat.getMax() * 1000.0) << endl;
         cout << "stddev (ms): " << (rttStat.getStddev() * 1000.0) << "   variance:" << rttStat.getVariance() << endl;

@@ -58,7 +58,7 @@ class INET_API WsnAppBase : public cSimpleModule, public ILifecycle
     long sentCount = 0;    // number of sent Ping requests
     long lossCount = 0;    // number of lost requests
     long outOfOrderArrivalCount = 0;    // number of responses which arrived too late
-    long numPongs = 0;    // number of received Ping requests
+    long numReplies = 0;    // number of received Ping requests
 
   protected:
     virtual void initialize(int stage) override;
