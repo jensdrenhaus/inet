@@ -37,5 +37,5 @@ simple AccessPointApp extends WsnAppBase
         int sendCount = default(2); // number of messages sent before change the product nr (> 0)
         
         volatile double sleepTime @unit("s") = default(10s); // sleep time before paging the next product (in addition to sendInterval)
-        int changeCount = default(1); // number of product paging changes, -1 means forever (2 changes -> paging 3 products)
+        int changeCount = default(0); // number of product paging changes, -1 means forever (2 changes -> paging 3 products)
 }
