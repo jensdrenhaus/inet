@@ -13,23 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+cplusplus {{
+#include "inet/common/INETDefs.h"
+}}
 
-import inet.applications.contract.IMACApp;
+namespace inet;
 
 //
-// TODO
-//
-module PhyNode extends TinyNodeBase
+// 
+packet PageResponseMsg
 {
-	parameters:
-	    @display("i=msg/packet");
-	submodules:
-	    app: <default("NodeApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
+    long originatorId; // sender module id
+    long seqNo; // sequence number
+    int productNo;
+    int type;
 }

@@ -13,23 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+package inet.mobility.group;
 
-import inet.applications.contract.IMACApp;
+import inet.mobility.single.MassMobility;
 
 //
-// TODO
+// TODO auto-generated module
 //
-module PhyNode extends TinyNodeBase
+simple StorageHallRandomMobility extends MassMobility
 {
-	parameters:
-	    @display("i=msg/packet");
-	submodules:
-	    app: <default("NodeApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
+    parameters:
+        changeInterval = default(normal(4s, 0.1s));
+        changeAngleBy = default(normal(0deg, 40deg));
+        speed = default(0.5mps);
+        bool initAtCenter = default(false);
+        @class(StorageHallRandomMobility);
 }

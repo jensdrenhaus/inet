@@ -13,20 +13,26 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-cplusplus {{
-#include "inet/common/INETDefs.h"
-}}
+package inet.applications.wsn;
 
-namespace inet;
+import inet.applications.wsn.WsnAppBase;
 
 //
-// Represents payload in an MAC Echo Request/Reply.
+// TODO auto-generated module
 //
-// TODO: move originator id and sequence number to ICMPMessage and use an ICMPControlInfo
-packet SimplePayload
+simple NodeApp extends WsnAppBase
 {
-    long originatorId; // sender module id
-    long seqNo; // sequence number
-    unsigned char data[];
-    bool isReply = false;
+    parameters:
+        @class(NodeApp);
+        
+        startTime @unit("s") = default(0s);
+        stopTime @unit("s") = default(-1s); // -1 means no stop time
+        packetSize @unit("B") = default(16B);
+        
+        int numProducts = default(3);
+        int productNo = default(intuniform(1,numProducts));
+        
+        double fixProcessDelay @unit("ms") = default(0ms);
+        volatile double randomProcessDelay @unit("us") = default(0us);
+        volatile double processDelay = fixProcessDelay + randomProcessdelay;
 }

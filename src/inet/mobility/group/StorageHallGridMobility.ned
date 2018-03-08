@@ -13,23 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+package inet.mobility.group;
 
-import inet.applications.contract.IMACApp;
+import inet.mobility.base.MovingMobilityBase;
 
 //
-// TODO
+// TODO auto-generated module
 //
-module PhyNode extends TinyNodeBase
+simple StorageHallGridMobility extends MovingMobilityBase
 {
-	parameters:
-	    @display("i=msg/packet");
-	submodules:
-	    app: <default("NodeApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
+    parameters:
+        volatile double speed @unit(mps) = default(0.5mps); // use uniform(minSpeed, maxSpeed) or another distribution
+        volatile double waitTime @unit(s) = default(uniform(30s,90s)); // wait time between reaching a target and choosing a new one
+        updateInterval @unit(s) = default(1s); // the simulation time interval used to regularly signal mobility state changes and update the display
+        @class(StorageHallGridMobility);
 }

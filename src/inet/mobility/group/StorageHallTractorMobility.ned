@@ -13,23 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+package inet.mobility.group;
 
-import inet.applications.contract.IMACApp;
+import inet.mobility.single.TractorMobility;
 
 //
-// TODO
+// TODO auto-generated module
 //
-module PhyNode extends TinyNodeBase
+simple StorageHallTractorMobility extends TractorMobility
 {
-	parameters:
-	    @display("i=msg/packet");
-	submodules:
-	    app: <default("NodeApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
+    parameters:
+        speed = default(0.5mps);
+        x1 = 0m; // will be reset during network initialisation
+        y1 = 0m; // will be reset during network initialisation
+        x2 = 1m; // will be reset during network initialisation
+        y2 = 1m; // will be reset during network initialisation
+        rowCount = 1; // will be reset during network initialisation
+        @class(StorageHallTractorMobility);
 }

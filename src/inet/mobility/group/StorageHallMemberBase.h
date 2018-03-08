@@ -13,23 +13,22 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.node.wsn;
+#ifndef __INET_STORAGEHALLMEMBERBASE_H_
+#define __INET_STORAGEHALLMEMBERBASE_H_
 
-import inet.applications.contract.IMACApp;
+#include "inet/common/INETDefs.h"
 
-//
-// TODO
-//
-module PhyNode extends TinyNodeBase
+namespace inet {
+
+/**
+ * TODO - Generated class
+ */
+class INET_API StorageHallMemberBase
 {
-	parameters:
-	    @display("i=msg/packet");
-	submodules:
-	    app: <default("NodeApp")> like IMACApp {
-            parameters:
-                @display("i=device/terminal;p=216,141");
-        }
-	connections allowunconnected:
-	    nic.upperLayerOut --> app.appIn;
-        nic.upperLayerIn <-- app.appOut;
-}
+  public:
+    virtual void stopMoving() = 0;
+};
+
+} //namespace
+
+#endif

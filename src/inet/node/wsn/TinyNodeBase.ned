@@ -38,7 +38,8 @@ module TinyNodeBase like ITinyNode
         int numRadios = 1;
         string osgModel = default(""); // 3D model for OSG visualization, no 3D model by default
         string osgModelColor = default(""); // tint color, no colorization by default
-        string mobilityType = default(numRadios > 0 ? "StationaryMobility" : "");
+        string mobilityType = default("StationaryMobility");
+        string nicType = default("SimpleWirelessNic");
         string energyStorageType = default("");
         string energyManagementType = default("");
         string energyGeneratorType = default("");
@@ -61,7 +62,7 @@ module TinyNodeBase like ITinyNode
                 @display("p=50,150;i=block/plug;is=s");
         }
         // optional mobility module. Required only if wireless cards are present
-        mobility: <mobilityType> like IMobility if mobilityType != "" {
+        mobility: <mobilityType> like IMobility {
             parameters:
                 @display("p=53,200");
         }
@@ -70,9 +71,9 @@ module TinyNodeBase like ITinyNode
             parameters:
                 @display("p=53,300;is=s");
         }
-        nic: <default("SimpleWirelessNic")> like IWirelessNic {
+        nic: <nicType> like IWirelessNic {
             parameters:
-                @display("p=216,406,row,60;q=queue");
+                @display("p=216,241,;q=queue");
         }
 	connections allowunconnected:
         radioIn --> { @display("m=s"); } --> nic.radioIn;

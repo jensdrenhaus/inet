@@ -20,12 +20,12 @@ import inet.applications.contract.IMACApp;
 //
 // TODO
 //
-module PhyNode extends TinyNodeBase
+module AccessPoint extends TinyNodeBase
 {
-	parameters:
-	    @display("i=msg/packet");
+    parameters:
+	    @display("i=device/accesspoint");
 	submodules:
-	    app: <default("NodeApp")> like IMACApp {
+	    app: <default("AccessPointApp")> like IMACApp {
             parameters:
                 @display("i=device/terminal;p=216,141");
         }
