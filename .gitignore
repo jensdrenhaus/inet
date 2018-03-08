@@ -75,3 +75,8 @@ xxx
 /examples/phynettest_mono/.*
 /examples/phynettest_mono/*.json
 /src/.fuse_*
+
+#ignore latex compilation files
+/doc/src/manual/*.aux
+/doc/src/manual/*.idx
+/doc/src/manual/*.toc
