@@ -80,3 +80,4 @@ xxx
 /doc/src/manual/*.aux
 /doc/src/manual/*.idx
 /doc/src/manual/*.toc
+/.computed/
