@@ -74,6 +74,10 @@ xxx
 # ignore some files in phynettest_mono example
 /examples/phynettest_mono/.*
 /examples/phynettest_mono/*.json
+/examples/phynettest_mono/PhyNetFlow.OMNeT
+/examples/phynettest_mono/createdump
+/examples/phynettest_mono/setuplinux
+/examples/phynettest_mono/sosdocsunix.txt
 /src/.fuse_*
 
 #ignore latex compilation files
