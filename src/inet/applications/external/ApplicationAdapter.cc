@@ -25,6 +25,8 @@ extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->c
 extern "C" void aa_send(unsigned long srcId, unsigned long destId, int numBytes, int msgId) {ApplicationAdapter::instance->send(srcId, destId, numBytes, msgId);}
 extern "C" void aa_wait_ms(unsigned long id, int duration) {ApplicationAdapter::instance->wait_ms(id, duration);}
 extern "C" void aa_wait_s(unsigned long id, int duration) {ApplicationAdapter::instance->wait_s(id, duration);}
+extern "C" void aa_set_global_timer_ms(int duration) {ApplicationAdapter::instance->setGlobalTimer_ms(duration);}
+extern "C" void aa_set_global_timer_s(int duration) {ApplicationAdapter::instance->setGlobalTimer_s(duration);}
 
 ApplicationAdapter* ApplicationAdapter::instance = nullptr;
 
@@ -99,8 +101,12 @@ void ApplicationAdapter::initialize(int stage)
 
 void ApplicationAdapter::handleMessage(cMessage *msg)
 {
-    if (msg->isSelfMessage())
-        call_simulationReady();
+    if (msg->isSelfMessage()) {
+        if (msg->getKind() == timer_kind)
+            call_globalTimerNotify();
+        else if (msg->getKind() == trigger_kind)
+            call_simulationReady();
+    }
 }
 
 void ApplicationAdapter::finish()
@@ -136,6 +142,24 @@ void ApplicationAdapter::wait_s(unsigned long id, int duration)
     simtime_t t = SimTime(duration, SIMTIME_S);
     ExternalApp* app = checkNodeId(id);
     app->wait(t);
+}
+
+void ApplicationAdapter::setGlobalTimer_ms(int duration)
+{
+    simtime_t t = SimTime(duration, SIMTIME_MS);
+    if (!timer->isScheduled())
+        scheduleAt(simTime()+t, timer);
+    else
+        throw cRuntimeError("timer is already scheduled");
+}
+
+void ApplicationAdapter::setGlobalTimer_s(int duration)
+{
+    simtime_t t = SimTime(duration, SIMTIME_S);
+    if (!timer->isScheduled())
+            scheduleAt(simTime()+t, timer);
+    else
+        throw cRuntimeError("timer is already scheduled");
 }
 
 void ApplicationAdapter::createNode(unsigned long id)
@@ -190,7 +214,7 @@ void ApplicationAdapter::call_simulationReady()
 void ApplicationAdapter::call_simulationFinished()
 {
     MonoMethod* m = checkFunctionPtr("simulationFinished");
-        mono_runtime_invoke (m, NULL, NULL, NULL);
+    mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
 void ApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
@@ -216,6 +240,12 @@ void ApplicationAdapter::call_timerNotify(unsigned long nodeId)
 
     MonoMethod* m = checkFunctionPtr("timerNotify");
     mono_runtime_invoke (m, NULL, args, NULL);
+}
+
+void ApplicationAdapter::call_globalTimerNotify()
+{
+    MonoMethod* m = checkFunctionPtr("globalTimerNotify");
+    mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
 /*
@@ -319,6 +349,7 @@ ApplicationAdapter::ApplicationAdapter()
 {
     instance = nullptr;
     trigger = nullptr;
+    timer = nullptr;
 }
 
 ApplicationAdapter::~ApplicationAdapter()

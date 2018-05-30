@@ -45,6 +45,8 @@ class ApplicationAdapter : public cSimpleModule
     void send(unsigned long srcId, unsigned long destId, int numBytes, int msgId);
     void wait_ms(unsigned long id, int duration);
     void wait_s(unsigned long id, int duration);
+    void setGlobalTimer_s(int duration);
+    void setGlobalTimer_ms(int duration);
 
     // to be called by omnet core
   protected:
@@ -60,11 +62,13 @@ class ApplicationAdapter : public cSimpleModule
             {"simulationReady", NULL},
             {"receptionNotify", NULL},
             {"timerNotify", NULL},
+            {"globalTimerNotify", NULL},
             {"simulationFinished", NULL},
     };
     void call_initSimulation();
     void call_simulationReady();
     void call_simulationFinished();
+    void call_globalTimerNotify();
   public:
     void call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status);
     void call_timerNotify(unsigned long nodeId);
@@ -81,6 +85,8 @@ class ApplicationAdapter : public cSimpleModule
 
     uint32 creationCnt;
     cMessage* trigger;
+    cMessage* timer;
+    enum{trigger_kind=1, timer_kind=2};
     std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
 
   private:
