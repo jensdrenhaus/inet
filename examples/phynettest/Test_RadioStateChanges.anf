@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scave:Analysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:scave="http://www.omnetpp.org/omnetpp/scave">
+  <inputs>
+    <inputs name="/inet/examples/phynettest/results/Test_RadioStateChanges-*.vec"/>
+    <inputs name="/inet/examples/phynettest/results/Test_RadioStateChanges-*.sca"/>
+  </inputs>
+  <datasets>
+    <datasets name="energy_vector">
+      <items xsi:type="scave:Add" filterPattern="module(PhyNet.node[0].nic.radio) AND name(radioMode:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="module(PhyNet.node[0].nic.radio) AND name(receptionState:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="module(PhyNet.node[0].nic.radio) AND name(transmissionState:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="module(PhyNet.node[0].energyStorage) AND name(powerConsumption:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Apply" operation="multiply-by">
+        <filters xsi:type="scave:Select" filterPattern="module(PhyNet.node[0].energyStorage) AND name(powerConsumption:vector)" type="VECTOR"/>
+        <params name="a" value="100"/>
+      </items>
+      <items xsi:type="scave:Apply" operation="add">
+        <filters xsi:type="scave:Select" filterPattern="module(PhyNet.node[0].energyStorage) AND name(&quot;multiply-by(powerConsumption:vector)&quot;)" type="VECTOR"/>
+        <params name="c" value="4"/>
+      </items>
+      <items xsi:type="scave:LineChart" name="" lineNameFormat=""/>
+    </datasets>
+  </datasets>
+  <chartSheets>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.6"/>
+  </chartSheets>
+</scave:Analysis>

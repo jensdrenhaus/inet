@@ -40,7 +40,7 @@ module TinyNodeBase like ITinyNode
         string osgModelColor = default(""); // tint color, no colorization by default
         string mobilityType = default("StationaryMobility");
         string nicType = default("SimpleWirelessNic");
-        string energyStorageType = default("");
+        string energyStorageType = default("IdealEpEnergyStorage");
         string energyManagementType = default("");
         string energyGeneratorType = default("");
         *.interfaceTableModule = default(absPath(".interfaceTable"));

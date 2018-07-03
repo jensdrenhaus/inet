@@ -76,6 +76,7 @@ xxx
 /examples/phynettest_mono/*.json
 /examples/phynettest_mono/PhyNetFlow.OMNeT
 /examples/phynettest_mono/createdump
+/examples/phynettest_mono/setuplinux
 /examples/phynettest_mono/sosdocsunix.txt
 /src/.fuse_*
 
@@ -83,3 +84,4 @@ xxx
 /doc/src/manual/*.aux
 /doc/src/manual/*.idx
 /doc/src/manual/*.toc
+/.computed/
