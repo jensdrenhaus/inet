@@ -1,4 +1,4 @@
 #!/bin/bash
 dotnet publish /media/data/PhyNetFlow.OMNeT/PhyNetFlow.OMNeT
-cp ~/.nuget/packages/system.collections.immutable/1.4.0/lib/netstandard2.0/System.Collections.Immutable.dll /media/data/PhyNetFlow.OMNeT/PhyNetFlow.OMNeT/bin/Debug/netcoreapp2.0/publish
-cp -f /media/data/PhyNetFlow.OMNeT/PhyNetFlow.OMNeT/bin/Debug/netcoreapp2.0/publish/* /media/data/inet_phynode/inet/examples/phynettest_mono
+#cp ~/.nuget/packages/system.collections.immutable/1.4.0/lib/netstandard2.0/System.Collections.Immutable.dll /media/data/PhyNetFlow.OMNeT/PhyNetFlow.OMNeT/bin/Debug/netcoreapp2.0/publish
+cp -f /media/data/PhyNetFlow.OMNeT/PhyNetFlow.OMNeT/bin/Debug/netstandard2.0/publish/* /media/data/inet_phynode/inet/examples/phynettest_mono
