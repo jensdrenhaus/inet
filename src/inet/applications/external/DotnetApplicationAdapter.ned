@@ -1,0 +1,36 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+package inet.applications.external;
+
+
+//
+// TODO auto-generated module
+//
+simple DotnetApplicationAdapter
+{
+    parameters:
+        @display("i=block/filter_s");
+        
+//        string assemblyName = default("hello.exe"); // assembly to load
+//        string namespaceName = default("Omnet"); // namespace used in the assembly
+//        string className = default("Adapter"); // class inside the assembly that implements the used methods
+        
+        string assemblyName = default(""); // assembly to load eg. PhyNetFlow.OMNeT.dll
+        string namespaceName = default(""); // namespace used in the assembly eg. PhyNetFlow.OMNeT
+        string className = default(""); // class inside the assembly that implements the used methods eg. OMNeTInterface
+        
+        string nodeType = default("inet.node.wsn.PhyNodeExternal"); // fully qualified NED type name of the module which is to be dynamically instanciated
+}

@@ -18,7 +18,7 @@ package inet.examples.phynettest_dotnet;
 import inet.node.wsn.PhyNodeExternal;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
-import inet.applications.external.ApplicationAdapter;
+import inet.applications.external.DotnetApplicationAdapter;
 
 
 network Net
@@ -35,7 +35,7 @@ network Net
             parameters:
                 @display("p=-100,250");
         }
-        adapter: ApplicationAdapter {
+        adapter: DotnetApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
         }
