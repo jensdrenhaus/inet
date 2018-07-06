@@ -92,15 +92,16 @@ void DotnetApplicationAdapter::initialize(int stage)
         int exitCode = executeManagedAssemblyMain(0, NULL);
 
 
-//        printf("Application Adapter searches for required callback functions \n");
-//        getExternalFunctioinPtrs(monoClass);
-//        printf("SUCCESS! Setup of external assembly done \n\n");
+        printf("Application Adapter searches for required callback functions \n");
+        checkExternalFunctionPtrs();
+        printf("SUCCESS! Setup of external assembly done \n\n");
 
         trigger = new cMessage("trigger");
         scheduleAt(SimTime(),trigger); // schedule self message right at the beginning
 
-        //call_initSimulation();
-        callMethod();
+
+        call_initSimulation();
+        //callMethod();
     }
 }
 
@@ -173,7 +174,7 @@ void DotnetApplicationAdapter::setGlobalTimer_s(int duration)
 void DotnetApplicationAdapter::createNode(unsigned long id)
 {
     if (id == 0 || id == 0xFFFFFFFFFFFF)
-        throw cRuntimeError("invalid node id!");
+        throw cRuntimeError("invalid node id %x!", id);
     ExternalApp* appPtr = createNewNode(id);
     if (appPtr->getNodeId() != id)
         throw cRuntimeError("error with node id");
@@ -202,68 +203,52 @@ unsigned long DotnetApplicationAdapter::createNode()
  *  ###########################################################################
  */
 
-void DotnetApplicationAdapter::callMethod()
-{
-    typedef void (*method_ptr)(int);
-    method_ptr delegate;
-    int st = createDelegate(
-            hostHandle,
-            domainId,
-            "myApp", // assembly name,
-            "OmnetServices.OmnetInterface", // namespace.class
-            "Method", // function name
-            (void**)&delegate);
-
-    delegate(42);
-}
-
 void DotnetApplicationAdapter::call_initSimulation()
 {
-//    MonoMethod* m = checkFunctionPtr("initSimulation");
-//    mono_runtime_invoke (m, NULL, NULL, NULL);
+    static initSimulation_fptr delegate = nullptr;
+    if (delegate == nullptr)
+        getExternalFunctionPtr("initSimulation", (void**)&delegate);
+    delegate();
 }
 
 void DotnetApplicationAdapter::call_simulationReady()
 {
-//    MonoMethod* m = checkFunctionPtr("simulationReady");
-//    mono_runtime_invoke (m, NULL, NULL, NULL);
+    static simulationReady_fptr delegate = nullptr;
+    if (delegate == nullptr)
+        getExternalFunctionPtr("simulationReady", (void**)&delegate);
+    delegate();
 }
 
 void DotnetApplicationAdapter::call_simulationFinished()
 {
-//    MonoMethod* m = checkFunctionPtr("simulationFinished");
-//    mono_runtime_invoke (m, NULL, NULL, NULL);
+    static simulationFinished_fptr delegate = nullptr;
+    if (delegate == nullptr)
+        getExternalFunctionPtr("simulationFinished", (void**)&delegate);
+    delegate();
 }
 
 void DotnetApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
 {
-//    Enter_Method("receptionNotify");
-//
-//    void* args [4];
-//    args[0] = &destId;
-//    args[1] = &srcId;
-//    args[2] = &msgId;
-//    args[3] = &status;
-//
-//    MonoMethod* m = checkFunctionPtr("receptionNotify");
-//    mono_runtime_invoke (m, NULL, args, NULL);
+    static receptionNotify_fptr delegate = nullptr;
+    if (delegate == nullptr)
+        getExternalFunctionPtr("receptionNotify", (void**)&delegate);
+    delegate(destId, srcId, msgId, status);
 }
 
 void DotnetApplicationAdapter::call_timerNotify(unsigned long nodeId)
 {
-//    Enter_Method("timerNotify");
-//
-//    void* args [1];
-//    args[0] = &nodeId;
-//
-//    MonoMethod* m = checkFunctionPtr("timerNotify");
-//    mono_runtime_invoke (m, NULL, args, NULL);
+    static timerNotify_fptr delegate = nullptr;
+    if (delegate == nullptr)
+        getExternalFunctionPtr("timerNotify", (void**)&delegate);
+    delegate(nodeId);
 }
 
 void DotnetApplicationAdapter::call_globalTimerNotify()
 {
-//    MonoMethod* m = checkFunctionPtr("globalTimerNotify");
-//    mono_runtime_invoke (m, NULL, NULL, NULL);
+    static globalTimerNotify_fptr delegate = nullptr;
+    if (delegate == nullptr)
+        getExternalFunctionPtr("globalTimerNotify", (void**)&delegate);
+    delegate();
 }
 
 /*
@@ -345,30 +330,49 @@ ExternalApp* DotnetApplicationAdapter::checkNodeId(unsigned long handle)
  *  =================
  *  ###########################################################################
  */
-
-void DotnetApplicationAdapter::getExternalFunctioinPtrs(const char* klass)
+void DotnetApplicationAdapter::callMethod()
 {
-//    std::map<const char*, MonoMethod*>::iterator iter;
-//
-//    /*
-//     * mono_class_get_method_from_name obtains a MonoMethod with a
-//     * given name. It only works if there are no multiple signatures
-//     * for any given method name. Last argument is number of parameters. -1 for any number.
-//     */
-//    for (iter=functionMap.begin(); iter!=functionMap.end(); ++iter) {
-//        iter->second = mono_class_get_method_from_name(klass, iter->first, -1);
-//        if (!iter->second)
-//            throw cRuntimeError("function '%s' not found in assembly", iter->first);
-//    }
+    typedef void (*method_ptr)(int);
+    method_ptr delegate = nullptr;
+    int st = createDelegate(
+            hostHandle,
+            domainId,
+            "myApp", // assembly name,
+            "OmnetServices.OmnetInterface", // namespace.class
+            "Method", // function name
+            (void**)&delegate);
+
+    delegate(42);
 }
 
-void* DotnetApplicationAdapter::checkFunctionPtr(const char* handle)
+
+void DotnetApplicationAdapter::getExternalFunctionPtr(const char* funcName, void** ptr)
 {
-//    if (functionMap.find(handle) == functionMap.end())
-//        throw cRuntimeError("cannot find pointer associated with '%s'", handle);
-//    else if (functionMap[handle] == NULL)
-//        throw cRuntimeError("'%s' has no valid function pointer", handle);
-//    return functionMap[handle];
+    int status = createDelegate(hostHandle,
+                                domainId,
+                                "myApp", // assembly name,
+                                "OmnetServices.OmnetInterface", // namespace.class
+                                funcName, // function name
+                                ptr);
+    if (status < 0)
+        throw cRuntimeError("function '%s' not found in external assembly", funcName);
+}
+
+void DotnetApplicationAdapter::checkExternalFunctionPtrs()
+{
+    int status;
+    std::map<const char*, void*>::iterator iter;
+
+    for (iter=functionMap.begin(); iter!=functionMap.end(); ++iter) {
+        status = createDelegate(hostHandle,
+                                domainId,
+                                "myApp", // assembly name,
+                                "OmnetServices.OmnetInterface", // namespace.class
+                                iter->first, // function name
+                                &(iter->second));
+        if (status < 0)
+            throw cRuntimeError("function '%s' not found in external assembly", iter->first);
+    }
 }
 
 bool DotnetApplicationAdapter::generateAbsolutePaths(const char* managedAssemblyPath, const char* clrFilesPath)

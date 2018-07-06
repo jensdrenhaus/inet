@@ -53,12 +53,18 @@ class DotnetApplicationAdapter : public cSimpleModule
                 {"simulationFinished", NULL},
     };
     void call_initSimulation();
+    typedef void (*initSimulation_fptr)(void);
     void call_simulationReady();
+    typedef void (*simulationReady_fptr)(void);
     void call_simulationFinished();
+    typedef void (*simulationFinished_fptr)(void);
     void call_globalTimerNotify();
+    typedef void (*globalTimerNotify_fptr)(void);
   public:
     void call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status);
+    typedef void (*receptionNotify_fptr)(unsigned long, unsigned long, int, int);
     void call_timerNotify(unsigned long nodeId);
+    typedef void (*timerNotify_fptr)(unsigned long);
 
 
   private:
@@ -87,8 +93,8 @@ class DotnetApplicationAdapter : public cSimpleModule
 
     // runtime helper
   private:
-    void getExternalFunctioinPtrs(const char* klass);
-    void* checkFunctionPtr(const char* handle);
+    void getExternalFunctionPtr(const char* funcName, void** ptr);
+    void checkExternalFunctionPtrs();
     bool generateAbsolutePaths(const char* managedAssemblyPath,const char* clrFilesPath);
     int  setupRuntime();
     void shutdownRuntime();
