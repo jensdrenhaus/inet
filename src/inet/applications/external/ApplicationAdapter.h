@@ -38,7 +38,7 @@ namespace inet {
 
 class ApplicationAdapter : public cSimpleModule
 {
-    // to be called by wrapper functions
+    // called from external assembly via wrapper functions
   public:
     unsigned long createNode();
     void createNode(unsigned long id);

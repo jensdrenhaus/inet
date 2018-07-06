@@ -35,7 +35,7 @@ Define_Module(ApplicationAdapter);
 /*
  *  ###########################################################################
  *
- *  functions to be called by omnet
+ *  functions called by omnet
  *  ===============================
  *  ###########################################################################
  */
@@ -107,6 +107,8 @@ void ApplicationAdapter::handleMessage(cMessage *msg)
         else if (msg->getKind() == trigger_kind)
             call_simulationReady();
     }
+    else
+        throw cRuntimeError("ApplicationAdapter does not expect messages from other modules!");
 }
 
 void ApplicationAdapter::finish()

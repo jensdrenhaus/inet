@@ -11,8 +11,10 @@
 #include "inet/common/INETDefs.h"
 
 #include <string>
+#include <unordered_map>
 
 #include "inet/applications/external/coreclrhost.h"
+#include "inet/applications/external/ExternalApp.h"
 
 namespace inet {
 
@@ -22,10 +24,15 @@ namespace inet {
 
 class DotnetApplicationAdapter : public cSimpleModule
 {
+    // called from external assembly via wrapper functions
   public:
-    DotnetApplicationAdapter();
-    ~DotnetApplicationAdapter();
-    void callMethod();
+    unsigned long createNode();
+    void createNode(unsigned long id);
+    void send(unsigned long srcId, unsigned long destId, int numBytes, int msgId);
+    void wait_ms(unsigned long id, int duration);
+    void wait_s(unsigned long id, int duration);
+    void setGlobalTimer_s(int duration);
+    void setGlobalTimer_ms(int duration);
 
     // to be called by omnet core
   protected:
@@ -34,22 +41,33 @@ class DotnetApplicationAdapter : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
     virtual void finish() override;
 
+    // to call external code
   private:
-    bool generateAbsolutePaths(
-                            const char* managedAssemblyPath,
-                            const char* clrFilesPath);
-    int  setupRuntime();
-    bool getCoreClrHostInterface(const char* coreClrDll);
-    int  executeManagedAssemblyMain(int managedAssemblyArgc, const char** managedAssemblyArgv);
-    bool getAbsolutePath(const char* path, std::string& absolutePath);
-    bool getDirectory(const char* absolutePath, std::string& directory);
-    const char* GetEnvValueBoolean(const char* envVariable);
-    void addFilesFromDirectoryToTpaList(const char* directory);
+    void callMethod();
+    std::map<const char*, void*> functionMap = {       // fast iteration, slower access
+                {"initSimulation", NULL},
+                {"simulationReady", NULL},
+                {"receptionNotify", NULL},
+                {"timerNotify", NULL},
+                {"globalTimerNotify", NULL},
+                {"simulationFinished", NULL},
+    };
+    void call_initSimulation();
+    void call_simulationReady();
+    void call_simulationFinished();
+    void call_globalTimerNotify();
+  public:
+    void call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status);
+    void call_timerNotify(unsigned long nodeId);
+
 
   private:
     void* hostHandle;
     unsigned int domainId;
     void* coreclrLib;
+    const char* assemblyName;
+    const char* namespaceName;
+    const char* className;
 
     std::string currentProcessAbsolutePath;
     std::string clrFilesAbsolutePath;
@@ -61,6 +79,37 @@ class DotnetApplicationAdapter : public cSimpleModule
     coreclr_create_delegate_ptr createDelegate;
     coreclr_shutdown_ptr shutdownCoreCLR;
 
+    uint32 creationCnt;
+    cMessage* trigger;
+    cMessage* timer;
+    enum{trigger_kind=1, timer_kind=2};
+    std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
+
+    // runtime helper
+  private:
+    void getExternalFunctioinPtrs(const char* klass);
+    void* checkFunctionPtr(const char* handle);
+    bool generateAbsolutePaths(const char* managedAssemblyPath,const char* clrFilesPath);
+    int  setupRuntime();
+    void shutdownRuntime();
+    bool getCoreClrHostInterface(const char* coreClrDll);
+    int  executeManagedAssemblyMain(int managedAssemblyArgc, const char** managedAssemblyArgv);
+    bool getAbsolutePath(const char* path, std::string& absolutePath);
+    bool getDirectory(const char* absolutePath, std::string& directory);
+    const char* GetEnvValueBoolean(const char* envVariable);
+    void addFilesFromDirectoryToTpaList(const char* directory);
+
+    //factory helper
+  private:
+    ExternalApp* createNewNode(unsigned long id);
+    unsigned long getUniqueId();
+    void saveNode(unsigned long id, ExternalApp* nodeApp);
+    ExternalApp* checkNodeId(unsigned long handle);
+
+  public:
+    DotnetApplicationAdapter();
+    ~DotnetApplicationAdapter();
+    static DotnetApplicationAdapter* instance;
 };
 
 } //namespace
