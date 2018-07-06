@@ -14,7 +14,7 @@
 #include <unordered_map>
 
 #include "inet/applications/external/coreclrhost.h"
-#include "inet/applications/external/ExternalApp.h"
+#include "inet/applications/external/DotnetCoreApp.h"
 
 namespace inet {
 
@@ -89,7 +89,7 @@ class DotnetApplicationAdapter : public cSimpleModule
     cMessage* trigger;
     cMessage* timer;
     enum{trigger_kind=1, timer_kind=2};
-    std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
+    std::unordered_map<unsigned long, DotnetCoreApp*> nodeMap; // fast access, slower iteration
 
     // runtime helper
   private:
@@ -107,10 +107,10 @@ class DotnetApplicationAdapter : public cSimpleModule
 
     //factory helper
   private:
-    ExternalApp* createNewNode(unsigned long id);
+    DotnetCoreApp* createNewNode(unsigned long id);
     unsigned long getUniqueId();
-    void saveNode(unsigned long id, ExternalApp* nodeApp);
-    ExternalApp* checkNodeId(unsigned long handle);
+    void saveNode(unsigned long id, DotnetCoreApp* nodeApp);
+    DotnetCoreApp* checkNodeId(unsigned long handle);
 
   public:
     DotnetApplicationAdapter();

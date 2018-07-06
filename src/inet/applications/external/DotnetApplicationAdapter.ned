@@ -32,5 +32,5 @@ simple DotnetApplicationAdapter
         string namespaceName = default(""); // namespace used in the assembly eg. PhyNetFlow.OMNeT
         string className = default(""); // class inside the assembly that implements the used methods eg. OMNeTInterface
         
-        string nodeType = default("inet.node.wsn.PhyNodeExternal"); // fully qualified NED type name of the module which is to be dynamically instanciated
+        string nodeType = default("inet.node.wsn.PhyNodeExternalDotnetCore"); // fully qualified NED type name of the module which is to be dynamically instanciated
 }

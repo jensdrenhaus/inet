@@ -15,7 +15,7 @@
 
 package inet.examples.phynettest_dotnet;
 
-import inet.node.wsn.PhyNodeExternal;
+import inet.node.wsn.PhyNodeExternalDotnetCore;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.applications.external.DotnetApplicationAdapter;
@@ -43,7 +43,7 @@ network Net
 //            parameters:
 //                @display("r=,,#707070;p=250,58");
 //        }
-        node: PhyNodeExternal {
+        node: PhyNodeExternalDotnetCore {
             parameters:
                 @dynamic;
         }

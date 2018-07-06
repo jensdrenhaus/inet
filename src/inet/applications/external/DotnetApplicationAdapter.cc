@@ -97,6 +97,7 @@ void DotnetApplicationAdapter::initialize(int stage)
         printf("SUCCESS! Setup of external assembly done \n\n");
 
         trigger = new cMessage("trigger");
+        trigger->setKind(trigger_kind);
         scheduleAt(SimTime(),trigger); // schedule self message right at the beginning
 
 
@@ -134,7 +135,7 @@ void DotnetApplicationAdapter::finish()
 
 void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
-    ExternalApp* app = checkNodeId(srcId);
+    DotnetCoreApp* app = checkNodeId(srcId);
     //app->sendPing();
     app->sendMsg(destId, numBytes, msgId);
 }
@@ -142,14 +143,14 @@ void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, i
 void DotnetApplicationAdapter::wait_ms(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_MS);
-    ExternalApp* app = checkNodeId(id);
+    DotnetCoreApp* app = checkNodeId(id);
     app->wait(t);
 }
 
 void DotnetApplicationAdapter::wait_s(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
-    ExternalApp* app = checkNodeId(id);
+    DotnetCoreApp* app = checkNodeId(id);
     app->wait(t);
 }
 
@@ -175,7 +176,7 @@ void DotnetApplicationAdapter::createNode(unsigned long id)
 {
     if (id == 0 || id == 0xFFFFFFFFFFFF)
         throw cRuntimeError("invalid node id %x!", id);
-    ExternalApp* appPtr = createNewNode(id);
+    DotnetCoreApp* appPtr = createNewNode(id);
     if (appPtr->getNodeId() != id)
         throw cRuntimeError("error with node id");
     saveNode(id, appPtr);
@@ -186,7 +187,7 @@ void DotnetApplicationAdapter::createNode(unsigned long id)
 
 unsigned long DotnetApplicationAdapter::createNode()
 {
-    ExternalApp* appPtr = createNewNode(0); // auto generate MAC address
+    DotnetCoreApp* appPtr = createNewNode(0); // auto generate MAC address
     unsigned long id = appPtr->getNodeId();
     saveNode(id, appPtr);
 
@@ -268,7 +269,7 @@ unsigned long DotnetApplicationAdapter::getUniqueId()
     return id;
 }
 
-ExternalApp* DotnetApplicationAdapter::createNewNode(unsigned long id)
+DotnetCoreApp* DotnetApplicationAdapter::createNewNode(unsigned long id)
 {
     creationCnt++;
     const char* spacer = (creationCnt < 10) ? "000" : (creationCnt < 100) ? "00" : (creationCnt < 1000) ? "0" : "";;
@@ -301,20 +302,20 @@ ExternalApp* DotnetApplicationAdapter::createNewNode(unsigned long id)
     tempModule = newNode->getSubmodule("app");
     if(!tempModule)
         throw cRuntimeError("Cannot find Submodule 'app' in created Node");
-    ExternalApp* appPtr = check_and_cast<ExternalApp*>(tempModule);
+    DotnetCoreApp* appPtr = check_and_cast<DotnetCoreApp*>(tempModule);
     return appPtr;
 }
 
-void DotnetApplicationAdapter::saveNode(unsigned long id, ExternalApp* nodeApp)
+void DotnetApplicationAdapter::saveNode(unsigned long id, DotnetCoreApp* nodeApp)
 {
     using namespace std;
-    pair<unordered_map<unsigned long, ExternalApp*>::iterator, bool> retVal;
-    retVal = nodeMap.insert(pair<unsigned long,ExternalApp*>(id, nodeApp));
+    pair<unordered_map<unsigned long, DotnetCoreApp*>::iterator, bool> retVal;
+    retVal = nodeMap.insert(pair<unsigned long,DotnetCoreApp*>(id, nodeApp));
     if(retVal.second == false)
         throw cRuntimeError("Node with Id %d already exists", id);
 }
 
-ExternalApp* DotnetApplicationAdapter::checkNodeId(unsigned long handle)
+DotnetCoreApp* DotnetApplicationAdapter::checkNodeId(unsigned long handle)
 {
     if (nodeMap.find(handle) == nodeMap.end())
         throw cRuntimeError("cannot find node accociatied with Id %ld", handle);

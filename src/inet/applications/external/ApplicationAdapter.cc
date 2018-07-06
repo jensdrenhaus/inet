@@ -93,6 +93,7 @@ void ApplicationAdapter::initialize(int stage)
         printf("SUCCESS! Setup of external assembly done \n\n");
 
         trigger = new cMessage("trigger");
+        trigger->setKind(trigger_kind);
         scheduleAt(SimTime(),trigger); // schedule self message right at the beginning
 
         call_initSimulation();
