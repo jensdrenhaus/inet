@@ -75,6 +75,7 @@ class DotnetApplicationAdapter : public cSimpleModule
     const char* assemblyName;
     const char* namespaceName;
     const char* className;
+    const char* clrFilesPath;
 
     std::string currentProcessAbsolutePath;
     std::string clrFilesAbsolutePath;

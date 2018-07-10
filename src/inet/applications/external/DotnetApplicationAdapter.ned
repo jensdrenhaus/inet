@@ -24,13 +24,11 @@ simple DotnetApplicationAdapter
     parameters:
         @display("i=block/filter_s");
         
-//        string assemblyName = default("hello.exe"); // assembly to load
-//        string namespaceName = default("Omnet"); // namespace used in the assembly
-//        string className = default("Adapter"); // class inside the assembly that implements the used methods
         
-        string assemblyName = default(""); // assembly to load eg. PhyNetFlow.OMNeT.dll
-        string namespaceName = default(""); // namespace used in the assembly eg. PhyNetFlow.OMNeT
-        string className = default(""); // class inside the assembly that implements the used methods eg. OMNeTInterface
+        string assemblyName = default("SampleApp.dll"); // assembly to load from csharp/bin/.. directory
+        string namespaceName = default("OmnetServices"); // namespace used in the assembly 
+        string className = default("OmnetInterface"); // class inside the assembly that implements the callback methods
+        string clrFilesPath = default("/usr/share/dotnet/shared/Microsoft.NETCore.App/2.0.6"); // absolut path to the dotnet installations' CLR files
         
         string nodeType = default("inet.node.wsn.PhyNodeExternalDotnetCore"); // fully qualified NED type name of the module which is to be dynamically instanciated
 }

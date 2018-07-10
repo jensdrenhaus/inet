@@ -1,6 +1,7 @@
 #include "inet/applications/external/DotnetApplicationAdapter.h"
 
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <limits.h>
 #include <string.h>
@@ -18,6 +19,7 @@
 
 namespace inet {
 
+static const char* const relativePathToDll = "../../src/csharp/bin/Debug/netcoreapp2.0/";
 static const char* const symlinkEntrypointExecutable = "/proc/self/exe";
 static const char* const coreClrDll = "libcoreclr.so";
 // Name of the environment variable controlling server GC.
@@ -57,17 +59,16 @@ void DotnetApplicationAdapter::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
 
-    //TODO move to Ned
-    const char* managedAssemblyPath = "/media/data/dotnetcore_hosting/myApp/bin/Debug/netcoreapp2.0/myApp.dll";
-    const char* clrFilesPath = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.0.6";
+    char managedAssemblyPath [PATH_MAX];
 
     if (stage == INITSTAGE_LOCAL) {
 
         creationCnt = 0;
         instance = this;
-//        assemblyName = par("assemblyName").stringValue();
-//        namespaceName = par("namespaceName").stringValue();
-//        className = par("className").stringValue();
+        assemblyName = par("assemblyName").stringValue();
+        namespaceName = par("namespaceName").stringValue();
+        className = par("className").stringValue();
+        clrFilesPath = par("clrFilesPath").stringValue();
 
         coreclrLib      = NULL;
         hostHandle      = NULL;
@@ -78,10 +79,12 @@ void DotnetApplicationAdapter::initialize(int stage)
         createDelegate    = NULL;
         shutdownCoreCLR   = NULL;
 
-        printf("Application Adapter is loading %s\n", managedAssemblyPath);
+        strcpy(managedAssemblyPath, relativePathToDll);
+        strcat(managedAssemblyPath, assemblyName);
         if(!generateAbsolutePaths(managedAssemblyPath, clrFilesPath)){
-            printf("Error, generateAbsolutePaths \n");
+            throw cRuntimeError("Invalid paths! Check the following relative paths:\n   %s\n   %s", managedAssemblyPath, clrFilesPath);
         }
+        printf("Application Adapter is loading %s\n", managedAssemblyAbsolutePath.c_str());
 
         int exitCode = setupRuntime();
     }
@@ -89,7 +92,7 @@ void DotnetApplicationAdapter::initialize(int stage)
     if (stage == INITSTAGE_LAST) {
 
         // run the Main() method in the assembly.
-        printf("Application Adapter executes Main() in %s\n", managedAssemblyPath);
+        printf("Application Adapter executes Main() in %s\n", assemblyName);
         int exitCode = executeManagedAssemblyMain(0, NULL);
 
 
@@ -372,7 +375,7 @@ void DotnetApplicationAdapter::getExternalFunctionPtr(const char* funcName, void
 {
     int status = createDelegate(hostHandle,
                                 domainId,
-                                "myApp", // assembly name,
+                                "SampleApp", // assembly name,
                                 "OmnetServices.OmnetInterface", // namespace.class
                                 funcName, // function name
                                 ptr);
@@ -388,7 +391,7 @@ void DotnetApplicationAdapter::checkExternalFunctionPtrs()
     for (iter=functionMap.begin(); iter!=functionMap.end(); ++iter) {
         status = createDelegate(hostHandle,
                                 domainId,
-                                "myApp", // assembly name,
+                                "SampleApp", // assembly name,
                                 "OmnetServices.OmnetInterface", // namespace.class
                                 iter->first, // function name
                                 &(iter->second));
@@ -399,10 +402,15 @@ void DotnetApplicationAdapter::checkExternalFunctionPtrs()
 
 bool DotnetApplicationAdapter::generateAbsolutePaths(const char* managedAssemblyPath, const char* clrFilesPath)
 {
+//    char cwd[1024];
+//    if (getcwd(cwd, sizeof(cwd)) != NULL)
+//       printf("Current working dir: %s\n", cwd);
+//    else
+//        printf("getcwd() error");
     // Check if the specified managed assembly file exists
     struct stat sb;
     if (stat(managedAssemblyPath, &sb) == -1){
-        printf("Managed assembly not found\n");
+        printf("Managed assembly not found: %s\n", managedAssemblyPath);
         return false;
     }
 
@@ -548,7 +556,7 @@ int DotnetApplicationAdapter::setupRuntime()
             globalizationInvariant,
         };
 
-        printf("nativeDllSearchDirs: %s \n", nativeDllSearchDirs.c_str());
+        //printf("nativeDllSearchDirs: %s \n", nativeDllSearchDirs.c_str());
 
         int st = initializeCoreCLR(
                     currentProcessAbsolutePath.c_str(),

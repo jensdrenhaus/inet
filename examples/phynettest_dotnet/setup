@@ -1,3 +1,4 @@
 #!/bin/bash
-dotnet build /media/data/dotnetcore_hosting/myApp
+dotnet build ../../src/csharp
+
 
