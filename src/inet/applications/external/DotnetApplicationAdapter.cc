@@ -144,7 +144,7 @@ void DotnetApplicationAdapter::finish()
 
 void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
-    DotnetCoreApp* app = checkNodeId(srcId);
+    DotnetCoreApp* app = findNode(srcId);
     //app->sendPing();
     app->sendMsg(destId, numBytes, msgId);
 }
@@ -152,14 +152,14 @@ void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, i
 void DotnetApplicationAdapter::wait_ms(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_MS);
-    DotnetCoreApp* app = checkNodeId(id);
+    DotnetCoreApp* app = findNode(id);
     app->wait(t);
 }
 
 void DotnetApplicationAdapter::wait_s(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
-    DotnetCoreApp* app = checkNodeId(id);
+    DotnetCoreApp* app = findNode(id);
     app->wait(t);
 }
 
@@ -339,7 +339,7 @@ void DotnetApplicationAdapter::saveNode(unsigned long id, DotnetCoreApp* nodeApp
         throw cRuntimeError("Node with Id %d already exists", id);
 }
 
-DotnetCoreApp* DotnetApplicationAdapter::checkNodeId(unsigned long handle)
+DotnetCoreApp* DotnetApplicationAdapter::findNode(unsigned long handle)
 {
     if (nodeMap.find(handle) == nodeMap.end())
         throw cRuntimeError("cannot find node accociatied with Id %ld", handle);

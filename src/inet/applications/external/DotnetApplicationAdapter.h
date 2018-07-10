@@ -112,7 +112,7 @@ class DotnetApplicationAdapter : public cSimpleModule
     DotnetCoreApp* createNewNode(unsigned long id);
     unsigned long getUniqueId();
     void saveNode(unsigned long id, DotnetCoreApp* nodeApp);
-    DotnetCoreApp* checkNodeId(unsigned long handle);
+    DotnetCoreApp* findNode(unsigned long handle);
 
   public:
     DotnetApplicationAdapter();
