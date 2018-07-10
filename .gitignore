@@ -85,3 +85,7 @@ xxx
 /doc/src/manual/*.idx
 /doc/src/manual/*.toc
 /.computed/
+
+#ignore csharp object folder
+/src/csharp/obj/
+/src/csharp/.vs/
