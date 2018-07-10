@@ -33,6 +33,7 @@ class DotnetApplicationAdapter : public cSimpleModule
     void wait_s(unsigned long id, int duration);
     void setGlobalTimer_s(int duration);
     void setGlobalTimer_ms(int duration);
+    unsigned long getGlobalTime();
 
     // to be called by omnet core
   protected:

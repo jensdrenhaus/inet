@@ -39,6 +39,7 @@ extern "C" void daa_wait_ms(unsigned long id, int duration) {DotnetApplicationAd
 extern "C" void daa_wait_s(unsigned long id, int duration) {DotnetApplicationAdapter::instance->wait_s(id, duration);}
 extern "C" void daa_set_global_timer_ms(int duration) {DotnetApplicationAdapter::instance->setGlobalTimer_ms(duration);}
 extern "C" void daa_set_global_timer_s(int duration) {DotnetApplicationAdapter::instance->setGlobalTimer_s(duration);}
+extern "C" unsigned long daa_getGlobalTime() {return DotnetApplicationAdapter::instance->getGlobalTime();}
 
 DotnetApplicationAdapter* DotnetApplicationAdapter::instance = nullptr;
 
@@ -96,6 +97,9 @@ void DotnetApplicationAdapter::initialize(int stage)
         checkExternalFunctionPtrs();
         printf("SUCCESS! Setup of external assembly done \n\n");
 
+        timer = new cMessage("timer");
+        timer->setKind(timer_kind);
+
         trigger = new cMessage("trigger");
         trigger->setKind(trigger_kind);
         scheduleAt(SimTime(),trigger); // schedule self message right at the beginning
@@ -111,8 +115,10 @@ void DotnetApplicationAdapter::handleMessage(cMessage *msg)
     if (msg->isSelfMessage()) {
         if (msg->getKind() == timer_kind)
             call_globalTimerNotify();
-        else if (msg->getKind() == trigger_kind)
+        if (msg->getKind() == trigger_kind) {
+            delete(msg);
             call_simulationReady();
+        }
     }
     else
         throw cRuntimeError("ApplicationAdapter does not expect messages from other modules!");
@@ -166,10 +172,25 @@ void DotnetApplicationAdapter::setGlobalTimer_ms(int duration)
 void DotnetApplicationAdapter::setGlobalTimer_s(int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
-    if (!timer->isScheduled())
-            scheduleAt(simTime()+t, timer);
+    if (!timer->isScheduled()){
+        cancelEvent(timer);
+        scheduleAt(simTime()+t, timer);
+    }
     else
         throw cRuntimeError("timer is already scheduled");
+}
+
+unsigned long DotnetApplicationAdapter::getGlobalTime()
+{
+    simtime_t time = simTime();
+    int scaleExpo = time.getScaleExp();
+    int64_t raw = time.raw();
+    //printf(" time string     : %s \n time raw        : %ld \n time scale expo : %i \n", time.str().c_str(), raw, scaleExpo);
+    if (scaleExpo == -12 && raw >= 0) {//picosec
+        return raw;
+    }
+    else
+        throw cRuntimeError("Error in get GlobalTime: unsupported time format");
 }
 
 void DotnetApplicationAdapter::createNode(unsigned long id)
@@ -762,7 +783,7 @@ DotnetApplicationAdapter::DotnetApplicationAdapter()
 
 DotnetApplicationAdapter::~DotnetApplicationAdapter()
 {
-
+    cancelAndDelete(timer);
 }
 
 } //namespace
