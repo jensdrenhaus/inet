@@ -16,6 +16,7 @@
 #include "inet/applications/external/ApplicationAdapterBase.h"
 #include "inet/applications/external/coreclrhost.h"
 #include "inet/applications/external/ExternalAppTrampoline.h"
+#include "inet/applications/external/util/NodeFactory.h"
 
 namespace inet {
 
@@ -88,6 +89,7 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
     coreclr_create_delegate_ptr createDelegate;
     coreclr_shutdown_ptr shutdownCoreCLR;
 
+    NodeFactory* factory;
     uint32 creationCnt;
     cMessage* trigger;
     cMessage* timer;
@@ -110,9 +112,8 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
 
     //factory helper
   private:
-    ExternalAppTrampoline* createNewNode(unsigned long id);
     unsigned long getUniqueId();
-    void saveNode(unsigned long id, ExternalAppTrampoline* nodeApp);
+    void addNodeToList(unsigned long id, ExternalAppTrampoline* nodeApp);
     ExternalAppTrampoline* findNode(unsigned long handle);
 
   public:

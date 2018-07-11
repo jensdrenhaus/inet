@@ -64,6 +64,7 @@ void DotnetApplicationAdapter::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
 
         creationCnt = 0;
+        factory = new NodeFactory(par("nodeType").stringValue(), this->getParentModule());
         instance = this;
         assemblyName = par("assemblyName").stringValue();
         namespaceName = par("namespaceName").stringValue();
@@ -200,10 +201,10 @@ void DotnetApplicationAdapter::createNode(unsigned long id)
 {
     if (id == 0 || id == 0xFFFFFFFFFFFF)
         throw cRuntimeError("invalid node id %x!", id);
-    ExternalAppTrampoline* appPtr = createNewNode(id);
+    ExternalAppTrampoline* appPtr = factory->getNode(id);
     if (appPtr->getNodeId() != id)
         throw cRuntimeError("error with node id");
-    saveNode(id, appPtr);
+    addNodeToList(id, appPtr);
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with Id %ld\n", name, id);
@@ -211,9 +212,9 @@ void DotnetApplicationAdapter::createNode(unsigned long id)
 
 unsigned long DotnetApplicationAdapter::createNode()
 {
-    ExternalAppTrampoline* appPtr = createNewNode(0); // auto generate MAC address
+    ExternalAppTrampoline* appPtr = factory->getNode(0); // auto generate MAC address
     unsigned long id = appPtr->getNodeId();
-    saveNode(id, appPtr);
+    addNodeToList(id, appPtr);
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with auto-Id %ld\n", name, id);
@@ -293,44 +294,7 @@ unsigned long DotnetApplicationAdapter::getUniqueId()
     return id;
 }
 
-ExternalAppTrampoline* DotnetApplicationAdapter::createNewNode(unsigned long id)
-{
-    creationCnt++;
-    const char* spacer = (creationCnt < 10) ? "000" : (creationCnt < 100) ? "00" : (creationCnt < 1000) ? "0" : "";;
-    char newNodeName[16];
-    sprintf(newNodeName, "node%s%d", spacer, creationCnt);
-
-    // find factory object
-    const char* moduleTypeName = par("nodeType").stringValue();
-    cModuleType *moduleType = cModuleType::get(moduleTypeName);
-
-    // create compound module and build its submodules
-    cModule* parentModule = getParentModule(); // parent of nodes must be the network
-    cModule *newNode = moduleType->create(newNodeName, parentModule);
-    newNode->finalizeParameters();
-    newNode->buildInside();
-
-    //manipulate parameter of submodules
-    cModule* tempModule = newNode->getSubmodule("nic")->getSubmodule("mac");
-    if (id != 0){
-        char addrStr[20];
-        sprintf(addrStr, "%012lx", id);
-        tempModule->par("address") = addrStr;
-    }
-    else
-        tempModule->par("address") = "auto"; // let MAC module create an address
-
-    //initialize
-    newNode->callInitialize();
-
-    tempModule = newNode->getSubmodule("app");
-    if(!tempModule)
-        throw cRuntimeError("Cannot find Submodule 'app' in created Node");
-    ExternalAppTrampoline* appPtr = check_and_cast<ExternalAppTrampoline*>(tempModule);
-    return appPtr;
-}
-
-void DotnetApplicationAdapter::saveNode(unsigned long id, ExternalAppTrampoline* nodeApp)
+void DotnetApplicationAdapter::addNodeToList(unsigned long id, ExternalAppTrampoline* nodeApp)
 {
     using namespace std;
     pair<unordered_map<unsigned long, ExternalAppTrampoline*>::iterator, bool> retVal;
@@ -792,6 +756,7 @@ DotnetApplicationAdapter::DotnetApplicationAdapter()
 DotnetApplicationAdapter::~DotnetApplicationAdapter()
 {
     cancelAndDelete(timer);
+    delete factory;
 }
 
 } //namespace

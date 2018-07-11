@@ -21,7 +21,10 @@ NodeFactory::NodeFactory(const char* _nodeTypeName, cModule* _networkModule)
 {
     cnt = 0;
     nodeTypeName = _nodeTypeName;
-    networkModule = _networkModule;
+    if(_networkModule->getModuleType()->isNetwork())
+        networkModule = _networkModule;
+    else
+        throw cRuntimeError("NodeFactory: the passed module '%s' ist not the network!", _networkModule->getName());
 }
 
 NodeFactory::~NodeFactory()
