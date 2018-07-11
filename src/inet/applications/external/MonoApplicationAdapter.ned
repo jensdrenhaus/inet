@@ -18,10 +18,10 @@ package inet.applications.external;
 //
 // TODO auto-generated module
 //
-simple ApplicationAdapter extends ApplicationAdapterBase
+simple MonoApplicationAdapter extends ApplicationAdapterBase
 {
     parameters:
-        @class(ApplicationAdapter);
+        @class(MonoApplicationAdapter);
         @display("i=block/filter_s");
         
         string assemblyName = default("PhyNetFlow.OMNeT.dll"); // assembly to load

@@ -18,7 +18,7 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "inet/applications/external/DotnetCoreApp.h"
+#include "inet/applications/external/ExternalAppTrampoline.h"
 
 namespace inet {
 
@@ -34,7 +34,7 @@ class NodeFactory
      * creates a network node with the given physical address. Pass 0 to get a random address.
      * returns a pointer to the application module inside the new node
      */
-    DotnetCoreApp* getNode(uint64 phy_address);
+    ExternalAppTrampoline* getNode(uint64 phy_address);
 
   private:
     /* fully qualified NED type name of the module which is to be dynamically instanciated */

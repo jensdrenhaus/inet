@@ -13,25 +13,24 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "inet/applications/external/ApplicationAdapter.h"
+#include "MonoApplicationAdapter.h"
 
 namespace inet {
 
 /**
  * wrappers to be called from loaded assembly
  */
-extern "C" unsigned long aa_createNodeAndId() {return ApplicationAdapter::instance->createNode();}
-extern "C" void aa_createNode(unsigned long id) {ApplicationAdapter::instance->createNode(id);}
-extern "C" void aa_send(unsigned long srcId, unsigned long destId, int numBytes, int msgId) {ApplicationAdapter::instance->send(srcId, destId, numBytes, msgId);}
-extern "C" void aa_wait_ms(unsigned long id, int duration) {ApplicationAdapter::instance->wait_ms(id, duration);}
-extern "C" void aa_wait_s(unsigned long id, int duration) {ApplicationAdapter::instance->wait_s(id, duration);}
-extern "C" void aa_set_global_timer_ms(int duration) {ApplicationAdapter::instance->setGlobalTimer_ms(duration);}
-extern "C" void aa_set_global_timer_s(int duration) {ApplicationAdapter::instance->setGlobalTimer_s(duration);}
+extern "C" unsigned long aa_createNodeAndId() {return MonoApplicationAdapter::instance->createNode();}
+extern "C" void aa_createNode(unsigned long id) {MonoApplicationAdapter::instance->createNode(id);}
+extern "C" void aa_send(unsigned long srcId, unsigned long destId, int numBytes, int msgId) {MonoApplicationAdapter::instance->send(srcId, destId, numBytes, msgId);}
+extern "C" void aa_wait_ms(unsigned long id, int duration) {MonoApplicationAdapter::instance->wait_ms(id, duration);}
+extern "C" void aa_wait_s(unsigned long id, int duration) {MonoApplicationAdapter::instance->wait_s(id, duration);}
+extern "C" void aa_set_global_timer_ms(int duration) {MonoApplicationAdapter::instance->setGlobalTimer_ms(duration);}
+extern "C" void aa_set_global_timer_s(int duration) {MonoApplicationAdapter::instance->setGlobalTimer_s(duration);}
 
-ApplicationAdapter* ApplicationAdapter::instance = nullptr;
+MonoApplicationAdapter* MonoApplicationAdapter::instance = nullptr;
 
-Define_Module(ApplicationAdapter);
-
+Define_Module(MonoApplicationAdapter);
 /*
  *  ###########################################################################
  *
@@ -40,7 +39,7 @@ Define_Module(ApplicationAdapter);
  *  ###########################################################################
  */
 
-void ApplicationAdapter::initialize(int stage)
+void MonoApplicationAdapter::initialize(int stage)
 {
     ApplicationAdapterBase::initialize(stage);
 
@@ -100,7 +99,7 @@ void ApplicationAdapter::initialize(int stage)
     }
 }
 
-void ApplicationAdapter::handleMessage(cMessage *msg)
+void MonoApplicationAdapter::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
         if (msg->getKind() == timer_kind)
@@ -112,7 +111,7 @@ void ApplicationAdapter::handleMessage(cMessage *msg)
         throw cRuntimeError("ApplicationAdapter does not expect messages from other modules!");
 }
 
-void ApplicationAdapter::finish()
+void MonoApplicationAdapter::finish()
 {
     call_simulationFinished();
     instance = nullptr;
@@ -126,28 +125,28 @@ void ApplicationAdapter::finish()
  *  ###########################################################################
  */
 
-void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
+void MonoApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
     ExternalAppTrampoline* app = findNode(srcId);
     //app->sendPing();
     app->sendMsg(destId, numBytes, msgId);
 }
 
-void ApplicationAdapter::wait_ms(unsigned long id, int duration)
+void MonoApplicationAdapter::wait_ms(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_MS);
     ExternalAppTrampoline* app = findNode(id);
     app->wait(t);
 }
 
-void ApplicationAdapter::wait_s(unsigned long id, int duration)
+void MonoApplicationAdapter::wait_s(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
     ExternalAppTrampoline* app = findNode(id);
     app->wait(t);
 }
 
-void ApplicationAdapter::setGlobalTimer_ms(int duration)
+void MonoApplicationAdapter::setGlobalTimer_ms(int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_MS);
     if (!timer->isScheduled())
@@ -156,7 +155,7 @@ void ApplicationAdapter::setGlobalTimer_ms(int duration)
         throw cRuntimeError("timer is already scheduled");
 }
 
-void ApplicationAdapter::setGlobalTimer_s(int duration)
+void MonoApplicationAdapter::setGlobalTimer_s(int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
     if (!timer->isScheduled())
@@ -165,7 +164,7 @@ void ApplicationAdapter::setGlobalTimer_s(int duration)
         throw cRuntimeError("timer is already scheduled");
 }
 
-void ApplicationAdapter::createNode(unsigned long id)
+void MonoApplicationAdapter::createNode(unsigned long id)
 {
     if (id == 0 || id == 0xFFFFFFFFFFFF)
         throw cRuntimeError("invalid node id!");
@@ -178,7 +177,7 @@ void ApplicationAdapter::createNode(unsigned long id)
     printf("%s created with Id %ld\n", name, id);
 }
 
-unsigned long ApplicationAdapter::createNode()
+unsigned long MonoApplicationAdapter::createNode()
 {
     ExternalAppTrampoline* appPtr = createNewNode(0); // auto generate MAC address
     unsigned long id = appPtr->getNodeId();
@@ -202,25 +201,25 @@ unsigned long ApplicationAdapter::createNode()
  *  ###########################################################################
  */
 
-void ApplicationAdapter::call_initSimulation()
+void MonoApplicationAdapter::call_initSimulation()
 {
     MonoMethod* m = checkFunctionPtr("initSimulation");
     mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
-void ApplicationAdapter::call_simulationReady()
+void MonoApplicationAdapter::call_simulationReady()
 {
     MonoMethod* m = checkFunctionPtr("simulationReady");
     mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
-void ApplicationAdapter::call_simulationFinished()
+void MonoApplicationAdapter::call_simulationFinished()
 {
     MonoMethod* m = checkFunctionPtr("simulationFinished");
     mono_runtime_invoke (m, NULL, NULL, NULL);
 }
 
-void ApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
+void MonoApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
 {
     Enter_Method("receptionNotify");
 
@@ -234,7 +233,7 @@ void ApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned lon
     mono_runtime_invoke (m, NULL, args, NULL);
 }
 
-void ApplicationAdapter::call_timerNotify(unsigned long nodeId)
+void MonoApplicationAdapter::call_timerNotify(unsigned long nodeId)
 {
     Enter_Method("timerNotify");
 
@@ -245,7 +244,7 @@ void ApplicationAdapter::call_timerNotify(unsigned long nodeId)
     mono_runtime_invoke (m, NULL, args, NULL);
 }
 
-void ApplicationAdapter::call_globalTimerNotify()
+void MonoApplicationAdapter::call_globalTimerNotify()
 {
     MonoMethod* m = checkFunctionPtr("globalTimerNotify");
     mono_runtime_invoke (m, NULL, NULL, NULL);
@@ -259,7 +258,7 @@ void ApplicationAdapter::call_globalTimerNotify()
  *  ###########################################################################
  */
 
-unsigned long ApplicationAdapter::getUniqueId()
+unsigned long MonoApplicationAdapter::getUniqueId()
 {
     unsigned long id = 0;
     while (id == 0) {
@@ -268,7 +267,7 @@ unsigned long ApplicationAdapter::getUniqueId()
     return id;
 }
 
-ExternalAppTrampoline* ApplicationAdapter::createNewNode(unsigned long id)
+ExternalAppTrampoline* MonoApplicationAdapter::createNewNode(unsigned long id)
 {
     creationCnt++;
     const char* spacer = (creationCnt < 10) ? "000" : (creationCnt < 100) ? "00" : (creationCnt < 1000) ? "0" : "";;
@@ -305,7 +304,7 @@ ExternalAppTrampoline* ApplicationAdapter::createNewNode(unsigned long id)
     return appPtr;
 }
 
-void ApplicationAdapter::saveNode(unsigned long id, ExternalAppTrampoline* nodeApp)
+void MonoApplicationAdapter::saveNode(unsigned long id, ExternalAppTrampoline* nodeApp)
 {
     using namespace std;
     pair<unordered_map<unsigned long, ExternalAppTrampoline*>::iterator, bool> retVal;
@@ -314,7 +313,7 @@ void ApplicationAdapter::saveNode(unsigned long id, ExternalAppTrampoline* nodeA
         throw cRuntimeError("Node with Id %d already exists", id);
 }
 
-void ApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
+void MonoApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
 {
     std::map<const char*, MonoMethod*>::iterator iter;
 
@@ -330,7 +329,7 @@ void ApplicationAdapter::getExternalFunctioinPtrs(MonoClass* klass)
     }
 }
 
-MonoMethod* ApplicationAdapter::checkFunctionPtr(const char* handle)
+MonoMethod* MonoApplicationAdapter::checkFunctionPtr(const char* handle)
 {
     if (functionMap.find(handle) == functionMap.end())
         throw cRuntimeError("cannot find pointer associated with '%s'", handle);
@@ -339,7 +338,7 @@ MonoMethod* ApplicationAdapter::checkFunctionPtr(const char* handle)
     return functionMap[handle];
 }
 
-ExternalAppTrampoline* ApplicationAdapter::findNode(unsigned long handle)
+ExternalAppTrampoline* MonoApplicationAdapter::findNode(unsigned long handle)
 {
     if (nodeMap.find(handle) == nodeMap.end())
         throw cRuntimeError("cannot find node accociatied with Id %ld", handle);
@@ -348,14 +347,14 @@ ExternalAppTrampoline* ApplicationAdapter::findNode(unsigned long handle)
     return nodeMap[handle];
 }
 
-ApplicationAdapter::ApplicationAdapter()
+MonoApplicationAdapter::MonoApplicationAdapter()
 {
     instance = nullptr;
     trigger = nullptr;
     timer = nullptr;
 }
 
-ApplicationAdapter::~ApplicationAdapter()
+MonoApplicationAdapter::~MonoApplicationAdapter()
 {
     cancelAndDelete(trigger);
     instance == nullptr;

@@ -29,7 +29,7 @@ NodeFactory::~NodeFactory()
 
 }
 
-DotnetCoreApp* NodeFactory::getNode(uint64 phy_address)
+ExternalAppTrampoline* NodeFactory::getNode(uint64 phy_address)
 {
     cnt++;
     const char* spacer = (cnt < 10) ? "000" : (cnt < 100) ? "00" : (cnt < 1000) ? "0" : "";;
@@ -60,7 +60,7 @@ DotnetCoreApp* NodeFactory::getNode(uint64 phy_address)
     tempModule = newNode->getSubmodule("app");
     if(!tempModule)
         throw cRuntimeError("Cannot find Submodule 'app' in created Node");
-    DotnetCoreApp* appPtr = check_and_cast<DotnetCoreApp*>(tempModule);
+    ExternalAppTrampoline* appPtr = check_and_cast<ExternalAppTrampoline*>(tempModule);
     return appPtr;
 }
 

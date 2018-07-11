@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __INET_APPLICATIONADAPTER_H_
-#define __INET_APPLICATIONADAPTER_H_
+#ifndef __INET_MONOAPPLICATIONADAPTER_H_
+#define __INET_MONOAPPLICATIONADAPTER_H_
 
 #include "inet/common/INETDefs.h"
 
@@ -37,7 +37,7 @@ namespace inet {
  * TODO - Generated class
  */
 
-class ApplicationAdapter : public ApplicationAdapterBase
+class MonoApplicationAdapter : public ApplicationAdapterBase
 {
     // called from external assembly via wrapper functions
   public:
@@ -99,9 +99,9 @@ class ApplicationAdapter : public ApplicationAdapterBase
     ExternalAppTrampoline* findNode(unsigned long handle);
 
   public:
-    ApplicationAdapter();
-    ~ApplicationAdapter();
-    static ApplicationAdapter* instance;
+    MonoApplicationAdapter();
+    ~MonoApplicationAdapter();
+    static MonoApplicationAdapter* instance;
 };
 
 
