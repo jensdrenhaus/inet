@@ -13,20 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.applications.external;
+package inet.node.wsn;
+
+import inet.applications.contract.IMACApp;
 
 //
-// TODO auto-generated module
+// TODO
 //
-simple ApplicationAdapter extends ApplicationAdapterBase
+module TrampolineNode extends TinyNodeBase
 {
-    parameters:
-        @class(ApplicationAdapter);
-        @display("i=block/filter_s");
-        
-        string assemblyName = default("PhyNetFlow.OMNeT.dll"); // assembly to load
-        string namespaceName = default("PhyNetFlow.OMNeT"); // namespace used in the assembly
-        string className = default("OMNeTInterface"); // class inside the assembly that implements the used methods
-        
-        string nodeType = default("inet.node.wsn.TrampolineNode"); // fully qualified NED type name of the module which is to be dynamically instanciated
+	parameters:
+	    @display("i=msg/packet");
+	submodules:
+	    app: <default("ExternalAppTrampoline")> like IMACApp {
+            parameters:
+                @display("i=device/terminal;p=216,141,row,60");
+        }
+	connections allowunconnected:
+	    nic.upperLayerOut --> app.appIn;
+        nic.upperLayerIn <-- app.appOut;
 }

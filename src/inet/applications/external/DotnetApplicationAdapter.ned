@@ -31,5 +31,5 @@ simple DotnetApplicationAdapter extends ApplicationAdapterBase
         string className = default("OmnetInterface"); // class inside the assembly that implements the callback methods
         string clrFilesPath = default("/usr/share/dotnet/shared/Microsoft.NETCore.App/2.0.6"); // absolut path to the dotnet installations' CLR files
         
-        string nodeType = default("inet.node.wsn.PhyNodeExternalDotnetCore"); // fully qualified NED type name of the module which is to be dynamically instanciated
+        string nodeType = default("inet.node.wsn.TrampolineNode"); // fully qualified NED type name of the module which is to be dynamically instanciated
 }

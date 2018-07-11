@@ -25,7 +25,7 @@ module PhyNodeExternal extends TinyNodeBase
 	parameters:
 	    @display("i=msg/packet");
 	submodules:
-	    app: <default("ExternalApp")> like IMACApp {
+	    app: <default("DotnetCoreApp")> like IMACApp {
             parameters:
                 @display("i=device/terminal;p=216,141,row,60");
         }

@@ -28,7 +28,7 @@
 #include <unordered_map>
 
 #include "inet/applications/external/ApplicationAdapterBase.h"
-#include "inet/applications/external/ExternalApp.h"
+#include "inet/applications/external/ExternalAppTrampoline.h"
 
 
 namespace inet {
@@ -88,15 +88,15 @@ class ApplicationAdapter : public ApplicationAdapterBase
     cMessage* trigger;
     cMessage* timer;
     enum{trigger_kind=1, timer_kind=2};
-    std::unordered_map<unsigned long, ExternalApp*> nodeMap; // fast access, slower iteration
+    std::unordered_map<unsigned long, ExternalAppTrampoline*> nodeMap; // fast access, slower iteration
 
   private:
-    ExternalApp* createNewNode(unsigned long id);
+    ExternalAppTrampoline* createNewNode(unsigned long id);
     unsigned long getUniqueId();
-    void saveNode(unsigned long id, ExternalApp* nodeApp);
+    void saveNode(unsigned long id, ExternalAppTrampoline* nodeApp);
     void getExternalFunctioinPtrs(MonoClass* klass);
     MonoMethod* checkFunctionPtr(const char* handle);
-    ExternalApp* findNode(unsigned long handle);
+    ExternalAppTrampoline* findNode(unsigned long handle);
 
   public:
     ApplicationAdapter();

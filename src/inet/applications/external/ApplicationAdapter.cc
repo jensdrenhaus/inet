@@ -128,7 +128,7 @@ void ApplicationAdapter::finish()
 
 void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
-    ExternalApp* app = findNode(srcId);
+    ExternalAppTrampoline* app = findNode(srcId);
     //app->sendPing();
     app->sendMsg(destId, numBytes, msgId);
 }
@@ -136,14 +136,14 @@ void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int num
 void ApplicationAdapter::wait_ms(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_MS);
-    ExternalApp* app = findNode(id);
+    ExternalAppTrampoline* app = findNode(id);
     app->wait(t);
 }
 
 void ApplicationAdapter::wait_s(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
-    ExternalApp* app = findNode(id);
+    ExternalAppTrampoline* app = findNode(id);
     app->wait(t);
 }
 
@@ -169,7 +169,7 @@ void ApplicationAdapter::createNode(unsigned long id)
 {
     if (id == 0 || id == 0xFFFFFFFFFFFF)
         throw cRuntimeError("invalid node id!");
-    ExternalApp* appPtr = createNewNode(id);
+    ExternalAppTrampoline* appPtr = createNewNode(id);
     if (appPtr->getNodeId() != id)
         throw cRuntimeError("error with node id");
     saveNode(id, appPtr);
@@ -180,7 +180,7 @@ void ApplicationAdapter::createNode(unsigned long id)
 
 unsigned long ApplicationAdapter::createNode()
 {
-    ExternalApp* appPtr = createNewNode(0); // auto generate MAC address
+    ExternalAppTrampoline* appPtr = createNewNode(0); // auto generate MAC address
     unsigned long id = appPtr->getNodeId();
     saveNode(id, appPtr);
 
@@ -268,7 +268,7 @@ unsigned long ApplicationAdapter::getUniqueId()
     return id;
 }
 
-ExternalApp* ApplicationAdapter::createNewNode(unsigned long id)
+ExternalAppTrampoline* ApplicationAdapter::createNewNode(unsigned long id)
 {
     creationCnt++;
     const char* spacer = (creationCnt < 10) ? "000" : (creationCnt < 100) ? "00" : (creationCnt < 1000) ? "0" : "";;
@@ -301,15 +301,15 @@ ExternalApp* ApplicationAdapter::createNewNode(unsigned long id)
     tempModule = newNode->getSubmodule("app");
     if(!tempModule)
         throw cRuntimeError("Cannot find Submodule 'app' in created Node");
-    ExternalApp* appPtr = check_and_cast<ExternalApp*>(tempModule);
+    ExternalAppTrampoline* appPtr = check_and_cast<ExternalAppTrampoline*>(tempModule);
     return appPtr;
 }
 
-void ApplicationAdapter::saveNode(unsigned long id, ExternalApp* nodeApp)
+void ApplicationAdapter::saveNode(unsigned long id, ExternalAppTrampoline* nodeApp)
 {
     using namespace std;
-    pair<unordered_map<unsigned long, ExternalApp*>::iterator, bool> retVal;
-    retVal = nodeMap.insert(pair<unsigned long,ExternalApp*>(id, nodeApp));
+    pair<unordered_map<unsigned long, ExternalAppTrampoline*>::iterator, bool> retVal;
+    retVal = nodeMap.insert(pair<unsigned long,ExternalAppTrampoline*>(id, nodeApp));
     if(retVal.second == false)
         throw cRuntimeError("Node with Id %d already exists", id);
 }
@@ -339,7 +339,7 @@ MonoMethod* ApplicationAdapter::checkFunctionPtr(const char* handle)
     return functionMap[handle];
 }
 
-ExternalApp* ApplicationAdapter::findNode(unsigned long handle)
+ExternalAppTrampoline* ApplicationAdapter::findNode(unsigned long handle)
 {
     if (nodeMap.find(handle) == nodeMap.end())
         throw cRuntimeError("cannot find node accociatied with Id %ld", handle);

@@ -15,7 +15,7 @@
 
 #include "inet/applications/external/ApplicationAdapterBase.h"
 #include "inet/applications/external/coreclrhost.h"
-#include "inet/applications/external/DotnetCoreApp.h"
+#include "inet/applications/external/ExternalAppTrampoline.h"
 
 namespace inet {
 
@@ -92,7 +92,7 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
     cMessage* trigger;
     cMessage* timer;
     enum{trigger_kind=1, timer_kind=2};
-    std::unordered_map<unsigned long, DotnetCoreApp*> nodeMap; // fast access, slower iteration
+    std::unordered_map<unsigned long, ExternalAppTrampoline*> nodeMap; // fast access, slower iteration
 
     // runtime helper
   private:
@@ -110,10 +110,10 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
 
     //factory helper
   private:
-    DotnetCoreApp* createNewNode(unsigned long id);
+    ExternalAppTrampoline* createNewNode(unsigned long id);
     unsigned long getUniqueId();
-    void saveNode(unsigned long id, DotnetCoreApp* nodeApp);
-    DotnetCoreApp* findNode(unsigned long handle);
+    void saveNode(unsigned long id, ExternalAppTrampoline* nodeApp);
+    ExternalAppTrampoline* findNode(unsigned long handle);
 
   public:
     DotnetApplicationAdapter();
