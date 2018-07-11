@@ -19,9 +19,10 @@ package inet.applications.external;
 //
 // TODO auto-generated module
 //
-simple DotnetApplicationAdapter
+simple DotnetApplicationAdapter extends ApplicationAdapterBase
 {
     parameters:
+        @class(DotnetApplicationAdapter);
         @display("i=block/filter_s");
         
         

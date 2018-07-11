@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <unordered_map>
 
+#include "inet/applications/external/ApplicationAdapterBase.h"
 #include "inet/applications/external/ExternalApp.h"
 
 
@@ -36,7 +37,7 @@ namespace inet {
  * TODO - Generated class
  */
 
-class ApplicationAdapter : public cSimpleModule
+class ApplicationAdapter : public ApplicationAdapterBase
 {
     // called from external assembly via wrapper functions
   public:
@@ -95,7 +96,7 @@ class ApplicationAdapter : public cSimpleModule
     void saveNode(unsigned long id, ExternalApp* nodeApp);
     void getExternalFunctioinPtrs(MonoClass* klass);
     MonoMethod* checkFunctionPtr(const char* handle);
-    ExternalApp* checkNodeId(unsigned long handle);
+    ExternalApp* findNode(unsigned long handle);
 
   public:
     ApplicationAdapter();

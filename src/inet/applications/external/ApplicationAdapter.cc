@@ -339,7 +339,7 @@ MonoMethod* ApplicationAdapter::checkFunctionPtr(const char* handle)
     return functionMap[handle];
 }
 
-ExternalApp* ApplicationAdapter::checkNodeId(unsigned long handle)
+ExternalApp* ApplicationAdapter::findNode(unsigned long handle)
 {
     if (nodeMap.find(handle) == nodeMap.end())
         throw cRuntimeError("cannot find node accociatied with Id %ld", handle);

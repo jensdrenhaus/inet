@@ -13,6 +13,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "inet/applications/external/ApplicationAdapterBase.h"
 #include "inet/applications/external/coreclrhost.h"
 #include "inet/applications/external/DotnetCoreApp.h"
 
@@ -22,7 +23,7 @@ namespace inet {
  * TODO - Generated class
  */
 
-class DotnetApplicationAdapter : public cSimpleModule
+class DotnetApplicationAdapter : public ApplicationAdapterBase
 {
     // called from external assembly via wrapper functions
   public:
