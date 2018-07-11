@@ -27,8 +27,13 @@ namespace inet {
 class ApplicationAdapterBase : public cSimpleModule
 {
   protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void handleMessage(cMessage *msg) override;
+
+  public:
+    virtual void call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status) = 0;
+    virtual void call_timerNotify(unsigned long nodeId) = 0;
 };
 
 } //namespace

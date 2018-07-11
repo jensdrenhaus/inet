@@ -42,7 +42,7 @@ Define_Module(ApplicationAdapter);
 
 void ApplicationAdapter::initialize(int stage)
 {
-    cSimpleModule::initialize(stage);
+    ApplicationAdapterBase::initialize(stage);
 
     if (stage == INITSTAGE_LOCAL) {
 
@@ -128,7 +128,7 @@ void ApplicationAdapter::finish()
 
 void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
-    ExternalApp* app = checkNodeId(srcId);
+    ExternalApp* app = findNode(srcId);
     //app->sendPing();
     app->sendMsg(destId, numBytes, msgId);
 }
@@ -136,14 +136,14 @@ void ApplicationAdapter::send(unsigned long srcId, unsigned long destId, int num
 void ApplicationAdapter::wait_ms(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_MS);
-    ExternalApp* app = checkNodeId(id);
+    ExternalApp* app = findNode(id);
     app->wait(t);
 }
 
 void ApplicationAdapter::wait_s(unsigned long id, int duration)
 {
     simtime_t t = SimTime(duration, SIMTIME_S);
-    ExternalApp* app = checkNodeId(id);
+    ExternalApp* app = findNode(id);
     app->wait(t);
 }
 

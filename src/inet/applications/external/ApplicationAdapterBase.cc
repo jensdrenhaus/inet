@@ -17,9 +17,9 @@
 
 namespace inet {
 
-Define_Module(ApplicationAdapterBase);
 
-void ApplicationAdapterBase::initialize()
+
+void ApplicationAdapterBase::initialize(int stage)
 {
     // TODO - Generated method body
 }

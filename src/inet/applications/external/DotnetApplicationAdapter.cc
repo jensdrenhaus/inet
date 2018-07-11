@@ -57,7 +57,7 @@ Define_Module(DotnetApplicationAdapter);
 
 void DotnetApplicationAdapter::initialize(int stage)
 {
-    cSimpleModule::initialize(stage);
+    ApplicationAdapterBase::initialize(stage);
 
     char managedAssemblyPath [PATH_MAX];
 
