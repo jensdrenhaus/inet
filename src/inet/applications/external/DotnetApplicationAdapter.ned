@@ -29,7 +29,7 @@ simple DotnetApplicationAdapter extends ApplicationAdapterBase
         string assemblyName = default("SampleApp.dll"); // assembly to load from csharp/bin/.. directory
         string namespaceName = default("OmnetServices"); // namespace used in the assembly 
         string className = default("OmnetInterface"); // class inside the assembly that implements the callback methods
-        string clrFilesPath = default("/usr/share/dotnet/shared/Microsoft.NETCore.App/2.0.6"); // absolut path to the dotnet installations' CLR files
+        string clrFilesPath = default("/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"); // absolut path to the dotnet installations' CLR files
         
         string nodeType = default("inet.node.wsn.TrampolineNode"); // fully qualified NED type name of the module which is to be dynamically instanciated
 }

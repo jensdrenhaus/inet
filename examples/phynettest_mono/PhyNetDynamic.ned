@@ -19,10 +19,10 @@
 package inet.examples.phynettest_mono;
 
 
-import inet.node.wsn.PhyNodeExternal;
+import inet.node.wsn.TrampolineNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
-import inet.applications.external.ApplicationAdapter;
+import inet.applications.external.MonoApplicationAdapter;
 
 
 network Net
@@ -39,7 +39,7 @@ network Net
             parameters:
                 @display("p=-100,250");
         }
-        adapter: ApplicationAdapter {
+        adapter: MonoApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
         }
@@ -47,7 +47,7 @@ network Net
 //            parameters:
 //                @display("r=,,#707070;p=250,58");
 //        }
-        node: PhyNodeExternal {
+        node: TrampolineNode {
             parameters:
                 @dynamic;
         }
