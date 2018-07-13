@@ -1,7 +1,7 @@
 
 
 1) OMNeT 5.2.1 installieren ( auf plattformspezifische Vorbereitungen achten -> siehe Omnet Install Guide)
-2) install and test .NET SDK for Linux -> https://www.microsoft.com/net/learn/get-started/linux/ubuntu16-04
+2) .NET SDK für Linux installieren -> https://www.microsoft.com/net/learn/get-started/linux/ubuntu16-04
 2) Die .NET dlls sollten nun in /usr/share/dotnet/shared/Microsoft.NETCore.App/2.x.x liegen (
 2) Repository colen $ git clone --recursive git@github.com:jensdrenhaus/inet.git 
 3) auf Showcase-Branch wechseln $ checkout --track origin/dotnet_showcase
