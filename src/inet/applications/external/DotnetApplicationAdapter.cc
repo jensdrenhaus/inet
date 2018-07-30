@@ -218,6 +218,8 @@ unsigned long DotnetApplicationAdapter::createNode()
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with auto-Id %ld\n", name, id);
+
+    return id;
 }
 
 /*
