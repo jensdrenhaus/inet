@@ -19,7 +19,7 @@
 
 namespace inet {
 
-static const char* const relativePathToDll = "../../src/csharp/bin/Debug/netcoreapp2.0/";
+static const char* const relativePathToDll = "../../src/csharp/bin/Debug/netcoreapp2.0/publish/";
 static const char* const symlinkEntrypointExecutable = "/proc/self/exe";
 static const char* const coreClrDll = "libcoreclr.so";
 // Name of the environment variable controlling server GC.

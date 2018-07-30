@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using NativeLibraryLoader;
 
+// ReSharper disable once CheckNamespace
 namespace OmnetServices
 {
 	public class OmnetSimulation
@@ -33,12 +34,10 @@ namespace OmnetServices
 		private delegate ulong GetGlobalTimeType();
 		private GetGlobalTimeType _GetGlobalTime = null;
 
+		// ReSharper disable once InconsistentNaming
 		private static readonly OmnetSimulation instance = new OmnetSimulation();
 
-		public static OmnetSimulation Instance()
-		{
-			return instance;
-		}
+		public static OmnetSimulation Instance() => instance;
 
 		private OmnetSimulation()
 		{
