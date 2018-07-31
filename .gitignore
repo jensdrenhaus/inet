@@ -89,3 +89,6 @@ xxx
 #ignore csharp object folder
 /src/csharp/obj/
 /src/csharp/.vs/
+
+ignore vscode project files
+/src/csharp/.vscode/
