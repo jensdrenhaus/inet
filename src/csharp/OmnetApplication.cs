@@ -108,12 +108,8 @@ namespace OmnetServices
 	    public event OnOmnetGlobalTimerNotify OmnetGlobalTimerNotify;
 		public static void globalTimerNotify()
         {
-            Console.WriteLine("C# : globalTimerNotify is called");
-
-			//Example
-            // OmnetSimulation.Instance().Send(1, 2, 10, 123);
+            Console.WriteLine("C# : globalTimerNotify is called");	
             Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
-            // OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
 	        Instance.OmnetGlobalTimerNotify?.Invoke();
         }
 	    
