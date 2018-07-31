@@ -1,4 +1,4 @@
 #!/bin/bash
-dotnet build ../../src/csharp
+dotnet publish ../../src/csharp
 
 
