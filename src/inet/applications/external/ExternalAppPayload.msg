@@ -23,8 +23,8 @@ namespace inet;
 // TODO
 packet ExternalAppPayload
 {
-	long originatorId; // sender module id, representing the physical Address (MAC Address)
-	long destinationId; // receiver module id, representing the physical Address (MAC Address)
+	unsigned long originatorId; // sender module id, representing the physical Address (MAC Address)
+	unsigned long destinationId; // receiver module id, representing the physical Address (MAC Address)
 	int extMsgId;
 	unsigned char data[];
 }
