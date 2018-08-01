@@ -15,7 +15,7 @@ Momentan nur für Linux (Ubuntu 16.04 LTS getestet)
 13) $ ./run
 14) Im sich öffnenden GUI auf play klicken -> PingPong Szenario
 
-Die Funktionalitat der App-Schicht kann in inet/src/scharp/OmnetApplication.cs implementiert werden.
+Die Funktionalität der App-Schicht kann in inet/src/scharp/OmnetApplication.cs implementiert werden.
 
 Bekannte Fehlerquellen: 
 in ~/.nuget/packages darf sich keine ältere/ andere version von akka befinden (nur akka 1.3.8)
