@@ -4,7 +4,7 @@ Momentan nur für Linux (Ubuntu 16.04 LTS getestet)
 2) .NET SDK für Linux istallieren und testen -> https://www.microsoft.com/net/learn/get-started/linux/ubuntu16-04
 3) Die .NET Dlls sollten nun in /usr/share/dotnet/shared/Microsoft.NETCore.App/2.x.x liegen 
 4) Repository colen $ git clone --recursive git@github.com:jensdrenhaus/inet.git 
-5) auf Dotnet-Branch wechseln $ checkout --track origin/dotnet_tuning
+5) auf Dotnet-Branch wechseln $ checkout --track origin/dotnetcore
 6) ins INET Wurzelverzechnis wechseln
 7) $ make makefiles
 8) $ make
@@ -21,4 +21,4 @@ Beispiel starten: z.B "akka pingpong"
 Die Funktionalität der App-Schicht kann in inet/src/scharp/OmnetApplication.cs implementiert werden.
 
 Bekannte Fehlerquellen: 
-in ~/.nuget/packages darf sich keine ältere/ andere version von akka befinden (nur akka 1.3.8)
+in ~/.nuget/packages darf sich keine ältere/andere version von akka befinden (nur akka 1.3.8)
