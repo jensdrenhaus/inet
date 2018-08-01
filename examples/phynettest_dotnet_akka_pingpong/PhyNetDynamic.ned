@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.phynettest_dotnet;
+package inet.examples.phynettest_dotnet_akka_pingpong;
 
 import inet.node.wsn.TrampolineNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
@@ -38,6 +38,7 @@ network Net
         adapter: DotnetApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
+        	    assembly = "akka_pingpong/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
         }
 //        node[numNodes]: PhyNode {
 //            parameters:

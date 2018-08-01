@@ -74,7 +74,7 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
     void* hostHandle;
     unsigned int domainId;
     void* coreclrLib;
-    const char* assemblyName;
+    const char* assembly;
     const char* namespaceName;
     const char* className;
     const char* clrFilesPath;

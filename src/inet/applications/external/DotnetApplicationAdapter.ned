@@ -26,7 +26,7 @@ simple DotnetApplicationAdapter extends ApplicationAdapterBase
         @display("i=block/filter_s");
         
         
-        string assemblyName = default("SampleApp.dll"); // assembly to load from csharp/bin/.. directory
+        string assembly = default("SampleApp.dll"); // path to assambly relative to src/csharp/
         string namespaceName = default("OmnetServices"); // namespace used in the assembly 
         string className = default("OmnetInterface"); // class inside the assembly that implements the callback methods
         string clrFilesPath = default("/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"); // absolut path to the dotnet installations' CLR files

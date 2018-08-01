@@ -19,7 +19,7 @@
 
 namespace inet {
 
-static const char* const relativePathToDll = "../../src/csharp/bin/Debug/netcoreapp2.0/publish/";
+static const char* const relativePathToDll = "../../src/csharp/";
 static const char* const symlinkEntrypointExecutable = "/proc/self/exe";
 static const char* const coreClrDll = "libcoreclr.so";
 // Name of the environment variable controlling server GC.
@@ -66,7 +66,7 @@ void DotnetApplicationAdapter::initialize(int stage)
         creationCnt = 0;
         factory = new NodeFactory(par("nodeType").stringValue(), this->getParentModule());
         instance = this;
-        assemblyName = par("assemblyName").stringValue();
+        assembly = par("assembly").stringValue();
         namespaceName = par("namespaceName").stringValue();
         className = par("className").stringValue();
         clrFilesPath = par("clrFilesPath").stringValue();
@@ -81,7 +81,7 @@ void DotnetApplicationAdapter::initialize(int stage)
         shutdownCoreCLR   = NULL;
 
         strcpy(managedAssemblyPath, relativePathToDll);
-        strcat(managedAssemblyPath, assemblyName);
+        strcat(managedAssemblyPath, assembly);
         if(!generateAbsolutePaths(managedAssemblyPath, clrFilesPath)){
             throw cRuntimeError("Invalid paths! Check the following relative paths:\n   %s\n   %s", managedAssemblyPath, clrFilesPath);
         }
@@ -93,7 +93,7 @@ void DotnetApplicationAdapter::initialize(int stage)
     if (stage == INITSTAGE_LAST) {
 
         // run the Main() method in the assembly.
-        printf("Application Adapter executes Main() in %s\n", assemblyName);
+        printf("Application Adapter executes Main() in %s\n", assembly);
         int exitCode = executeManagedAssemblyMain(0, NULL);
 
 
