@@ -1,24 +1,28 @@
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
+// Copyright (C) 2013 OpenSim Ltd.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+//
 
-package inet.examples.phynettest_dotnet_csharp_demo;
+package inet.examples.phynet_mono;
+
 
 import inet.node.wsn.TrampolineNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
-import inet.applications.external.DotnetApplicationAdapter;
+import inet.applications.external.MonoApplicationAdapter;
 
 
 network Net
@@ -35,11 +39,9 @@ network Net
             parameters:
                 @display("p=-100,250");
         }
-        adapter: DotnetApplicationAdapter {
+        adapter: MonoApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
-        	    assembly     = "csharp_demo/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
-        	    clrFilesPath = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"; // absolut path to the dotnet CLR files
         }
 //        node[numNodes]: PhyNode {
 //            parameters:
@@ -50,3 +52,4 @@ network Net
                 @dynamic;
         }
 }
+

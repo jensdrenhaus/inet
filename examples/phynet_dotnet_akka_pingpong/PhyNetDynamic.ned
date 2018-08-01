@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.phynettest_dotnet_akka_pingpong;
+package inet.examples.phynet_dotnet_akka_pingpong;
 
 import inet.node.wsn.TrampolineNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
