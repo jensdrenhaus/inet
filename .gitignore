@@ -90,5 +90,6 @@ xxx
 /src/csharp/obj/
 /src/csharp/.vs/
 
-ignore vscode project files
-/src/csharp/.vscode/
+#ignore vscode project files
+/src/csharp/.vscode
+
