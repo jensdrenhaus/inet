@@ -1,19 +1,22 @@
 Momentan nur für Linux (Ubuntu 16.04 LTS getestet)
 
 1) OMNeT 5.2.1 installieren ( auf plattformspezifische Vorbereitungen und Nachbereitungen achten -> siehe Omnet Install Guide)
-2) .NET SDK for Linux istallieren und testen -> https://www.microsoft.com/net/learn/get-started/linux/ubuntu16-04
-3) Die .NET Dlls sollten nun in /usr/share/dotnet/shared/Microsoft.NETCore.App/2.x.x liegen (
+2) .NET SDK für Linux istallieren und testen -> https://www.microsoft.com/net/learn/get-started/linux/ubuntu16-04
+3) Die .NET Dlls sollten nun in /usr/share/dotnet/shared/Microsoft.NETCore.App/2.x.x liegen 
 4) Repository colen $ git clone --recursive git@github.com:jensdrenhaus/inet.git 
-5) auf Showcase-Branch wechseln $ checkout --track origin/dotnet_showcase_akka
+5) auf Dotnet-Branch wechseln $ checkout --track origin/dotnet_tuning
 6) ins INET Wurzelverzechnis wechseln
 7) $ make makefiles
 8) $ make
-9) inet/src/int/applications/extern/DotnetApplicationAdapter.ned öffnen und bei clrFilesPath den unter 3 erwänten Pfad einfügen/kontrollieren
-10) zu inet/examples/phynettest_dotnet wechseln
-11) Benutzerrechte von ./setup und ./ run kontrollieren. Diese müssen ausführbar sein.
-12) C# Code bauen $ ./setup 
-13) $ ./run
-14) Im sich öffnenden GUI auf play klicken -> PingPong Szenario
+
+Beispiel starten: z.B "akka pingpong"
+
+1) inet/examples/phynet_dotnet_akka_pingpong/PhyNetDynamic.ned öffnen und bei Parameter 'clrFilesPath' den unter 3 genannten Pfad einfügen/kontrollieren (Versionsnummer)
+2) zu inet/examples/phynettest_dotnet_akka_pingpong wechseln
+3) Benutzerrechte von ./setup und ./ run kontrollieren. Diese müssen ausführbar sein.
+4) C# Code bauen $ ./setup 
+5) Simulation ausführen $ ./run
+6) Im sich öffnenden GUI oben auf "play" klicken -> PingPong Szenario
 
 Die Funktionalität der App-Schicht kann in inet/src/scharp/OmnetApplication.cs implementiert werden.
 

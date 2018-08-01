@@ -38,7 +38,8 @@ network Net
         adapter: DotnetApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
-        	    assembly = "csharp_demo/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
+        	    assembly     = "csharp_demo/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
+        	    clrFilesPath = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"; // absolut path to the dotnet CLR files
         }
 //        node[numNodes]: PhyNode {
 //            parameters:
