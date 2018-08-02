@@ -55,8 +55,24 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.229043752.1839431547" name="/" resourcePath="src">
+						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.250841251" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1870388583" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1843986175"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.622474562" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.1544720771">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1389447018" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1010510359" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.892294620">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1531396446" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1956876747" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.1169210834"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1854567398" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.1065738287"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.base.523463702" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.420284418">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1711095843" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="inet/networklayer/ted|inet/networklayer/wiseroute|inet/node/xmipv6|inet/transportlayer/tcp_lwip|inet/applications/rtpapp|inet/visualizer/util|inet/applications/udpapp|inet/visualizer/base|inet/common/serializer/headerserializers/arp|inet/node/rtp|inet/linklayer/ieee802154|inet/networklayer/multi|inet/physicallayer/ieee802154|inet/linklayer/ieee80211|inet/common/serializer/ipv6|inet/networklayer/icmpv6|inet/visualizer/mobility|inet/physicallayer/ieee80211|inet/visualizer/environment|inet/routing/pim|inet/physicallayer/apskradio|inet/routing/aodv|transport/tcp_nsc|inet/routing/extras|inet/visualizer/networklayer|inet/node/ospfv2|inet/applications/sctpapp|inet/transportlayer/rtp|inet/networklayer/configurator/generic|inet/node/internetcloud|inet/networklayer/internetcloud|inet/applications/httptools|inet/routing/rip|inet/networklayer/configurator/ipv6|inet/common/serializer/sctp|inet/common/serializer/headerserializers/ieee80211|inet/networklayer/ldp|inet/node/packetdrill|inet/applications/voip|inet/linklayer/tun|inet/node/ipv6|inet/visualizer/common|inet/node/gpsr|inet/applications/packetdrill|inet/common/serializer/udp|inet/common/serializer/tcp|inet/applications/dhcp|inet/node/httptools|inet/networklayer/probabilistic|inet/networklayer/xmipv6|inet/linklayer/lmac|inet/transportlayer/sctp|inet/networklayer/arp/generic|inet/transportlayer/tcp_nsc|inet/node/ethernet|inet/visualizer/integrated|inet/networklayer/configurator/ipv4|inet/applications/voipstream|inet/networklayer/ipv6tunneling|inet/visualizer/power|inet/networklayer/rsvp_te|inet/applications/ethernet|inet/networklayer/generic|inet/visualizer/physicallayer|inet/node/dymo|inet/applications/tcpapp|inet/networklayer/diffserv|inet/node/wireless|inet/networklayer/ipv6|transport/tcp_lwip|inet/node/rip|inet/linklayer/ethernet|inet/applications/tunapp|inet/linklayer/ppp|inet/routing/dymo|inet/linklayer/ieee8021d|inet/node/mpls|inet/visualizer/scene|inet/visualizer/linklayer|inet/routing/gpsr|inet/routing/bgpv4|inet/networklayer/mpls|inet/transportlayer/tcp_common|inet/networklayer/arp/ipv4|inet/node/aodv|inet/routing/ospfv2|inet/linklayer/ext|inet/visualizer/transportlayer|inet/common/serializer/headerserializers/ethernet|inet/transportlayer/udp|inet/networklayer/flood|inet/transportlayer/tcp|inet/common/serializer/ipv4|inet/node/bgp|inet/linklayer/bmac|inet/networklayer/ipv4" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="inet/transportlayer/tcp_lwip|transport/tcp_nsc|inet/routing/extras|inet/transportlayer/tcp_nsc|inet/applications/voipstream|transport/tcp_lwip|inet/linklayer/ext" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -112,8 +128,24 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="org.omnetpp.cdt.gnu.config.release.1746235823.1241216086" name="/" resourcePath="src">
+						<toolChain id="org.omnetpp.cdt.gnu.toolchain.release.1614543552" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.release" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1901599513" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1643927787"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.2133007934" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.1039888888">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1871528337" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.502857155" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.419916163">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.532925670" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1866892681" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.1190158571"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.774077661" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.893445214"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.base.446880310" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.960891752">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1203323725" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="inet/networklayer/ted|inet/networklayer/wiseroute|inet/node/xmipv6|inet/transportlayer/tcp_lwip|inet/applications/rtpapp|inet/visualizer/util|inet/applications/udpapp|inet/visualizer/base|inet/common/serializer/headerserializers/arp|inet/node/rtp|inet/linklayer/ieee802154|inet/networklayer/multi|inet/physicallayer/ieee802154|inet/linklayer/ieee80211|inet/common/serializer/ipv6|inet/networklayer/icmpv6|inet/visualizer/mobility|inet/physicallayer/ieee80211|inet/visualizer/environment|inet/routing/pim|inet/physicallayer/apskradio|inet/routing/aodv|transport/tcp_nsc|inet/routing/extras|inet/visualizer/networklayer|inet/node/ospfv2|inet/applications/sctpapp|inet/transportlayer/rtp|inet/networklayer/configurator/generic|inet/node/internetcloud|inet/networklayer/internetcloud|inet/applications/httptools|inet/routing/rip|inet/networklayer/configurator/ipv6|inet/common/serializer/sctp|inet/common/serializer/headerserializers/ieee80211|inet/networklayer/ldp|inet/node/packetdrill|inet/applications/voip|inet/linklayer/tun|inet/node/ipv6|inet/visualizer/common|inet/node/gpsr|inet/applications/packetdrill|inet/common/serializer/udp|inet/common/serializer/tcp|inet/applications/dhcp|inet/node/httptools|inet/networklayer/probabilistic|inet/networklayer/xmipv6|inet/linklayer/lmac|inet/transportlayer/sctp|inet/networklayer/arp/generic|inet/transportlayer/tcp_nsc|inet/node/ethernet|inet/visualizer/integrated|inet/networklayer/configurator/ipv4|inet/applications/voipstream|inet/networklayer/ipv6tunneling|inet/visualizer/power|inet/networklayer/rsvp_te|inet/applications/ethernet|inet/networklayer/generic|inet/visualizer/physicallayer|inet/node/dymo|inet/applications/tcpapp|inet/networklayer/diffserv|inet/node/wireless|inet/networklayer/ipv6|transport/tcp_lwip|inet/node/rip|inet/linklayer/ethernet|inet/applications/tunapp|inet/linklayer/ppp|inet/routing/dymo|inet/linklayer/ieee8021d|inet/node/mpls|inet/visualizer/scene|inet/visualizer/linklayer|inet/routing/gpsr|inet/routing/bgpv4|inet/networklayer/mpls|inet/transportlayer/tcp_common|inet/networklayer/arp/ipv4|inet/node/aodv|inet/routing/ospfv2|inet/linklayer/ext|inet/visualizer/transportlayer|inet/common/serializer/headerserializers/ethernet|inet/transportlayer/udp|inet/networklayer/flood|inet/transportlayer/tcp|inet/common/serializer/ipv4|inet/node/bgp|inet/linklayer/bmac|inet/networklayer/ipv4" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="inet/transportlayer/tcp_lwip|transport/tcp_nsc|inet/routing/extras|inet/transportlayer/tcp_nsc|inet/applications/voipstream|transport/tcp_lwip|inet/linklayer/ext" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
