@@ -39,7 +39,7 @@ module TinyNodeBase like ITinyNode
         string osgModel = default(""); // 3D model for OSG visualization, no 3D model by default
         string osgModelColor = default(""); // tint color, no colorization by default
         string mobilityType = default("StationaryMobility");
-        string nicType = default("SimpleWirelessNic");
+        string nicType;
         string energyStorageType = default("IdealEpEnergyStorage");
         string energyManagementType = default("");
         string energyGeneratorType = default("");

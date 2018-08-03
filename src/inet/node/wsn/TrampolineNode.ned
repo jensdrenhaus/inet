@@ -25,6 +25,7 @@ module TrampolineNode extends TinyNodeBase
 	parameters:
 	    @display("i=msg/packet");
 	    mobilityType = "StorageHallGridMobility";
+	    nicType = default("IdealPhyNetNic");
 	submodules:
 	    app: <default("ExternalAppTrampoline")> like IMACApp {
             parameters:

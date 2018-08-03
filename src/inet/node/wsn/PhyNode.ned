@@ -24,6 +24,7 @@ module PhyNode extends TinyNodeBase
 {
 	parameters:
 	    @display("i=msg/packet");
+	    nicType = default("IdealPhyNetNic");
 	submodules:
 	    app: <default("NodeApp")> like IMACApp {
             parameters:

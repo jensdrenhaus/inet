@@ -24,6 +24,7 @@ module AccessPoint extends TinyNodeBase
 {
     parameters:
 	    @display("i=device/accesspoint");
+	    nicType = default("IdealPhyNetNic");
 	submodules:
 	    app: <default("AccessPointApp")> like IMACApp {
             parameters:
