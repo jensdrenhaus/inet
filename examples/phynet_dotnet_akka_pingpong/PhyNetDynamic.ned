@@ -19,6 +19,7 @@ import inet.node.wsn.TrampolineNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.applications.external.DotnetApplicationAdapter;
+import inet.mobility.group.StorageHallCoordinator;
 
 
 network Net
@@ -35,6 +36,11 @@ network Net
             parameters:
                 @display("p=-100,250");
         }
+        mobilityCoordinator: StorageHallCoordinator {
+        	parameters:
+        	    @display("p=2.5,-0.8;is=s");
+        	    numItems = 20;
+        }  
         adapter: DotnetApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
