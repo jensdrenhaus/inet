@@ -51,7 +51,7 @@ namespace OmnetServices
             Console.WriteLine("C# : simulationReady is called");
 
 			//Example
-            OmnetSimulation.Instance().Send(1, 0x0000ffffffffffff, 10, 123);
+            OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
             Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
             OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
         }
@@ -66,7 +66,8 @@ namespace OmnetServices
 
 		public static void receptionNotify(ulong destId, ulong srcId, int msgId, int status)
         {
-            Console.WriteLine("C# : receptionNotify is called with destID=" + destId + " srcId=" + srcId + " msgId=" + msgId + " status=" + status);
+			string statusString = status==OmnetSimulation.RECEPTION_OK ? "OK" : status==OmnetSimulation.RECEPTION_IGNORED ? "IGNORED" : status==OmnetSimulation.RECEPTION_BITERROR ? "BITERROR" : "UNKNOWN";
+            Console.WriteLine("C# : receptionNotify is called with destID=" + destId + " srcId=" + srcId + " msgId=" + msgId + " status=" + statusString);
 
 			//Example
             Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
@@ -92,7 +93,7 @@ namespace OmnetServices
             Console.WriteLine("C# : globalTimerNotify is called");
 
 			//Example
-            OmnetSimulation.Instance().Send(1, 0x0000ffffffffffff, 10, 123);
+            OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
             Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
             OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
         }
