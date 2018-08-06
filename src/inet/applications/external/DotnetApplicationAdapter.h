@@ -17,6 +17,8 @@
 #include "inet/applications/external/coreclrhost.h"
 #include "inet/applications/external/ExternalAppTrampoline.h"
 #include "inet/applications/external/util/NodeFactory.h"
+#include "inet/applications/external/ApplicationAdapterReceptionStates.h"
+
 
 namespace inet {
 

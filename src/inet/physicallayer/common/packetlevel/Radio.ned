@@ -84,6 +84,7 @@ module Radio like IRadio
         @signal[packetErrorRate];
         @signal[bitErrorRate];
         @signal[symbolErrorRate];
+        @signal[receptionEndedIgnoring];
 
         @statistic[radioMode](title="Radio mode"; source=radioModeChanged; record=count,vector; interpolationmode=sample-hold);
         @statistic[receptionState](title="Radio reception state"; source=receptionStateChanged; record=count,vector; interpolationmode=sample-hold);
@@ -93,6 +94,7 @@ module Radio like IRadio
         @statistic[packetErrorRate](title="Packet error rate"; source=packetErrorRate; record=histogram);
         @statistic[bitErrorRate](title="Bit error rate"; source=bitErrorRate; record=histogram);
         @statistic[symbolErrorRate](title="Symbol error rate"; source=symbolErrorRate; record=histogram);
+        @statistic[receptionEndedIgnoring](title="Reception ended ignoring"; source=receptionEndedIgnoring; record=count);
 
     gates:
         input upperLayerIn @labels(ILinkLayerFrame/down);
