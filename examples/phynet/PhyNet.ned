@@ -24,6 +24,8 @@ import inet.node.wsn.PhyNode;
 import inet.physicallayer.contract.packetlevel.IRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.mobility.group.StorageHallCoordinator;
+import inet.logger.Logger;
+
 
 network PhyNet
 {
@@ -36,6 +38,10 @@ network PhyNet
             parameters:
                 @display("p=0.5,-0.8;is=s");
         }
+        logger: Logger {
+			parameters:
+			  @display("p=3.5,-0.8;is=s");  
+		}
         radioMedium: <radioMediumType> like IRadioMedium {
             parameters:
                 @display("p=1.5,-0.8;is=s");

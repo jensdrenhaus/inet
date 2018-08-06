@@ -93,4 +93,7 @@ xxx
 #ignore vscode project files
 /src/csharp/.vscode
 
-obj/
+#ignore custom log files
+/examples/*/log/
+
+

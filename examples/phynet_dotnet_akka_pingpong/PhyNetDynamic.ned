@@ -20,6 +20,8 @@ import inet.physicallayer.idealradio.IdealRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.applications.external.DotnetApplicationAdapter;
 import inet.mobility.group.StorageHallCoordinator;
+import inet.logger.Logger;
+
 
 
 network Net
@@ -32,6 +34,10 @@ network Net
 //            parameters:
 //                @display("p=-100,50");
 //        }
+		logger: Logger {
+			parameters:
+			    @display("p=0.5,-0.8;is=s");
+		}
         radioMedium: IdealRadioMedium {
             parameters:
                 @display("p=-100,250");
