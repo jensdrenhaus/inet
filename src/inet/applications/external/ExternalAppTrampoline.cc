@@ -25,6 +25,8 @@
 #include "inet/applications/external/ApplicationAdapterBase.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/linklayer/common/SimpleLinkLayerControlInfo.h"
+#include "inet/common/LayeredProtocolBase.h"
+#include "inet/physicallayer/common/packetlevel/Radio.h"
 
 
 namespace inet {
@@ -84,7 +86,8 @@ void ExternalAppTrampoline::initialize(int stage)
         interfaceTable = check_and_cast<IInterfaceTable*>(module);
         module = this->getParentModule()->getSubmodule("nic")->getSubmodule("radio");
         module->subscribe("receptionEndedIgnoring", this);
-
+        module = this->getParentModule()->getSubmodule("nic")->getSubmodule("mac");
+        module->subscribe("packetFromLowerDropped", this);
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
         // generate nodeId from MAC Adress
@@ -131,7 +134,7 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
 
 void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
 {
-    adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), 0);
+    adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), OK);
     delete msg;
 }
 
@@ -139,10 +142,12 @@ void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObje
 {
     Enter_Method_Silent();
     cPacket* pkg = check_and_cast<cPacket*>(value);
-    cPacket* pkg2 = check_and_cast<cPacket*>(pkg->getEncapsulatedPacket());
-    ExternalAppPayload* msg = check_and_cast<ExternalAppPayload*>(pkg2);
-    if(msg->getDestinationId() == nodeId){
-        adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), 1);
+    ExternalAppPayload* msg = check_and_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
+    if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
+        if(id == physicallayer::Radio::receptionEndedIgnoringSignal)
+            adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
+        if(id == LayeredProtocolBase::packetFromLowerDroppedSignal)
+            adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
     }
 
 }

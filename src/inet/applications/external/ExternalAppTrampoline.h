@@ -22,6 +22,7 @@
 #include "inet/common/lifecycle/ILifecycle.h"
 #include "inet/common/lifecycle/LifecycleOperation.h"
 #include "inet/common/lifecycle/NodeStatus.h"
+#include "inet/applications/external/ApplicationAdapterReceptionStates.h"
 
 
 namespace inet {

@@ -200,6 +200,7 @@ void SimpleMac::handleLowerPacket(cPacket *msg)
     if (frame->hasBitError()) {
         EV << "Received " << frame << " contains bit errors or collision, dropping it\n";
         // TODO: add reason? emit(LayeredProtocolBase::packetFromLowerDroppedSignal, frame);
+        emit(LayeredProtocolBase::packetFromLowerDroppedSignal, frame); //HACK
         delete frame;
         return;
     }
