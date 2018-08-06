@@ -35,6 +35,7 @@ simsignal_t Radio::minSNIRSignal = cComponent::registerSignal("minSNIR");
 simsignal_t Radio::packetErrorRateSignal = cComponent::registerSignal("packetErrorRate");
 simsignal_t Radio::bitErrorRateSignal = cComponent::registerSignal("bitErrorRate");
 simsignal_t Radio::symbolErrorRateSignal = cComponent::registerSignal("symbolErrorRate");
+simsignal_t Radio::receptionEndedIgnoringSignal = cComponent::registerSignal("receptionEndedIgnoring"); //HACK
 
 Radio::~Radio()
 {
@@ -479,6 +480,9 @@ void Radio::endReception(cMessage *timer)
     }
     else {
         EV_INFO << "Reception ended: ignoring " << (IRadioFrame *)radioFrame << " " << IRadioSignal::getSignalPartName(part) << " as " << reception << endl;
+        auto ignoredMacFrame = medium->receivePacket(this, radioFrame); //HACK
+        emit(receptionEndedIgnoringSignal, ignoredMacFrame);            //HACK
+        delete ignoredMacFrame;                                         //HACK
         if (timer == receptionTimer)
             receptionTimer = nullptr;
     }

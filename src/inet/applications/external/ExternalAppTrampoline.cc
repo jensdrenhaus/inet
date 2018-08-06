@@ -82,6 +82,9 @@ void ExternalAppTrampoline::initialize(int stage)
         adapter = check_and_cast<ApplicationAdapterBase*>(module);
         module = this->getParentModule()->getSubmodule("interfaceTable");
         interfaceTable = check_and_cast<IInterfaceTable*>(module);
+        module = this->getParentModule()->getSubmodule("nic")->getSubmodule("radio");
+        module->subscribe("receptionEndedIgnoring", this);
+
     }
     else if (stage == INITSTAGE_APPLICATION_LAYER) {
         // generate nodeId from MAC Adress
@@ -128,8 +131,20 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
 
 void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
 {
-    adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), 1);
+    adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), 0);
     delete msg;
+}
+
+void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details)
+{
+    Enter_Method_Silent();
+    cPacket* pkg = check_and_cast<cPacket*>(value);
+    cPacket* pkg2 = check_and_cast<cPacket*>(pkg->getEncapsulatedPacket());
+    ExternalAppPayload* msg = check_and_cast<ExternalAppPayload*>(pkg2);
+    if(msg->getDestinationId() == nodeId){
+        adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), 1);
+    }
+
 }
 
 //void ExternalApp::refreshDisplay() const

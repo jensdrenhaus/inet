@@ -36,7 +36,7 @@ class IInterfaceTable;
 /**
  * TODO - Generated class
  */
-class ExternalAppTrampoline : public cSimpleModule, public ILifecycle
+class ExternalAppTrampoline : public cSimpleModule, public ILifecycle, public cListener
 {
 protected:
     // parameters: for more details, see the corresponding NED parameters' documentation
@@ -75,6 +75,7 @@ protected:
     virtual void initialize(int stage) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void handleMessage(cMessage *msg) override;
+    virtual void receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details) override;
     virtual void finish() override;
     //virtual void refreshDisplay() const override;
 
