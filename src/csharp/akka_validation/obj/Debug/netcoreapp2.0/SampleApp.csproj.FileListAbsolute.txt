@@ -1,0 +1,4 @@
+/media/data/inet_phynode/inet/src/csharp/akka_validation/obj/Debug/netcoreapp2.0/SampleApp.csprojAssemblyReference.cache
+/media/data/inet_phynode/inet/src/csharp/akka_validation/obj/Debug/netcoreapp2.0/SampleApp.csproj.CoreCompileInputs.cache
+/media/data/inet_phynode/inet/src/csharp/akka_validation/obj/Debug/netcoreapp2.0/SampleApp.AssemblyInfoInputs.cache
+/media/data/inet_phynode/inet/src/csharp/akka_validation/obj/Debug/netcoreapp2.0/SampleApp.AssemblyInfo.cs

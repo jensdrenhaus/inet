@@ -1,0 +1,4 @@
+#!/bin/bash
+dotnet publish ../../src/csharp/akka_validation
+
+
