@@ -28,6 +28,10 @@ simple ExternalAppTrampoline like IMACApp
         //double packetSize @unit("B") = default(0B); // of ping payload, in bytes
         bool printPing = default(false); // log to stdout
         @display("i=block/app");
+        @signal[packetSent](type=cPacket);
+        @signal[packetReceivedOk](type=cPacket);
+        @signal[packetReceivedIgnoring](type=cPacket);
+        @signal[packetReceivedCorrupted](type=cPacket);
         @signal[rtt](type=simtime_t);
         @signal[numLost](type=long);
         @signal[numOutOfOrderArrivals](type=long);

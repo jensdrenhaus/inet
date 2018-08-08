@@ -80,6 +80,11 @@ class ExternalAppTrampoline : public cSimpleModule, public ILifecycle, public cL
     long lossCount = 0;    // number of lost requests
     long outOfOrderArrivalCount = 0;    // number of responses which arrived too late
     long numPongs = 0;    // number of received Ping requests
+  public:
+    static simsignal_t packetSentSignal;
+    static simsignal_t packetReceivedOkSignal;
+    static simsignal_t packetReceivedIgnoringSignal;
+    static simsignal_t packetReceivedCorruptedSignal;
 
   protected:
     virtual void initialize(int stage) override;

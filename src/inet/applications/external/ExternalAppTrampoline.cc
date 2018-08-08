@@ -41,6 +41,11 @@ simsignal_t ExternalAppTrampoline::numOutOfOrderArrivalsSignal = registerSignal(
 simsignal_t ExternalAppTrampoline::pingTxSeqSignal = registerSignal("pingTxSeq");
 simsignal_t ExternalAppTrampoline::pingRxSeqSignal = registerSignal("pingRxSeq");
 
+simsignal_t ExternalAppTrampoline::packetSentSignal = registerSignal("packetSent");
+simsignal_t ExternalAppTrampoline::packetReceivedOkSignal = registerSignal("packetReceivedOk");
+simsignal_t ExternalAppTrampoline::packetReceivedIgnoringSignal = registerSignal("packetReceivedIgnoring");
+simsignal_t ExternalAppTrampoline::packetReceivedCorruptedSignal = registerSignal("packetReceivedCorrupted");
+
 #define TIMER_KIND 999
 
 
@@ -134,6 +139,7 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
 
 void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
 {
+    emit(packetReceivedOkSignal, msg);
     adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), OK);
     delete msg;
 }
@@ -145,8 +151,10 @@ void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObje
     ExternalAppPayload* msg = check_and_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
     if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
         if(id == physicallayer::Radio::receptionEndedIgnoringSignal)
+            emit(packetReceivedIgnoringSignal, msg);
             adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
         if(id == LayeredProtocolBase::packetFromLowerDroppedSignal)
+            emit(packetReceivedCorruptedSignal, msg);
             adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
     }
 
@@ -306,6 +314,7 @@ void ExternalAppTrampoline::sendMsg(unsigned long dest, int numBytes, int msgId)
 
     msg->setControlInfo(dynamic_cast<cObject *>(controlInfo));
     EV_INFO << "Sending message #" << sendSeqNo-1 << " to lower layer.\n";
+    emit(packetSentSignal, msg);
     send(msg, "appOut");
 }
 

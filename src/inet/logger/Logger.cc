@@ -15,6 +15,12 @@
 
 #include "inet/logger/Logger.h"
 
+#include <iomanip>
+#include <ctime>
+#include <string>
+
+#include "inet/applications/external/ExternalAppTrampoline.h"
+
 namespace inet {
 
 Define_Module(Logger);
@@ -23,21 +29,62 @@ void Logger::initialize(int stage)
 {
     if (stage == INITSTAGE_LOCAL) {
         // subscribe to signals
-        getSimulation()->getSystemModule()->subscribe("receptionEndedIgnoring", this);
+        getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetSentSignal, this);
+        getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetReceivedOkSignal, this);
+        getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetReceivedIgnoringSignal, this);
+        getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetReceivedCorruptedSignal, this);
 
         //open result file
-        resultFile.open("./log/test_file.csv", ios::out | ios::app);
+        auto t = std::time(nullptr);
+        auto tm = *std::localtime(&t);
+        std::ostringstream oss;
+        oss << std::put_time(&tm, "%y-%m-%d_%H:%M:%S");
+        std::stringstream stream;
+        stream << "./log/" << oss.str() <<".csv";
+        std::string filename_string = stream.str();
+        const char* filename = filename_string.c_str();
+
+        //printf("%s \n", filename.c_str());
+        resultFile.open(filename, ios::out | ios::app);
         if(resultFile.is_open()){
-            resultFile << "RunNr, Entity, VarName, Value";
+            resultFile << "Id, Node, NrSent, NrReceivedOk, NrReceivedIgnoring, NrReceivedCorrupted" << endl;
         }
         else
             throw cRuntimeError("Logger: Unable to open the result file! Does the 'log' folder exist?");
+
+        //init nodeMap
+        //nodeMap = new std::unordered_map<int, cObject>;
+        nodeMap.clear();
     }
 }
 
 void Logger::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details)
 {
-    resultFile << src->getFullPath().c_str() << "," << getSignalName(id) <<endl;
+    if (id == ExternalAppTrampoline::packetReceivedOkSignal) {
+        int nodeId = src->getParentModule()->getId();
+        if (!nodeMap[nodeId].nodeName)
+            nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        nodeMap[nodeId].receivedOk++;
+    }
+    if (id == ExternalAppTrampoline::packetReceivedIgnoringSignal) {
+        int nodeId = src->getParentModule()->getId();
+        if (!nodeMap[nodeId].nodeName)
+            nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        nodeMap[nodeId].receivedIgnoring++;
+    }
+    if (id == ExternalAppTrampoline::packetReceivedCorruptedSignal) {
+        int nodeId = src->getParentModule()->getId();
+        if (!nodeMap[nodeId].nodeName)
+            nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        nodeMap[nodeId].receivedCorrupted++;
+    }
+    if (id == ExternalAppTrampoline::packetSentSignal) {
+        int nodeId = src->getParentModule()->getId();
+        if (!nodeMap[nodeId].nodeName)
+            nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        nodeMap[nodeId].sent++;
+    }
+
 }
 
 void Logger::handleMessage(cMessage *msg)
@@ -47,7 +94,11 @@ void Logger::handleMessage(cMessage *msg)
 
 void Logger::finish()
 {
-
+    for (auto it : nodeMap){
+        int id = it.first;
+        PacketStat stat = it.second;
+        resultFile << id << sep << stat.nodeName << sep << stat.sent << sep << stat.receivedOk << sep << stat.receivedIgnoring << sep << stat.receivedCorrupted << endl;
+    }
 }
 
 } //namespace

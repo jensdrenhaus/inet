@@ -87,15 +87,20 @@ namespace OmnetServices
 			//Example
             //...
         }
-
+		
+		private static int cnt = 0;
+		
 		public static void globalTimerNotify()
         {
+			cnt++;
             Console.WriteLine("C# : globalTimerNotify is called");
-
-			//Example
-            OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
-            Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
-            OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
+            Console.WriteLine("Count: " + cnt);
+            if(cnt < 10) {
+            	OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
+	            Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
+	            OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
+				Console.WriteLine("Count: " + cnt);
+            }
         }
 
     }

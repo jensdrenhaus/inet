@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 
 
 namespace inet {
@@ -39,6 +40,19 @@ class Logger : public cSimpleModule, public cListener
 
   private:
     ofstream resultFile;
+    const char sep = ',';
+
+    class PacketStat: public cObject
+    {
+      public:
+        const char* nodeName = nullptr;
+        int sent = 0;
+        int receivedOk = 0;
+        int receivedIgnoring = 0;
+        int receivedCorrupted = 0;
+    };
+
+    std::unordered_map<int,PacketStat> nodeMap;
 };
 
 } //namespace
