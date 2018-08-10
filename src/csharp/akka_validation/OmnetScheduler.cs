@@ -67,9 +67,6 @@ namespace PhyNetFlow.OMNeT
         private void InternalSchedule(TimeSpan? initialDelay, TimeSpan delay, ICanTell receiver, object message, Action action,
             IActorRef sender, ICancelable cancelable, int deliveryCount = 0)
         {
-            // TODO: This probably needs adjustment for repetative events?
-            OmnetSimulation.Instance().SetGlobalTimerMillisecounds(delay.Milliseconds + initialDelay?.Milliseconds ?? 0);
-            
             var scheduledTime = TimeNow.Add(initialDelay ?? delay).UtcTicks;
             if (!_scheduledWork.TryGetValue(scheduledTime, out var tickItems))
             {
@@ -79,6 +76,9 @@ namespace PhyNetFlow.OMNeT
             var type = message == null ? ScheduledItem.ScheduledItemType.Action : ScheduledItem.ScheduledItemType.Message;
             tickItems.Enqueue(new ScheduledItem(initialDelay ?? delay, delay, type, message, action,
                 initialDelay.HasValue || deliveryCount > 0, receiver, sender, cancelable));
+            
+            // TODO: This probably needs adjustment for repetative events?
+            OmnetSimulation.Instance().SetGlobalTimerMillisecounds((initialDelay ?? delay).Milliseconds);
         }
         /// <summary>
         /// TBD

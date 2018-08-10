@@ -36,7 +36,7 @@ namespace PhyNetFlow.OMNeT
 
         protected override void OnReceive(object message)
         {
-            Console.WriteLine("Received a message.");
+            Console.WriteLine("Received a message. " + Self.Path);
             if (message is EchoBroadcast)
             {
                 _network.Broadcast(Self, new Echo());
@@ -54,8 +54,7 @@ namespace PhyNetFlow.OMNeT
 
         public static Props Props(bool shouldIgnore = false, bool isBroadcaster = false)
         {
-            // ReSharper disable once ArgumentsStyleNamedExpression
-            return Akka.Actor.Props.Create(() => new EchoActor(shouldIgnore: shouldIgnore, isBroadcaster: isBroadcaster));
+            return Akka.Actor.Props.Create(() => new EchoActor(shouldIgnore, isBroadcaster));
         }
     }
 }

@@ -134,7 +134,7 @@ namespace PhyNetFlow.OMNeT
             // Since everything should be scheduled to execute synchronously, the Actors/Nodes will be created
             // while in the init method.
             // After this we wait for the omnet simulation to start.
-            OnTransition(((state, nextState) =>
+            OnTransition((state, nextState) =>
             {
                 if (nextState == State.WaitingForSimulationStart)
                 {
@@ -143,9 +143,9 @@ namespace PhyNetFlow.OMNeT
                     // One that broadcasts, one that responds with echo, one that does nothing.
                     _echoBroadcaster = CreateOMNeTActor(EchoActor.Props(isBroadcaster:true).WithDispatcher("calling-thread-dispatcher"));
                     _echoReplier = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"));
-                    _echoIgnorer = CreateOMNeTActor(EchoActor.Props(shouldIgnore:true).WithDispatcher("calling-thread-dispatcher"));
+                    _echoIgnorer = CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"));
                 }
-            }));
+            });
 
             When(State.WaitingForSimulationStart, e =>
             {

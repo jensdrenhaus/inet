@@ -2,6 +2,15 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="__nuget__local__" t="Include">
+        <e p="PhyNetFlow.CLI.1.0.0.nupkg" t="Include" />
+        <e p="PhyNetFlow.Components.1.0.0.nupkg" t="Include" />
+        <e p="PhyNetFlow.Core.1.0.0.nupkg" t="Include" />
+        <e p="PhyNetFlow.Core.Plugins.1.0.0.nupkg" t="Include" />
+        <e p="PhyNetFlow.Experiments.1.0.0.nupkg" t="Include" />
+        <e p="PhyNetFlow.FileReaders.1.0.0.nupkg" t="Include" />
+        <e p="PhyNetFlow.Layouts.1.0.0.nupkg" t="Include" />
+      </e>
       <e p="bin" t="ExcludeRecursive" />
       <e p="CallingThreadDispatcher.cs" t="Include" />
       <e p="EchoActor.cs" t="Include" />
@@ -29,6 +38,6 @@
         <e p="NativeLibrary.cs" t="Include" />
       </e>
     </e>
-    <e p="$USER_HOME$/Library/Caches/Rider2018.1/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_SampleApp.-881414162.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2018.1/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_SampleApp.-1917230630.00" t="ExcludeRecursive" />
   </component>
 </project>
