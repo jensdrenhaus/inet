@@ -73,7 +73,7 @@ namespace SampleApp
             {
                 if (!Cache.ContainsKey(sys))
                 {
-                    Cache[sys] = sys.ActorOf<NetworkActor>();
+                    Cache[sys] = sys.ActorOf(Props.Create<NetworkActor>().WithDispatcher("calling-thread-dispatcher"));
                 }
                 return new Network(Cache[sys]);
             }
@@ -175,13 +175,16 @@ namespace SampleApp
             else if (message is Broadcast broadcast)
             {
                 // There seems to be no way to use publish here... we need to implement pubsub manually.
-                if (_subscribers.ContainsKey(broadcast.Message.GetType()))
+                var sender = broadcast.Sender;
+                var broadcasted = broadcast.Message;
+                var topic = broadcasted.GetType();
+                if (_subscribers.ContainsKey(topic))
                 {
-                    var subs = _subscribers[broadcast.Message.GetType()];
-                    BroadcastInOmnet(broadcast.Sender, broadcast.Message).ContinueWith(
+                    var subs = _subscribers[topic];
+                    BroadcastInOmnet(sender, broadcasted).ContinueWith(
                         result =>
                         {
-                            subs.ForEach(sub => sub.Tell(broadcast.Message, broadcast.Sender));
+                            subs.ForEach(sub => sub.Tell(broadcasted, sender));
                         });
                 }
             }
