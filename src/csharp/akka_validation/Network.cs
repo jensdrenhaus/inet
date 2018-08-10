@@ -11,13 +11,27 @@ namespace SampleApp
 {
     public static class NetworkExtension
     {
-        public static Network GetNetwork(this ActorSystem sys)
+        public static INetwork GetNetwork(this ActorSystem sys)
         {
             return Network.Create(sys);
         }
-    } 
-    
-    public class Network
+    }
+
+    /// <summary>
+    /// A generic network interface.
+    /// </summary>
+    public interface INetwork
+    {
+        void Send(IActorRef sender, IActorRef receiver, object message);
+        void Broadcast(IActorRef sender, object message);
+        void Subscribe(IActorRef subscriber, Type type);
+    }
+
+    /// <inheritdoc />
+    /// <summary>
+    /// A typesafe wrapper around the network actor for omnet.
+    /// </summary>
+    public class Network : INetwork
     {
         private readonly IActorRef _actor;
 
@@ -46,10 +60,15 @@ namespace SampleApp
             _actor.Tell(new NetworkActor.CreateOmnetNode(node));
         }
         
+        /// <summary>
+        /// IMPORTANT: <see cref="Create"/> can be accessed concurrently, we thus need to create a lock to ensure that
+        ///            we always return the same network instance for the same actor system.
+        /// </summary>
         private static readonly IDictionary<ActorSystem, IActorRef> Cache = new Dictionary<ActorSystem, IActorRef>();
 
-        public static Network Create(ActorSystem sys)
+        public static INetwork Create(ActorSystem sys)
         {
+            // Handle concurrent accesses. See Cache.
             lock (Cache)
             {
                 if (!Cache.ContainsKey(sys))

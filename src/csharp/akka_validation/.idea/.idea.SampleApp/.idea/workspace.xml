@@ -14,8 +14,8 @@
       <file leaf-file-name="OmnetScheduler.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OmnetScheduler.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="78" column="12" selection-start-line="78" selection-start-column="12" selection-end-line="78" selection-end-column="12" />
+            <state relative-caret-position="264">
+              <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
               <folding>
                 <marker date="1533887791278" expanded="false" signature="6:176" ph="..." />
                 <marker date="1533887791278" expanded="true" signature="204:10658" ph="{...}" />
@@ -90,128 +90,134 @@
       <file leaf-file-name="Plugin.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Plugin.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="147" column="15" lean-forward="true" selection-start-line="147" selection-start-column="15" selection-end-line="147" selection-end-column="15" />
+            <state relative-caret-position="278">
+              <caret line="145" column="57" selection-start-line="145" selection-start-column="57" selection-end-line="145" selection-end-column="57" />
               <folding>
-                <marker date="1533887896680" expanded="false" signature="6:230" ph="..." />
-                <marker date="1533887896680" expanded="true" signature="299:9662" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
-                <marker date="1533887896680" expanded="true" signature="783:9660" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="875:895" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="983:1004" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="1031:1253" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="1280:1360" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="1725:6456" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="2021:2108" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="2831:2889" ph="/* Define the state machine. ... */" />
-                <marker date="1533887896680" expanded="true" signature="2959:3120" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
-                <marker date="1533887896680" expanded="true" signature="3163:3510" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="3234:3326" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="3373:3466" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="3612:3817" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="3672:3774" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="3918:4135" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="3989:4091" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="4151:4469" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
-                <marker date="1533887896680" expanded="true" signature="4516:5275" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="4596:5261" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="4724:4869" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
-                <marker date="1533887896680" expanded="true" signature="5333:5522" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="5394:5478" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="5687:5976" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="5749:5962" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="6010:6279" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="6094:6235" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="6329:6444" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="6466:6639" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
-                <marker date="1533887896680" expanded="true" signature="6748:7150" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="6899:7140" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
-                <marker date="1533887896680" expanded="true" signature="7193:7259" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="7351:7605" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="7537:7595" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="7653:7718" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="7765:8201" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="8104:8191" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="8211:8421" ph="///  ... " />
-                <marker date="1533887896680" expanded="true" signature="8516:9446" ph="{...}" />
-                <marker date="1533887896680" expanded="true" signature="8539:9347" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
+                <marker date="1533892867537" expanded="false" signature="6:230" ph="..." />
+                <marker date="1533892867537" expanded="true" signature="299:9658" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
+                <marker date="1533892867537" expanded="true" signature="783:9656" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="875:895" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="983:1004" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="1031:1253" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="1280:1360" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="1726:6438" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="2022:2109" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="2832:2890" ph="/* Define the state machine. ... */" />
+                <marker date="1533892867537" expanded="true" signature="2960:3121" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
+                <marker date="1533892867537" expanded="true" signature="3164:3511" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="3235:3327" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="3374:3467" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="3613:3818" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="3673:3775" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="3919:4136" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="3990:4092" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="4152:4470" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
+                <marker date="1533892867537" expanded="true" signature="4517:5272" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="4597:5258" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="4725:4870" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
+                <marker date="1533892867537" expanded="true" signature="5330:5519" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="5391:5475" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="5684:5958" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="5746:5944" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="5992:6261" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="6076:6217" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="6311:6426" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="6448:6621" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
+                <marker date="1533892867537" expanded="true" signature="6730:7146" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="6895:7136" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
+                <marker date="1533892867537" expanded="true" signature="7189:7255" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="7347:7601" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="7533:7591" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="7649:7714" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="7761:8197" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="8100:8187" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="8207:8417" ph="///  ... " />
+                <marker date="1533892867537" expanded="true" signature="8512:9442" ph="{...}" />
+                <marker date="1533892867537" expanded="true" signature="8535:9343" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Network.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Network.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Network.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="172" column="13" lean-forward="true" selection-start-line="172" selection-start-column="13" selection-end-line="172" selection-end-column="13" />
+            <state relative-caret-position="-1386">
+              <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
               <folding>
-                <marker date="1533886971339" expanded="false" signature="6:215" ph="..." />
-                <marker date="1533886971339" expanded="true" signature="236:8027" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="279:414" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="348:408" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="445:1659" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="536:584" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="664:759" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="824:914" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="978:1069" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1122:1207" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1389:1653" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1483:1581" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1709:8025" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1752:1925" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1858:1915" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="1970:2245" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2139:2235" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2297:2533" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2458:2523" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2590:2725" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2687:2715" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2765:3039" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="2929:3029" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="3611:3631" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="3678:3806" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="3853:3981" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="4040:5640" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="4101:4354" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="4407:4749" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="4485:4623" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="4802:5392" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="4996:5378" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="5210:5358" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="5435:5630" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="5712:6410" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="5929:6265" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="6282:6375" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="6428:6638" ph="///  ... " />
-                <marker date="1533886971339" expanded="true" signature="6724:7665" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="7068:7508" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="7525:7630" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="7765:8019" ph="{...}" />
-                <marker date="1533886971339" expanded="true" signature="7951:8009" ph="{...}" />
+                <marker date="1533892576862" expanded="false" signature="6:215" ph="..." />
+                <marker date="1533892576862" expanded="true" signature="236:8774" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="279:415" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="349:409" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="421:490" ph="/// A generic network interface. ... " />
+                <marker date="1533892576862" expanded="true" signature="520:720" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="726:844" ph="/// A typesafe wrapper around the network actor for omnet. ... " />
+                <marker date="1533892576862" expanded="true" signature="880:2406" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="971:1019" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="1099:1194" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="1259:1349" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="1413:1504" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="1557:1642" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="1660:1908" ph="/// IMPORTANT: &lt;see cref=&quot;Create&quot;/&gt; can be accessed concurrently, we thus need to create a lock to ensure that ... " />
+                <marker date="1533892576862" expanded="true" signature="2082:2400" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="2230:2328" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="2456:8772" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="2499:2672" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="2605:2662" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="2717:2992" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="2886:2982" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="3044:3280" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="3205:3270" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="3337:3472" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="3434:3462" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="3512:3786" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="3676:3776" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="4358:4378" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="4425:4553" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="4600:4728" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="4787:6387" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="4848:5101" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="5154:5496" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="5232:5370" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="5549:6139" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="5743:6125" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="5957:6105" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="6182:6377" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="6459:7157" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="6676:7012" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="7029:7122" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="7175:7385" ph="///  ... " />
+                <marker date="1533892576862" expanded="true" signature="7471:8412" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="7815:8255" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="8272:8377" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="8512:8766" ph="{...}" />
+                <marker date="1533892576862" expanded="true" signature="8698:8756" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EchoActor.cs" pinned="false" current-in-tab="false">
+      <file leaf-file-name="EchoActor.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/EchoActor.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="29" column="12" lean-forward="true" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+            <state relative-caret-position="345">
+              <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
               <folding>
-                <marker date="1533887822904" expanded="false" signature="6:71" ph="..." />
-                <marker date="1533887822904" expanded="true" signature="99:1708" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="156:1706" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="314:382" ph="/// Message to be send. ... " />
-                <marker date="1533887822904" expanded="true" signature="408:428" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="472:492" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="565:852" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="758:842" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="911:1496" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="1030:1340" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="1404:1486" ph="{...}" />
-                <marker date="1533887822904" expanded="true" signature="1586:1700" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="6:48" ph="..." />
+                <marker date="1533892863381" expanded="true" signature="76:1709" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="139:756" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="223:295" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="354:750" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="468:732" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="816:1568" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="956:1122" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="1181:1401" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="1309:1391" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="1463:1562" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="1595:1607" ph="{...}" />
+                <marker date="1533892863381" expanded="true" signature="1613:1673" ph="/// Message to be send. ... " />
+                <marker date="1533892863381" expanded="true" signature="1695:1707" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -228,7 +234,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/EchoActor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/EchoActor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Network.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Plugin.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/CallingThreadDispatcher.cs" root0="FORCE_HIGHLIGHTING" />
@@ -250,11 +256,11 @@
         <option value="$PROJECT_DIR$/OMNeTScheduler.cs" />
         <option value="$PROJECT_DIR$/OmnetSimulation.cs" />
         <option value="$PROJECT_DIR$/OmnetInterface.cs" />
-        <option value="$PROJECT_DIR$/Network.cs" />
         <option value="$PROJECT_DIR$/NetworkActor.cs" />
         <option value="$PROJECT_DIR$/OmnetScheduler.cs" />
-        <option value="$PROJECT_DIR$/EchoActor.cs" />
+        <option value="$PROJECT_DIR$/Network.cs" />
         <option value="$PROJECT_DIR$/Plugin.cs" />
+        <option value="$PROJECT_DIR$/EchoActor.cs" />
       </list>
     </option>
   </component>
@@ -340,12 +346,12 @@
       <workItem from="1532615312072" duration="1379000" />
       <workItem from="1532675762425" duration="2803000" />
       <workItem from="1532765070166" duration="1724000" />
-      <workItem from="1533887048417" duration="1020000" />
+      <workItem from="1533887048417" duration="1939000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9786000" />
+    <option name="totallyTimeSpent" value="10705000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -475,48 +481,48 @@
         <state relative-caret-position="3465">
           <caret line="238" column="39" selection-start-line="238" selection-start-column="39" selection-end-line="238" selection-end-column="39" />
           <folding>
-            <marker date="1533887896680" expanded="false" signature="6:230" ph="..." />
-            <marker date="1533887896680" expanded="true" signature="299:9662" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
-            <marker date="1533887896680" expanded="true" signature="783:9660" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="875:895" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="983:1004" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1031:1253" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1280:1360" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1725:6456" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2021:2108" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2831:2889" ph="/* Define the state machine. ... */" />
-            <marker date="1533887896680" expanded="true" signature="2959:3120" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
-            <marker date="1533887896680" expanded="true" signature="3163:3510" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3234:3326" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3373:3466" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3612:3817" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3672:3774" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3918:4135" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3989:4091" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4151:4469" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
-            <marker date="1533887896680" expanded="true" signature="4516:5275" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4596:5261" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4724:4869" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
-            <marker date="1533887896680" expanded="true" signature="5333:5522" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5394:5478" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5687:5976" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5749:5962" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6010:6279" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6094:6235" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6329:6444" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6466:6639" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
-            <marker date="1533887896680" expanded="true" signature="6748:7150" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6899:7140" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
-            <marker date="1533887896680" expanded="true" signature="7193:7259" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7351:7605" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7537:7595" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7653:7718" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7765:8201" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8104:8191" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8211:8421" ph="///  ... " />
-            <marker date="1533887896680" expanded="true" signature="8516:9446" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8539:9347" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
+            <marker date="1533892867537" expanded="false" signature="6:230" ph="..." />
+            <marker date="1533892867537" expanded="true" signature="299:9658" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
+            <marker date="1533892867537" expanded="true" signature="783:9656" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="875:895" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="983:1004" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1031:1253" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1280:1360" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1726:6438" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2022:2109" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2832:2890" ph="/* Define the state machine. ... */" />
+            <marker date="1533892867537" expanded="true" signature="2960:3121" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
+            <marker date="1533892867537" expanded="true" signature="3164:3511" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3235:3327" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3374:3467" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3613:3818" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3673:3775" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3919:4136" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3990:4092" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4152:4470" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
+            <marker date="1533892867537" expanded="true" signature="4517:5272" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4597:5258" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4725:4870" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
+            <marker date="1533892867537" expanded="true" signature="5330:5519" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5391:5475" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5684:5958" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5746:5944" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5992:6261" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6076:6217" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6311:6426" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6448:6621" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
+            <marker date="1533892867537" expanded="true" signature="6730:7146" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6895:7136" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
+            <marker date="1533892867537" expanded="true" signature="7189:7255" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7347:7601" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7533:7591" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7649:7714" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7761:8197" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8100:8187" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8207:8417" ph="///  ... " />
+            <marker date="1533892867537" expanded="true" signature="8512:9442" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8535:9343" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
           </folding>
         </state>
       </provider>
@@ -748,48 +754,48 @@
         <state relative-caret-position="69">
           <caret line="87" column="17" lean-forward="true" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
           <folding>
-            <marker date="1533887896680" expanded="false" signature="6:230" ph="..." />
-            <marker date="1533887896680" expanded="true" signature="299:9662" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
-            <marker date="1533887896680" expanded="true" signature="783:9660" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="875:895" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="983:1004" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1031:1253" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1280:1360" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1725:6456" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2021:2108" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2831:2889" ph="/* Define the state machine. ... */" />
-            <marker date="1533887896680" expanded="true" signature="2959:3120" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
-            <marker date="1533887896680" expanded="true" signature="3163:3510" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3234:3326" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3373:3466" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3612:3817" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3672:3774" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3918:4135" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3989:4091" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4151:4469" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
-            <marker date="1533887896680" expanded="true" signature="4516:5275" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4596:5261" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4724:4869" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
-            <marker date="1533887896680" expanded="true" signature="5333:5522" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5394:5478" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5687:5976" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5749:5962" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6010:6279" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6094:6235" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6329:6444" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6466:6639" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
-            <marker date="1533887896680" expanded="true" signature="6748:7150" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6899:7140" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
-            <marker date="1533887896680" expanded="true" signature="7193:7259" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7351:7605" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7537:7595" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7653:7718" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7765:8201" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8104:8191" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8211:8421" ph="///  ... " />
-            <marker date="1533887896680" expanded="true" signature="8516:9446" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8539:9347" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
+            <marker date="1533892867537" expanded="false" signature="6:230" ph="..." />
+            <marker date="1533892867537" expanded="true" signature="299:9658" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
+            <marker date="1533892867537" expanded="true" signature="783:9656" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="875:895" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="983:1004" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1031:1253" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1280:1360" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1726:6438" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2022:2109" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2832:2890" ph="/* Define the state machine. ... */" />
+            <marker date="1533892867537" expanded="true" signature="2960:3121" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
+            <marker date="1533892867537" expanded="true" signature="3164:3511" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3235:3327" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3374:3467" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3613:3818" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3673:3775" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3919:4136" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3990:4092" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4152:4470" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
+            <marker date="1533892867537" expanded="true" signature="4517:5272" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4597:5258" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4725:4870" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
+            <marker date="1533892867537" expanded="true" signature="5330:5519" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5391:5475" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5684:5958" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5746:5944" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5992:6261" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6076:6217" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6311:6426" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6448:6621" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
+            <marker date="1533892867537" expanded="true" signature="6730:7146" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6895:7136" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
+            <marker date="1533892867537" expanded="true" signature="7189:7255" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7347:7601" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7533:7591" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7649:7714" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7761:8197" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8100:8187" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8207:8417" ph="///  ... " />
+            <marker date="1533892867537" expanded="true" signature="8512:9442" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8535:9343" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
           </folding>
         </state>
       </provider>
@@ -806,48 +812,48 @@
         <state relative-caret-position="3465">
           <caret line="238" column="39" selection-start-line="238" selection-start-column="39" selection-end-line="238" selection-end-column="39" />
           <folding>
-            <marker date="1533887896680" expanded="false" signature="6:230" ph="..." />
-            <marker date="1533887896680" expanded="true" signature="299:9662" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
-            <marker date="1533887896680" expanded="true" signature="783:9660" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="875:895" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="983:1004" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1031:1253" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1280:1360" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1725:6456" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2021:2108" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2831:2889" ph="/* Define the state machine. ... */" />
-            <marker date="1533887896680" expanded="true" signature="2959:3120" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
-            <marker date="1533887896680" expanded="true" signature="3163:3510" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3234:3326" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3373:3466" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3612:3817" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3672:3774" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3918:4135" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3989:4091" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4151:4469" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
-            <marker date="1533887896680" expanded="true" signature="4516:5275" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4596:5261" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4724:4869" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
-            <marker date="1533887896680" expanded="true" signature="5333:5522" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5394:5478" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5687:5976" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5749:5962" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6010:6279" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6094:6235" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6329:6444" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6466:6639" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
-            <marker date="1533887896680" expanded="true" signature="6748:7150" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6899:7140" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
-            <marker date="1533887896680" expanded="true" signature="7193:7259" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7351:7605" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7537:7595" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7653:7718" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7765:8201" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8104:8191" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8211:8421" ph="///  ... " />
-            <marker date="1533887896680" expanded="true" signature="8516:9446" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8539:9347" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
+            <marker date="1533892867537" expanded="false" signature="6:230" ph="..." />
+            <marker date="1533892867537" expanded="true" signature="299:9658" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
+            <marker date="1533892867537" expanded="true" signature="783:9656" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="875:895" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="983:1004" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1031:1253" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1280:1360" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1726:6438" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2022:2109" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2832:2890" ph="/* Define the state machine. ... */" />
+            <marker date="1533892867537" expanded="true" signature="2960:3121" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
+            <marker date="1533892867537" expanded="true" signature="3164:3511" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3235:3327" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3374:3467" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3613:3818" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3673:3775" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3919:4136" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3990:4092" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4152:4470" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
+            <marker date="1533892867537" expanded="true" signature="4517:5272" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4597:5258" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4725:4870" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
+            <marker date="1533892867537" expanded="true" signature="5330:5519" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5391:5475" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5684:5958" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5746:5944" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5992:6261" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6076:6217" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6311:6426" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6448:6621" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
+            <marker date="1533892867537" expanded="true" signature="6730:7146" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6895:7136" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
+            <marker date="1533892867537" expanded="true" signature="7189:7255" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7347:7601" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7533:7591" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7649:7714" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7761:8197" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8100:8187" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8207:8417" ph="///  ... " />
+            <marker date="1533892867537" expanded="true" signature="8512:9442" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8535:9343" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
           </folding>
         </state>
       </provider>
@@ -1016,10 +1022,78 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Main.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <marker date="1533886971338" expanded="true" signature="34:224" ph="{...}" />
+            <marker date="1533886971338" expanded="true" signature="58:222" ph="{...}" />
+            <marker date="1533886971338" expanded="true" signature="95:219" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Network.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1386">
+          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+          <folding>
+            <marker date="1533892576862" expanded="false" signature="6:215" ph="..." />
+            <marker date="1533892576862" expanded="true" signature="236:8774" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="279:415" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="349:409" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="421:490" ph="/// A generic network interface. ... " />
+            <marker date="1533892576862" expanded="true" signature="520:720" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="726:844" ph="/// A typesafe wrapper around the network actor for omnet. ... " />
+            <marker date="1533892576862" expanded="true" signature="880:2406" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="971:1019" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="1099:1194" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="1259:1349" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="1413:1504" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="1557:1642" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="1660:1908" ph="/// IMPORTANT: &lt;see cref=&quot;Create&quot;/&gt; can be accessed concurrently, we thus need to create a lock to ensure that ... " />
+            <marker date="1533892576862" expanded="true" signature="2082:2400" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="2230:2328" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="2456:8772" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="2499:2672" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="2605:2662" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="2717:2992" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="2886:2982" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="3044:3280" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="3205:3270" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="3337:3472" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="3434:3462" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="3512:3786" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="3676:3776" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="4358:4378" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="4425:4553" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="4600:4728" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="4787:6387" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="4848:5101" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="5154:5496" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="5232:5370" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="5549:6139" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="5743:6125" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="5957:6105" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="6182:6377" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="6459:7157" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="6676:7012" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="7029:7122" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="7175:7385" ph="///  ... " />
+            <marker date="1533892576862" expanded="true" signature="7471:8412" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="7815:8255" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="8272:8377" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="8512:8766" ph="{...}" />
+            <marker date="1533892576862" expanded="true" signature="8698:8756" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/OmnetScheduler.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="78" column="12" selection-start-line="78" selection-start-column="12" selection-end-line="78" selection-end-column="12" />
+        <state relative-caret-position="264">
+          <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
           <folding>
             <marker date="1533887791278" expanded="false" signature="6:176" ph="..." />
             <marker date="1533887791278" expanded="true" signature="204:10658" ph="{...}" />
@@ -1076,138 +1150,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Main.cs">
+    <entry file="file://$PROJECT_DIR$/Plugin.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        <state relative-caret-position="278">
+          <caret line="145" column="57" selection-start-line="145" selection-start-column="57" selection-end-line="145" selection-end-column="57" />
           <folding>
-            <marker date="1533886971338" expanded="true" signature="34:224" ph="{...}" />
-            <marker date="1533886971338" expanded="true" signature="58:222" ph="{...}" />
-            <marker date="1533886971338" expanded="true" signature="95:219" ph="{...}" />
+            <marker date="1533892867537" expanded="false" signature="6:230" ph="..." />
+            <marker date="1533892867537" expanded="true" signature="299:9658" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
+            <marker date="1533892867537" expanded="true" signature="783:9656" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="875:895" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="983:1004" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1031:1253" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1280:1360" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="1726:6438" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2022:2109" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="2832:2890" ph="/* Define the state machine. ... */" />
+            <marker date="1533892867537" expanded="true" signature="2960:3121" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
+            <marker date="1533892867537" expanded="true" signature="3164:3511" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3235:3327" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3374:3467" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3613:3818" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3673:3775" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3919:4136" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="3990:4092" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4152:4470" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
+            <marker date="1533892867537" expanded="true" signature="4517:5272" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4597:5258" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="4725:4870" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
+            <marker date="1533892867537" expanded="true" signature="5330:5519" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5391:5475" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5684:5958" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5746:5944" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="5992:6261" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6076:6217" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6311:6426" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6448:6621" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
+            <marker date="1533892867537" expanded="true" signature="6730:7146" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="6895:7136" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
+            <marker date="1533892867537" expanded="true" signature="7189:7255" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7347:7601" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7533:7591" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7649:7714" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="7761:8197" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8100:8187" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8207:8417" ph="///  ... " />
+            <marker date="1533892867537" expanded="true" signature="8512:9442" ph="{...}" />
+            <marker date="1533892867537" expanded="true" signature="8535:9343" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/EchoActor.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="29" column="12" lean-forward="true" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+        <state relative-caret-position="345">
+          <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
           <folding>
-            <marker date="1533887822904" expanded="false" signature="6:71" ph="..." />
-            <marker date="1533887822904" expanded="true" signature="99:1708" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="156:1706" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="314:382" ph="/// Message to be send. ... " />
-            <marker date="1533887822904" expanded="true" signature="408:428" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="472:492" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="565:852" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="758:842" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="911:1496" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="1030:1340" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="1404:1486" ph="{...}" />
-            <marker date="1533887822904" expanded="true" signature="1586:1700" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Plugin.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="147" column="15" lean-forward="true" selection-start-line="147" selection-start-column="15" selection-end-line="147" selection-end-column="15" />
-          <folding>
-            <marker date="1533887896680" expanded="false" signature="6:230" ph="..." />
-            <marker date="1533887896680" expanded="true" signature="299:9662" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="307:685" ph="/* IMPORTANT: ... */" />
-            <marker date="1533887896680" expanded="true" signature="783:9660" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="875:895" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="983:1004" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1031:1253" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1280:1360" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="1725:6456" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2021:2108" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="2831:2889" ph="/* Define the state machine. ... */" />
-            <marker date="1533887896680" expanded="true" signature="2959:3120" ph="/* TODO On simulationReady -&gt; create one actor and create a broadcast message. ... */" />
-            <marker date="1533887896680" expanded="true" signature="3163:3510" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3234:3326" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3373:3466" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3612:3817" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3672:3774" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3918:4135" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="3989:4091" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4151:4469" ph="/* This should be called after PhyNetContainer is ready, during the omnet++ initialization phase. ... */" />
-            <marker date="1533887896680" expanded="true" signature="4516:5275" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4596:5261" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="4724:4869" ph="/* Setup nodes/agents for omnet++ and phynetflow. ... */" />
-            <marker date="1533887896680" expanded="true" signature="5333:5522" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5394:5478" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5687:5976" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="5749:5962" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6010:6279" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6094:6235" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6329:6444" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6466:6639" ph="/// Creates an actor in the actorsystem and in omnet++. ... " />
-            <marker date="1533887896680" expanded="true" signature="6748:7150" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="6899:7140" ph="/* var id = OmnetSimulation.Instance().CreateNodeAndId(); ... */" />
-            <marker date="1533887896680" expanded="true" signature="7193:7259" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7351:7605" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7537:7595" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7653:7718" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="7765:8201" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8104:8191" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8211:8421" ph="///  ... " />
-            <marker date="1533887896680" expanded="true" signature="8516:9446" ph="{...}" />
-            <marker date="1533887896680" expanded="true" signature="8539:9347" ph="/* Console.WriteLine(&quot;Sending {0} from {1} to {2}&quot;, message.GetType(), sender?.Path.Name, receiver?.Path.Name); ... */" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Network.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="172" column="13" lean-forward="true" selection-start-line="172" selection-start-column="13" selection-end-line="172" selection-end-column="13" />
-          <folding>
-            <marker date="1533886971339" expanded="false" signature="6:215" ph="..." />
-            <marker date="1533886971339" expanded="true" signature="236:8027" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="279:414" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="348:408" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="445:1659" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="536:584" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="664:759" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="824:914" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="978:1069" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1122:1207" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1389:1653" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1483:1581" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1709:8025" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1752:1925" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1858:1915" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="1970:2245" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2139:2235" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2297:2533" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2458:2523" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2590:2725" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2687:2715" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2765:3039" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="2929:3029" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="3611:3631" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="3678:3806" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="3853:3981" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="4040:5640" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="4101:4354" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="4407:4749" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="4485:4623" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="4802:5392" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="4996:5378" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="5210:5358" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="5435:5630" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="5712:6410" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="5929:6265" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="6282:6375" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="6428:6638" ph="///  ... " />
-            <marker date="1533886971339" expanded="true" signature="6724:7665" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="7068:7508" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="7525:7630" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="7765:8019" ph="{...}" />
-            <marker date="1533886971339" expanded="true" signature="7951:8009" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="6:48" ph="..." />
+            <marker date="1533892863381" expanded="true" signature="76:1709" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="139:756" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="223:295" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="354:750" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="468:732" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="816:1568" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="956:1122" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="1181:1401" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="1309:1391" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="1463:1562" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="1595:1607" ph="{...}" />
+            <marker date="1533892863381" expanded="true" signature="1613:1673" ph="/// Message to be send. ... " />
+            <marker date="1533892863381" expanded="true" signature="1695:1707" ph="{...}" />
           </folding>
         </state>
       </provider>

@@ -57,7 +57,7 @@ namespace PhyNetFlow.OMNeT
         private ImmutableDictionary<IActorRef, ulong> _refToId;
         private IActorRef _echoBroadcaster;
         private IActorRef _echoReplier;
-        private Network _network;
+        private INetwork _network;
 
         public Plugin()
         {
@@ -141,7 +141,7 @@ namespace PhyNetFlow.OMNeT
                     Console.WriteLine("Creating actors/nodes in omnet and phynetflow.");
                     // Setup nodes/agents for omnet++ and phynetflow.
                     // One that broadcasts, one that responds with echo, one that does nothing.
-                    _echoBroadcaster = CreateOMNeTActor(EchoActor.Props(isBroadcaster:true).WithDispatcher("calling-thread-dispatcher"));
+                    _echoBroadcaster = CreateOMNeTActor(Props.Create<EchoBroadcaster>().WithDispatcher("calling-thread-dispatcher"));
                     _echoReplier = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"));
                     _echoIgnorer = CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"));
                 }
@@ -165,7 +165,7 @@ namespace PhyNetFlow.OMNeT
                 if (nextState == State.Running)
                 {
                     Console.WriteLine("Setting state to running, sending message.");
-                    _echoBroadcaster.Tell(new EchoActor.EchoBroadcast(), _echoBroadcaster);
+                    _echoBroadcaster.Tell(new SendEcho(), _echoBroadcaster);
                 }
             });
 
@@ -194,7 +194,7 @@ namespace PhyNetFlow.OMNeT
         private IActorRef CreateOMNeTActor(Props props)
         {
             var actorRef = Context.ActorOf(props);
-            _network.CreateOmnetNode(actorRef);
+            (_network as Network)?.CreateOmnetNode(actorRef);
             return actorRef;
             /*
                 var id = OmnetSimulation.Instance().CreateNodeAndId();
