@@ -38,6 +38,12 @@ namespace OmnetServices
 		private static readonly OmnetSimulation instance = new OmnetSimulation();
 
 		public static OmnetSimulation Instance() => instance;
+		
+		public const int RECEPTION_OK = 0;
+		public const int RECEPTION_IGNORED = 1;
+		public const int RECEPTION_BITERROR = 2;
+
+		public const ulong BROADCAST_ADDR = 0x0000ffffffffffff;
 
 		private OmnetSimulation()
 		{
