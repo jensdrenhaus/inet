@@ -30,8 +30,8 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
 {
     // called from external assembly via wrapper functions
   public:
-    unsigned long createNode();
-    void createNode(unsigned long id);
+    unsigned long createNode(ExternalAppTrampoline::NodeType type = ExternalAppTrampoline::UNDEFINED);
+    void createNode(unsigned long id, ExternalAppTrampoline::NodeType type = ExternalAppTrampoline::UNDEFINED);
     void send(unsigned long srcId, unsigned long destId, int numBytes, int msgId);
     void wait_ms(unsigned long id, int duration);
     void wait_s(unsigned long id, int duration);

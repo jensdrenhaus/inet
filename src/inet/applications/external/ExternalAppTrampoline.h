@@ -34,12 +34,21 @@ class IInterfaceTable;
 // how many ping request's send time is stored
 #define PING_HISTORY_SIZE    100
 
+
+
 /**
  * TODO - Generated class
  */
 class ExternalAppTrampoline : public cSimpleModule, public ILifecycle, public cListener
 {
-protected:
+  public:
+    typedef enum nodeType_enum {
+        UNDEFINED   = 0,
+        PHYNODE     = 1,
+        ACCESSPOINT = 2,
+    } NodeType;
+
+  protected:
     // parameters: for more details, see the corresponding NED parameters' documentation
     MACAddress destAddr;
     MACAddress srcAddr;
@@ -49,7 +58,7 @@ protected:
     bool printPing = false;
     ApplicationAdapterBase* adapter;
     IInterfaceTable* interfaceTable;
-
+    NodeType nodeType = UNDEFINED;
 
     // state
     unsigned long nodeId;    // to determine which hosts are associated with the responses
@@ -92,6 +101,9 @@ protected:
 
   public:
     unsigned long getNodeId();
+    void setNodeType(NodeType type) {nodeType = type;}
+    NodeType getNodeType() {return nodeType;}
+    const char* getNodeTypeName();
     void sendMsg(unsigned long dest, int numBytes, int msgId);
     void wait(simtime_t duration);
 

@@ -315,4 +315,21 @@ void ExternalAppTrampoline::wait(simtime_t duration)
     scheduleAt(simTime()+duration, timer);
 }
 
+const char* ExternalAppTrampoline::getNodeTypeName()
+{
+    switch(nodeType){
+    case UNDEFINED:
+        return "undefined";
+        break;
+    case PHYNODE:
+        return "PhyNode";
+        break;
+    case ACCESSPOINT:
+        return "AccessPoint";
+        break;
+    default:
+        throw cRuntimeError("unknown NodeType");
+    }
+}
+
 } //namespace

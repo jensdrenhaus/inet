@@ -9,10 +9,10 @@ namespace OmnetServices
 		private delegate void TestType(string text);
 		private TestType _Test = null;
 
-		private delegate ulong CreateNodeAndIdType();
+		private delegate ulong CreateNodeAndIdType(int type);
 		private CreateNodeAndIdType _CreateNodeAndId = null;
         
-		private delegate void CreateNodeType(ulong id);
+		private delegate void CreateNodeType(ulong id, int type);
 		private CreateNodeType _CreateNode = null;
 
 		private delegate void SendType(ulong srcId, ulong destId, int numBytes, int msgId);
@@ -45,6 +45,10 @@ namespace OmnetServices
 		public const int RECEPTION_BITERROR = 2;
 
 		public const ulong BROADCAST_ADDR = 0x0000ffffffffffff;
+		
+		public const int UNDEFINED_TYPE = 0;
+		public const int PHYNODE_TYPE = 1;
+		public const int ACCESSPOINT_TYPE = 2;
 
 		private OmnetSimulation()
 		{
@@ -65,14 +69,14 @@ namespace OmnetServices
 			_Test("C# is calling back into the runtime");
 		}
 
-		public ulong CreateNodeAndId()
+		public ulong CreateNodeAndId(int type = OmnetSimulation.UNDEFINED_TYPE)
         {
-			return _CreateNodeAndId();
+			return _CreateNodeAndId(type);
         }
         
-		public void CreateNode(ulong id)
+		public void CreateNode(ulong id, int type = OmnetSimulation.UNDEFINED_TYPE)
         {
-			_CreateNode(id);
+			_CreateNode(id, type);
         }
 
 		public void Send(ulong srcId, ulong destId, int numBytes, int msgId)
