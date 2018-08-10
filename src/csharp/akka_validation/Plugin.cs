@@ -141,9 +141,9 @@ namespace PhyNetFlow.OMNeT
                     Console.WriteLine("Creating actors/nodes in omnet and phynetflow.");
                     // Setup nodes/agents for omnet++ and phynetflow.
                     // One that broadcasts, one that responds with echo, one that does nothing.
-                    _echoBroadcaster = CreateOMNeTActor(Props.Create<EchoBroadcaster>().WithDispatcher("calling-thread-dispatcher"));
-                    _echoReplier = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"));
-                    _echoIgnorer = CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"));
+                    _echoBroadcaster = CreateOMNeTActor(Props.Create<EchoBroadcaster>().WithDispatcher("calling-thread-dispatcher"), "broadcaster");
+                    _echoReplier = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo");
+                    _echoIgnorer = CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo");
                 }
             });
 
@@ -189,11 +189,12 @@ namespace PhyNetFlow.OMNeT
         /// Creates an actor in the actorsystem and in omnet++.
         /// </summary>
         /// <param name="props"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         // ReSharper disable once InconsistentNaming
-        private IActorRef CreateOMNeTActor(Props props)
+        private IActorRef CreateOMNeTActor(Props props, string name = null)
         {
-            var actorRef = Context.ActorOf(props);
+            var actorRef = Context.ActorOf(props, name);
             (_network as Network)?.CreateOmnetNode(actorRef);
             return actorRef;
             /*
