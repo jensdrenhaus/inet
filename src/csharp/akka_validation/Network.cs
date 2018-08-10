@@ -166,11 +166,12 @@ namespace SampleApp
             }
             else if (message is Subscribe subscribe)
             {
-                if (!_subscribers.ContainsKey(subscribe.Topic))
+                var topic = subscribe.Topic;
+                if (!_subscribers.ContainsKey(topic))
                 {
-                    _subscribers = _subscribers.Add(subscribe.Topic, ImmutableList<IActorRef>.Empty);
+                    _subscribers = _subscribers.Add(topic, ImmutableList<IActorRef>.Empty);
                 }
-                _subscribers.SetItem(subscribe.Topic, _subscribers[subscribe.Topic].Add(subscribe.Subscriber));
+                _subscribers = _subscribers.SetItem(topic, _subscribers[topic].Add(subscribe.Subscriber));
             }
             else if (message is Broadcast broadcast)
             {
@@ -186,6 +187,10 @@ namespace SampleApp
                         {
                             subs.ForEach(sub => sub.Tell(broadcasted, sender));
                         });
+                }
+                else
+                {
+                    Context.System.Log.Warning("No subscribers for topic " + topic.FullName);
                 }
             }
             else if (message is Send send)
@@ -205,7 +210,7 @@ namespace SampleApp
                 var msgId = _nextMessageId++;
                 _waitingForOmnetToDelvierMessage.TryAdd(msgId, task);
                 var numberOfBytes = 10;
-                OmnetSimulation.Instance().Send(senderId, 0x000000, numberOfBytes, msgId);
+                OmnetSimulation.Instance().Send(senderId, OmnetSimulation.BROADCAST_ADDR, numberOfBytes, msgId);
             }
             else
             {
