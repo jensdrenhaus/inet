@@ -1,61 +1,65 @@
 ﻿using System;
-using System.Xml.Linq;
 using Akka.Actor;
 using SampleApp;
 
 namespace PhyNetFlow.OMNeT
 {
-    public class EchoActor : UntypedActor, ILogReceive
+    public class EchoBroadcaster : UntypedActor, ILogReceive
     {
-        private readonly bool _shouldIgnore;
-        private readonly bool _isBroadcaster;
-        private readonly Network _network;
-        
-        /// <summary>
-        /// Message to be send.
-        /// </summary>
-        public class Echo
+        private readonly INetwork _network;
+
+        public EchoBroadcaster()
         {
-        }
-        
-        public class EchoBroadcast
-        {
-        }
-        
-        public EchoActor(bool shouldIgnore, bool isBroadcaster)
-        {
-            _shouldIgnore = shouldIgnore;
-            _isBroadcaster = isBroadcaster;
             _network = Context.System.GetNetwork();
-            
-            if (!isBroadcaster)
-            {
-                _network.Subscribe(Self, typeof(Echo));
-            }
         }
 
         protected override void OnReceive(object message)
         {
-            Console.WriteLine("Received a message.");
-            if (message is EchoBroadcast)
+            Console.WriteLine("Received a message. " + Self.Path);
+            if (message is SendEcho)
             {
                 _network.Broadcast(Self, new Echo());
-                
                 // After 1 second broadcast new echo message.
-                Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromMilliseconds(1000), Self, new EchoBroadcast(), Self);
-                return;
-            }
-            
+                Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromMilliseconds(1000), Self, new SendEcho(), Self);
+            }        
+        }
+    }
+    
+    public class EchoActor : UntypedActor, ILogReceive
+    {
+        private readonly bool _shouldIgnore;
+        private readonly INetwork _network;
+
+        public EchoActor(bool shouldIgnore)
+        {
+            _shouldIgnore = shouldIgnore;
+            _network = Context.System.GetNetwork();
+            _network.Subscribe(Self, typeof(Echo));
+        }
+
+        protected override void OnReceive(object message)
+        {
+            Console.WriteLine("Received a message. " + Self.Path);
             if (message is Echo && !_shouldIgnore)
             {
                 _network.Send(Self, Sender, message);
             }
         }
 
-        public static Props Props(bool shouldIgnore = false, bool isBroadcaster = false)
+        public static Props Props(bool shouldIgnore = false)
         {
-            // ReSharper disable once ArgumentsStyleNamedExpression
-            return Akka.Actor.Props.Create(() => new EchoActor(shouldIgnore: shouldIgnore, isBroadcaster: isBroadcaster));
+            return Akka.Actor.Props.Create(() => new EchoActor(shouldIgnore));
         }
+    }
+
+    public class SendEcho
+    {
+    }
+
+    /// <summary>
+    /// Message to be send.
+    /// </summary>
+    public class Echo
+    {
     }
 }
