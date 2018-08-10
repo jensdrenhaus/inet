@@ -47,7 +47,7 @@ void Logger::initialize(int stage)
         //printf("%s \n", filename.c_str());
         resultFile.open(filename, ios::out | ios::app);
         if(resultFile.is_open()){
-            resultFile << "Id, Node, NrSent, NrReceivedOk, NrReceivedIgnoring, NrReceivedCorrupted" << endl;
+            resultFile << "Id, Node, Type, NrSent, NrReceivedOk, NrReceivedIgnoring, NrReceivedCorrupted" << endl;
         }
         else
             throw cRuntimeError("Logger: Unable to open the result file! Does the 'log' folder exist?");
@@ -64,24 +64,32 @@ void Logger::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObj
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        if (!nodeMap[nodeId].type)
+                    nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].receivedOk++;
     }
     if (id == ExternalAppTrampoline::packetReceivedIgnoringSignal) {
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        if (!nodeMap[nodeId].type)
+            nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].receivedIgnoring++;
     }
     if (id == ExternalAppTrampoline::packetReceivedCorruptedSignal) {
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        if (!nodeMap[nodeId].type)
+            nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].receivedCorrupted++;
     }
     if (id == ExternalAppTrampoline::packetSentSignal) {
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
+        if (!nodeMap[nodeId].type)
+            nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].sent++;
     }
 
@@ -97,7 +105,7 @@ void Logger::finish()
     for (auto it : nodeMap){
         int id = it.first;
         PacketStat stat = it.second;
-        resultFile << id << sep << stat.nodeName << sep << stat.sent << sep << stat.receivedOk << sep << stat.receivedIgnoring << sep << stat.receivedCorrupted << endl;
+        resultFile << id << sep << stat.nodeName << sep << stat.type << sep << stat.sent << sep << stat.receivedOk << sep << stat.receivedIgnoring << sep << stat.receivedCorrupted << endl;
     }
 }
 

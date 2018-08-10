@@ -46,6 +46,7 @@ class Logger : public cSimpleModule, public cListener
     {
       public:
         const char* nodeName = nullptr;
+        const char* type = nullptr;
         int sent = 0;
         int receivedOk = 0;
         int receivedIgnoring = 0;
