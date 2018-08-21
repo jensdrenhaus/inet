@@ -47,7 +47,7 @@ void Logger::initialize(int stage)
         //printf("%s \n", filename.c_str());
         resultFile.open(filename, ios::out | ios::app);
         if(resultFile.is_open()){
-            resultFile << "Id, Node, Type, NrSent, NrReceivedOk, NrReceivedIgnoring, NrReceivedCorrupted" << endl;
+            resultFile << "Id,Node,Type,NrSent,NrReceivedOk,NrReceivedIgnoring,NrReceivedCorrupted" << endl;
         }
         else
             throw cRuntimeError("Logger: Unable to open the result file! Does the 'log' folder exist?");
