@@ -235,11 +235,12 @@ namespace SampleApp
                 && 
                 _refToId.TryGetValue(receiver, out var receiverId))
             {
-                Console.WriteLine("Sending message to omnet.");
+                //Console.WriteLine("Sending message to omnet.");
                 var msgId = _nextMessageId++;
                 // Add to the dictionary first, since omnet might invoce the callback immediately.
                 _waitingForOmnetToDelvierMessage.TryAdd(msgId, task);
                 var numberOfBytes = 10;
+                Console.WriteLine("Sending message to omnet. Sender:"+senderId+" Receiver:"+receiverId+" MsgId:"+msgId+"Bytes:"+numberOfBytes);
                 OmnetSimulation.Instance().Send(senderId, receiverId, numberOfBytes, msgId);
             }
             else
