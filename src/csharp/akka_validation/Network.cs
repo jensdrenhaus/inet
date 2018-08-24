@@ -136,7 +136,10 @@ namespace SampleApp
         private ImmutableDictionary<ulong, IActorRef> _idToRef = ImmutableDictionary<ulong, IActorRef>.Empty;
         private ImmutableDictionary<IActorRef, ulong> _refToId = ImmutableDictionary<IActorRef, ulong>.Empty;
         private int _nextMessageId;
-        private readonly ConcurrentDictionary<int, Task> _waitingForOmnetToDelvierMessage = new ConcurrentDictionary<int, Task>();
+        /// <summary>
+        /// The key is a tuple of MessageId and ReceiverId. After a broadcast we need to distinguish different receivers, because message are delivered at different points in time.
+        /// </summary>
+        private readonly ConcurrentDictionary<Tuple<int, ulong>, Task> _waitingForOmnetToDelvierMessage = new ConcurrentDictionary<Tuple<int, ulong>, Task>();
         private IImmutableDictionary<Type, IImmutableList<IActorRef>> _subscribers = ImmutableDictionary<Type, IImmutableList<IActorRef>>.Empty;
 
         public NetworkActor()
@@ -179,19 +182,26 @@ namespace SampleApp
                 var sender = broadcast.Sender;
                 var broadcasted = broadcast.Message;
                 var topic = broadcasted.GetType();
+                var msgId = _nextMessageId++;
                 if (_subscribers.ContainsKey(topic))
                 {
-                    var subs = _subscribers[topic];
-                    BroadcastInOmnet(sender, broadcasted).ContinueWith(
-                        result =>
+                    _subscribers[topic].ForEach(sub =>
+                    {
+                        if (_refToId.TryGetValue(sub, out var subId))
                         {
-                            subs.ForEach(sub => sub.Tell(broadcasted, sender));
-                        });
+                            var task = new Task(() =>
+                            {
+                                sub.Tell(broadcasted, sender);
+                            });
+                            _waitingForOmnetToDelvierMessage.TryAdd(Tuple.Create(msgId, subId), task);
+                        }
+                    });
                 }
                 else
                 {
                     Context.System.Log.Warning("No subscribers for topic " + topic.FullName);
                 }
+                BroadcastInOmnet(sender, broadcasted, msgId);
             }
             else if (message is Send send)
             {
@@ -200,15 +210,12 @@ namespace SampleApp
             }
         }
 
-        public Task BroadcastInOmnet(IActorRef sender, object message)
+        public void BroadcastInOmnet(IActorRef sender, object message, int msgId)
         {
             Console.WriteLine("Broadcasting {0} from {1} ", message.GetType(), sender?.Path.Name);
-            var task = new Task(() => { });
             if (_refToId.TryGetValue(sender, out var senderId))
             {
                 Console.WriteLine("Broadcasting to omnet.");
-                var msgId = _nextMessageId++;
-                _waitingForOmnetToDelvierMessage.TryAdd(msgId, task);
                 var numberOfBytes = 10;
                 OmnetSimulation.Instance().Send(senderId, OmnetSimulation.BROADCAST_ADDR, numberOfBytes, msgId);
             }
@@ -216,7 +223,6 @@ namespace SampleApp
             {
                 throw new Exception("Key for sender not found");
             }
-            return task;
         }
         
         /// <summary>
@@ -238,7 +244,7 @@ namespace SampleApp
                 //Console.WriteLine("Sending message to omnet.");
                 var msgId = _nextMessageId++;
                 // Add to the dictionary first, since omnet might invoce the callback immediately.
-                _waitingForOmnetToDelvierMessage.TryAdd(msgId, task);
+                _waitingForOmnetToDelvierMessage.TryAdd(Tuple.Create(msgId, receiverId), task);
                 var numberOfBytes = 10;
                 Console.WriteLine("Sending message to omnet. Sender:"+senderId+" Receiver:"+receiverId+" MsgId:"+msgId+"Bytes:"+numberOfBytes);
                 OmnetSimulation.Instance().Send(senderId, receiverId, numberOfBytes, msgId);
@@ -252,8 +258,9 @@ namespace SampleApp
         
         private void OmnetOnOmneTReceive(ulong dest, ulong source, int id, int statusFlag)
         {
+            // TODO: Handle not delivered.
             Console.WriteLine("Handled omnet receive and continue to deliver message to actor.");
-            if (_waitingForOmnetToDelvierMessage.TryRemove(id, out var task))
+            if (_waitingForOmnetToDelvierMessage.TryRemove(Tuple.Create(id, dest), out var task))
             {
                 task.Start();
             }
