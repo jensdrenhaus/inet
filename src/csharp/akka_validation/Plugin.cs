@@ -23,7 +23,7 @@ namespace PhyNetFlow.OMNeT
      *
      * 
      */
-    public class Plugin : FSM<Plugin.State, Plugin.Data>, ILogReceive, ISimulationMessageDelegate
+    public class Plugin : FSM<Plugin.State, Plugin.Data>, ILogReceive
     {
         // ReSharper disable once InconsistentNaming
         private class OMNeTReady
@@ -56,8 +56,7 @@ namespace PhyNetFlow.OMNeT
         private ImmutableDictionary<ulong, IActorRef> _idToRef;
         private ImmutableDictionary<IActorRef, ulong> _refToId;
         private IActorRef _echoBroadcaster;
-        private IActorRef _echoReplier;
-        private INetwork _network;
+        private readonly INetwork _network;
 
         public Plugin()
         {
@@ -65,10 +64,12 @@ namespace PhyNetFlow.OMNeT
             Context.System.Log.Info("Started " + typeof(Plugin).Name);
 
             // Configure self as the delegate.
+            /*
             if (Context.System is ExtendedActorSystem system && system.Provider is OmnetActorRefProvider provider)
             {
                 provider.SimulationMessageDelegate = this;
             }
+            */
 
             // Save a reference to be able to send messages from within OMNeT calls.
             _selfRef = Self;
@@ -80,7 +81,7 @@ namespace PhyNetFlow.OMNeT
             // Register OMNeT events.
             _omnet = OmnetInterface.Instance;
             _omnet.OMNeTBeforeStart += OmnetOnOmneTBeforeStart;
-            _omnet.OMNeTReceive += OmnetOnOmneTReceive;
+            // _omnet.OMNeTReceive += OmnetOnOmneTReceive;
             _omnet.OMNeTStart += OmnetOnOmneTStart;
 
             // Subscribe to ready events.
@@ -142,8 +143,8 @@ namespace PhyNetFlow.OMNeT
                     // Setup nodes/agents for omnet++ and phynetflow.
                     // One that broadcasts, one that responds with echo, one that does nothing.
                     _echoBroadcaster = CreateOMNeTActor(Props.Create<EchoBroadcaster>().WithDispatcher("calling-thread-dispatcher"), "broadcaster");
-                    _echoReplier = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo");
-                    _echoIgnorer = CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo");
+                    CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo");
                 }
             });
 
@@ -212,6 +213,7 @@ namespace PhyNetFlow.OMNeT
             _selfRef.Tell(new OMNeTStared());
         }
 
+        /*
         private void OmnetOnOmneTReceive(ulong dest, ulong source, int id, int statusFlag)
         {
             Console.WriteLine("Handled omnet receive and continue to deliver message to actor.");
@@ -220,6 +222,7 @@ namespace PhyNetFlow.OMNeT
                 task.Start();
             }
         }
+        */
 
         private void OmnetOnOmneTBeforeStart()
         {
@@ -232,46 +235,12 @@ namespace PhyNetFlow.OMNeT
 
             _omnet.OMNeTBeforeStart -= OmnetOnOmneTBeforeStart;
             _omnet.OMNeTStart -= OmnetOnOmneTStart;
-            _omnet.OMNeTReceive -= OmnetOnOmneTReceive;
+            // _omnet.OMNeTReceive -= OmnetOnOmneTReceive;
 
-            if (Context.System is ExtendedActorSystem system && system.Provider is SimulationActorRefProvider provider)
-            {
-                provider.SimulationMessageDelegate = null;
-            }
+            // if (Context.System is ExtendedActorSystem system && system.Provider is SimulationActorRefProvider provider)
+            // {
+            //     provider.SimulationMessageDelegate = null;
+            // }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="receiver"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public Task DelayMessageDelivery(IActorRef sender, IActorRef receiver, object message)
-        {
-            /*
-            Console.WriteLine("Sending {0} from {1} to {2}", message.GetType(), sender?.Path.Name, receiver?.Path.Name);
-            var task = new Task(() => { });
-            if (_refToId.TryGetValue(sender, out var senderId) && _refToId.TryGetValue(receiver, out var receiverId))
-            {
-                Console.WriteLine("Sending message to omnet.");
-                var msgId = _nextMessageId++;
-                // Add to the dictionary first, since omnet might invoce the callback immediately.
-                _waitingForOmnetToDelvierMessage.TryAdd(msgId, task);
-                // TODO: Number of bytes!
-                var numberOfBytes = 10;
-                OmnetSimulation.Instance().Send(senderId, receiverId, numberOfBytes, msgId);
-            }
-
-            return task;
-            */
-            
-            // TODO: !! USES NETWORK
-            return Task.CompletedTask;
-        }
-
-        private int _nextMessageId;
-        private readonly ConcurrentDictionary<int, Task> _waitingForOmnetToDelvierMessage = new ConcurrentDictionary<int, Task>();
-        private IActorRef _echoIgnorer;
     }
 }
