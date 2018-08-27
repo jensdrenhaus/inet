@@ -78,7 +78,7 @@ namespace PhyNetFlow.OMNeT
                 initialDelay.HasValue || deliveryCount > 0, receiver, sender, cancelable));
             
             // TODO: This probably needs adjustment for repetative events?
-            OmnetSimulation.Instance().SetGlobalTimerMillisecounds((initialDelay ?? delay).Milliseconds);
+            OmnetSimulation.Instance().SetGlobalTimerMillisecounds((int)(initialDelay ?? delay).TotalMilliseconds);
         }
         /// <summary>
         /// TBD

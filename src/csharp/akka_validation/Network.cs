@@ -248,6 +248,7 @@ namespace SampleApp
                 // Add to the dictionary first, since omnet might invoce the callback immediately.
                 _waitingForOmnetToDelvierMessage.TryAdd(Tuple.Create(msgId, receiverId), task);
                 var numberOfBytes = 10;
+                Console.WriteLine("Sending message to omnet. Sender:"+senderId+" Receiver:"+receiverId+" MsgId:"+msgId+"Bytes:"+numberOfBytes);
                 OmnetSimulation.Instance().Send(senderId, receiverId, numberOfBytes, msgId);
             }
             else

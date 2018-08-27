@@ -34,8 +34,8 @@ static const char* const globalizationInvariantVar = "CORECLR_GLOBAL_INVARIANT";
  * wrappers to be called from loaded assembly
  */
 extern "C" void test(char* text) { printf("%s \n", text);}
-extern "C" unsigned long daa_createNodeAndId() {return DotnetApplicationAdapter::instance->createNode();}
-extern "C" void daa_createNode(unsigned long id) {DotnetApplicationAdapter::instance->createNode(id);}
+extern "C" unsigned long daa_createNodeAndId(int type) {return DotnetApplicationAdapter::instance->createNode((ExternalAppTrampoline::NodeType)type);}
+extern "C" void daa_createNode(unsigned long id, int type) {DotnetApplicationAdapter::instance->createNode(id, (ExternalAppTrampoline::NodeType)type);}
 extern "C" void daa_send(unsigned long srcId, unsigned long destId, int numBytes, int msgId) {DotnetApplicationAdapter::instance->send(srcId, destId, numBytes, msgId);}
 extern "C" void daa_wait_ms(unsigned long id, int duration) {DotnetApplicationAdapter::instance->wait_ms(id, duration);}
 extern "C" void daa_wait_s(unsigned long id, int duration) {DotnetApplicationAdapter::instance->wait_s(id, duration);}
@@ -197,7 +197,7 @@ unsigned long DotnetApplicationAdapter::getGlobalTime()
         throw cRuntimeError("Error in get GlobalTime: unsupported time format");
 }
 
-void DotnetApplicationAdapter::createNode(unsigned long id)
+void DotnetApplicationAdapter::createNode(unsigned long id, ExternalAppTrampoline::NodeType type)
 {
     if (id == 0 || id == 0xFFFFFFFFFFFF)
         throw cRuntimeError("invalid node id %x!", id);
@@ -205,19 +205,21 @@ void DotnetApplicationAdapter::createNode(unsigned long id)
     if (appPtr->getNodeId() != id)
         throw cRuntimeError("error with node id");
     addNodeToList(id, appPtr);
+    appPtr->setNodeType(type);
 
     const char* name = appPtr->getParentModule()->getName();
-    printf("%s created with Id %ld\n", name, id);
+    printf("%s created with Id %ld and type %s \n", name, id, appPtr->getNodeTypeName());
 }
 
-unsigned long DotnetApplicationAdapter::createNode()
+unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeType type)
 {
     ExternalAppTrampoline* appPtr = factory->getNode(0); // auto generate MAC address
     unsigned long id = appPtr->getNodeId();
     addNodeToList(id, appPtr);
+    appPtr->setNodeType(type);
 
     const char* name = appPtr->getParentModule()->getName();
-    printf("%s created with auto-Id %ld\n", name, id);
+    printf("%s created with auto-Id %ld and type %s\n", name, id, appPtr->getNodeTypeName());
 
     return id;
 }

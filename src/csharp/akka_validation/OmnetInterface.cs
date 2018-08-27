@@ -161,7 +161,7 @@ namespace OmnetServices
 	    // method invoked by omnet++ at reception events
 	    public static void receptionNotify(ulong dest, ulong source, int id, int statusFlag)
 	    {
-		    Console.WriteLine("Received reception notify from omnet++.");
+		    Console.WriteLine("Received reception notify from omnet++. Dest="+dest+" Source="+source+" MsgID="+id+" MsgStatus="+statusFlag);
 		    Instance.OnOmneTReceive(dest, source, id, statusFlag);
 		    // TODO Context.ExecuteAll();
 	    }
