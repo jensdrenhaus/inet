@@ -94,3 +94,4 @@ xxx
 /src/csharp/.vscode
 
 obj/
+workspace.xml

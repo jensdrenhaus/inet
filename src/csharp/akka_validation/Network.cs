@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Event;
 using Akka.Util.Internal;
 using OmnetServices;
 
@@ -132,7 +133,8 @@ namespace SampleApp
                 Topic = topic;
             }
         }
-        
+
+        private ILoggingAdapter _log = Context.System.Log;
         private ImmutableDictionary<ulong, IActorRef> _idToRef = ImmutableDictionary<ulong, IActorRef>.Empty;
         private ImmutableDictionary<IActorRef, ulong> _refToId = ImmutableDictionary<IActorRef, ulong>.Empty;
         private int _nextMessageId;
@@ -212,10 +214,10 @@ namespace SampleApp
 
         public void BroadcastInOmnet(IActorRef sender, object message, int msgId)
         {
-            Console.WriteLine("Broadcasting {0} from {1} ", message.GetType(), sender?.Path.Name);
+            _log.Info("Broadcasting {0} from {1} ", message.GetType(), sender?.Path.Name);
             if (_refToId.TryGetValue(sender, out var senderId))
             {
-                Console.WriteLine("Broadcasting to omnet.");
+                _log.Info($"Broadcasting {msgId} to omnet.");
                 var numberOfBytes = 10;
                 OmnetSimulation.Instance().Send(senderId, OmnetSimulation.BROADCAST_ADDR, numberOfBytes, msgId);
             }
@@ -241,8 +243,8 @@ namespace SampleApp
                 && 
                 _refToId.TryGetValue(receiver, out var receiverId))
             {
-                //Console.WriteLine("Sending message to omnet.");
                 var msgId = _nextMessageId++;
+                _log.Info($"Sending message {msgId} to omnet.");
                 // Add to the dictionary first, since omnet might invoce the callback immediately.
                 _waitingForOmnetToDelvierMessage.TryAdd(Tuple.Create(msgId, receiverId), task);
                 var numberOfBytes = 10;
@@ -259,7 +261,7 @@ namespace SampleApp
         private void OmnetOnOmneTReceive(ulong dest, ulong source, int id, int statusFlag)
         {
             // TODO: Handle not delivered.
-            Console.WriteLine("Handled omnet receive and continue to deliver message to actor.");
+            _log.Info($"Handled omnet receive for msg {id} and continue to deliver message from {source} to {dest}.");
             if (_waitingForOmnetToDelvierMessage.TryRemove(Tuple.Create(id, dest), out var task))
             {
                 task.Start();
