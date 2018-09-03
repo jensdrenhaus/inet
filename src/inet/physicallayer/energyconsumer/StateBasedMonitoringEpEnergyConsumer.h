@@ -30,24 +30,30 @@ using namespace inet::power;
 class INET_API StateBasedMonitoringEpEnergyConsumer : public StateBasedEpEnergyConsumer
 {
   protected:
+    J totalEnergyAccount = J(0);
+    J offEnergyAccount = J(0);
+    J sleepEnergyAccount = J(0);
+    J switchingEnergyAccount = J(0);
+    J receiverIdleEnergyAccount = J(0);
+    J receiverBusyEnergyAccount = J(0);
+    J receiverReceivingEnergyAccount = J(0);
+    J receiverReceivingPreambleEnergyAccount = J(0);
+    J receiverReceivingHeaderEnergyAccount = J(0);
+    J receiverReceivingDataEnergyAccount = J(0);
+    J transmitterIdleEnergyAccount = J(0);
+    J transmitterTransmittingEnergyAccount = J(0);
+    J transmitterTransmittingPreambleEnergyAccount = J(0);
+    J transmitterTransmittingHeaderEnergyAccount = J(0);
+    J transmitterTransmittingDataEnergyAccount = J(0);
+
     simtime_t lastUpdate;
-    J offEnergy = J(NaN);
-    J sleepEnergy = J(NaN);
-    J switchingEnergy = J(NaN);
-    J receiverIdleEnergy = J(NaN);
-    J receiverBusyEnergy = J(NaN);
-    J receiverReceivingEnergy = J(NaN);
-    J receiverReceivingPreambleEnergy = J(NaN);
-    J receiverReceivingHeaderEnergy = J(NaN);
-    J receiverReceivingDataEnergy = J(NaN);
-    J transmitterIdleEnergy = J(NaN);
-    J transmitterTransmittingEnergy = J(NaN);
-    J transmitterTransmittingPreambleEnergy = J(NaN);
-    J transmitterTransmittingHeaderEnergy = J(NaN);
-    J transmitterTransmittingDataEnergy = J(NaN);
+    J* currentEnergyAccount = nullptr;
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void initialize(int stage) override;
+
+    //virtual W computePowerConsumption() const override;
+    virtual void updateEnergyAccounts();
 
   public:
     virtual void receiveSignal(cComponent *source, simsignal_t signal, long value, cObject *details) override;
