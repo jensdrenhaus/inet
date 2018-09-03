@@ -35,5 +35,7 @@ module IdealPhyNetNic extends PhyNetNicBase
     parameters:
         queueType = default("DropTailQueue");    // DropTailQueue, a Diffserv queue, etc.
         macType = default("SimpleMac");
+        mac.fullDuplex = false;
         radioType = default("IdealRadio");
+        
 }
