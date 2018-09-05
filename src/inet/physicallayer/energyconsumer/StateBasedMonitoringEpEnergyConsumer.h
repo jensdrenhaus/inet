@@ -47,13 +47,18 @@ class INET_API StateBasedMonitoringEpEnergyConsumer : public StateBasedEpEnergyC
     J transmitterTransmittingDataEnergyAccount = J(0);
 
     simtime_t lastUpdate;
-    J* currentEnergyAccount = nullptr;
+    IRadio::RadioMode lastRadioMode;
+    IRadio::ReceptionState lastReceptionState;
+    IRadio::TransmissionState lastTransmissionState;
+    IRadioSignal::SignalPart lastReceivedSignalPart;
+    IRadioSignal::SignalPart lastTransmittedSignalPart;
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void initialize(int stage) override;
 
     //virtual W computePowerConsumption() const override;
     virtual void updateEnergyAccounts();
+    virtual void calculateEnergy(J* energyAccount);
 
   public:
     virtual void receiveSignal(cComponent *source, simsignal_t signal, long value, cObject *details) override;

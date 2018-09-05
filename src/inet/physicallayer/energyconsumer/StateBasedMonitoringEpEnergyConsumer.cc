@@ -42,6 +42,26 @@ void StateBasedMonitoringEpEnergyConsumer::initialize(int stage)
         transmitterTransmittingDataEnergyAccount = J(0);
         WATCH(totalEnergyAccount);
         WATCH(offEnergyAccount);
+        WATCH(sleepEnergyAccount);
+        WATCH(switchingEnergyAccount);
+        WATCH(receiverIdleEnergyAccount);
+        WATCH(receiverBusyEnergyAccount);
+        WATCH(receiverReceivingEnergyAccount);
+        WATCH(receiverReceivingPreambleEnergyAccount);
+        WATCH(receiverReceivingHeaderEnergyAccount);
+        WATCH(receiverReceivingDataEnergyAccount);
+        WATCH(transmitterIdleEnergyAccount);
+        WATCH(transmitterTransmittingEnergyAccount);
+        WATCH(transmitterTransmittingPreambleEnergyAccount);
+        WATCH(transmitterTransmittingHeaderEnergyAccount);
+        WATCH(transmitterTransmittingDataEnergyAccount);
+
+        lastRadioMode = IRadio::RADIO_MODE_OFF;
+        lastReceptionState = IRadio::RECEPTION_STATE_UNDEFINED;
+        lastTransmissionState = IRadio::TRANSMISSION_STATE_UNDEFINED;
+        lastReceivedSignalPart = IRadioSignal::SIGNAL_PART_NONE;
+        lastTransmittedSignalPart = IRadioSignal::SIGNAL_PART_NONE;
+
     }
     else if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT)
         ;
@@ -55,9 +75,16 @@ void StateBasedMonitoringEpEnergyConsumer::receiveSignal(cComponent *source, sim
         signal == IRadio::receivedSignalPartChangedSignal ||
         signal == IRadio::transmittedSignalPartChangedSignal)
     {
+        //printf("XXXXX %s \n\tlastRadioMode: %s\t\t\tradioMode: %s \n\tlastReceptionState: %s\t\treceptionState: %s \n\tlastTransmissionState: %s\ttransmissionState: %s \n\tlastReceivedSignalpart: %s\t\treceivedSignalPart: %s \n\tlastTransmittedSignalpart: %s\t\ttransmittedSignalPart: %s \n", this->getParentModule()->getParentModule()->getParentModule()->getName(), radio->getRadioModeName(lastRadioMode), radio->getRadioModeName(radio->getRadioMode()), radio->getRadioReceptionStateName(lastReceptionState), radio->getRadioReceptionStateName(radio->getReceptionState()), radio->getRadioTransmissionStateName(lastTransmissionState), radio->getRadioTransmissionStateName(radio->getTransmissionState()), IRadioSignal::getSignalPartName(lastReceivedSignalPart), IRadioSignal::getSignalPartName(radio->getReceivedSignalPart()), IRadioSignal::getSignalPartName(lastTransmittedSignalPart), IRadioSignal::getSignalPartName(radio->getTransmittedSignalPart()));
         updateEnergyAccounts();
         powerConsumption = computePowerConsumption();
         emit(powerConsumptionChangedSignal, powerConsumption.get());
+
+        lastRadioMode = radio->getRadioMode();
+        lastReceptionState = radio->getReceptionState();
+        lastTransmissionState = radio->getTransmissionState();
+        lastReceivedSignalPart = radio->getReceivedSignalPart();
+        lastTransmittedSignalPart = radio->getTransmittedSignalPart();
     }
     else
         throw cRuntimeError("Unknown signal");
@@ -65,66 +92,62 @@ void StateBasedMonitoringEpEnergyConsumer::receiveSignal(cComponent *source, sim
 
 void StateBasedMonitoringEpEnergyConsumer::updateEnergyAccounts()
 {
-    IRadio::RadioMode radioMode = radio->getRadioMode();
-    if (radioMode == IRadio::RADIO_MODE_OFF)
-        currentEnergyAccount = &offEnergyAccount;
-    else if (radioMode == IRadio::RADIO_MODE_SLEEP)
-        currentEnergyAccount = &offEnergyAccount;
-    else if (radioMode == IRadio::RADIO_MODE_SWITCHING)
-        currentEnergyAccount = &offEnergyAccount;
-    IRadio::ReceptionState receptionState = radio->getReceptionState();
-    IRadio::TransmissionState transmissionState = radio->getTransmissionState();
-    if (radioMode == IRadio::RADIO_MODE_RECEIVER || radioMode == IRadio::RADIO_MODE_TRANSCEIVER) {
-        if (receptionState == IRadio::RECEPTION_STATE_IDLE)
-            currentEnergyAccount = &offEnergyAccount;
-        else if (receptionState == IRadio::RECEPTION_STATE_BUSY)
-            currentEnergyAccount = &offEnergyAccount;
-        else if (receptionState == IRadio::RECEPTION_STATE_RECEIVING) {
-            auto part = radio->getReceivedSignalPart();
-            if (part == IRadioSignal::SIGNAL_PART_NONE)
+    if (lastRadioMode == IRadio::RADIO_MODE_OFF)
+        calculateEnergy(&offEnergyAccount);
+    else if (lastRadioMode == IRadio::RADIO_MODE_SLEEP)
+        calculateEnergy(&sleepEnergyAccount);
+    else if (lastRadioMode == IRadio::RADIO_MODE_SWITCHING)
+        calculateEnergy(&switchingEnergyAccount);
+    if (lastRadioMode == IRadio::RADIO_MODE_RECEIVER || lastRadioMode == IRadio::RADIO_MODE_TRANSCEIVER) {
+        if (lastReceptionState == IRadio::RECEPTION_STATE_IDLE)
+            calculateEnergy(&receiverIdleEnergyAccount);
+        else if (lastReceptionState == IRadio::RECEPTION_STATE_BUSY)
+            calculateEnergy(&receiverBusyEnergyAccount);
+        else if (lastReceptionState == IRadio::RECEPTION_STATE_RECEIVING) {
+            if (lastReceivedSignalPart == IRadioSignal::SIGNAL_PART_NONE)
                 ;
-            else if (part == IRadioSignal::SIGNAL_PART_WHOLE)
-                currentEnergyAccount = &offEnergyAccount;
-            else if (part == IRadioSignal::SIGNAL_PART_PREAMBLE)
-                currentEnergyAccount = &offEnergyAccount;
-            else if (part == IRadioSignal::SIGNAL_PART_HEADER)
-                currentEnergyAccount = &offEnergyAccount;
-            else if (part == IRadioSignal::SIGNAL_PART_DATA)
-                currentEnergyAccount = &offEnergyAccount;
+            else if (lastReceivedSignalPart == IRadioSignal::SIGNAL_PART_WHOLE)
+                calculateEnergy(&receiverReceivingEnergyAccount);
+            else if (lastReceivedSignalPart == IRadioSignal::SIGNAL_PART_PREAMBLE)
+                calculateEnergy(&receiverReceivingPreambleEnergyAccount);
+            else if (lastReceivedSignalPart == IRadioSignal::SIGNAL_PART_HEADER)
+                calculateEnergy(&receiverReceivingHeaderEnergyAccount);
+            else if (lastReceivedSignalPart == IRadioSignal::SIGNAL_PART_DATA)
+                calculateEnergy(&receiverReceivingDataEnergyAccount);
             else
                 throw cRuntimeError("Unknown received signal part");
         }
-        else if (receptionState != IRadio::RECEPTION_STATE_UNDEFINED)
+        else if (lastReceptionState != IRadio::RECEPTION_STATE_UNDEFINED)
             throw cRuntimeError("Unknown radio reception state");
     }
-    if (radioMode == IRadio::RADIO_MODE_TRANSMITTER || radioMode == IRadio::RADIO_MODE_TRANSCEIVER) {
-        if (transmissionState == IRadio::TRANSMISSION_STATE_IDLE)
-            currentEnergyAccount = &offEnergyAccount;
-        else if (transmissionState == IRadio::TRANSMISSION_STATE_TRANSMITTING) {
-            // TODO: add transmission power?
-            auto part = radio->getTransmittedSignalPart();
-            if (part == IRadioSignal::SIGNAL_PART_NONE)
+    if (lastRadioMode == IRadio::RADIO_MODE_TRANSMITTER || lastRadioMode == IRadio::RADIO_MODE_TRANSCEIVER) {
+        if (lastTransmissionState == IRadio::TRANSMISSION_STATE_IDLE)
+            calculateEnergy(&transmitterIdleEnergyAccount);
+        else if (lastTransmissionState == IRadio::TRANSMISSION_STATE_TRANSMITTING) {
+            if (lastTransmittedSignalPart == IRadioSignal::SIGNAL_PART_NONE)
                 ;
-            else if (part == IRadioSignal::SIGNAL_PART_WHOLE)
-                currentEnergyAccount = &offEnergyAccount;
-            else if (part == IRadioSignal::SIGNAL_PART_PREAMBLE)
-                currentEnergyAccount = &offEnergyAccount;
-            else if (part == IRadioSignal::SIGNAL_PART_HEADER)
-                currentEnergyAccount = &offEnergyAccount;
-            else if (part == IRadioSignal::SIGNAL_PART_DATA)
-                currentEnergyAccount = &offEnergyAccount;
+            else if (lastTransmittedSignalPart == IRadioSignal::SIGNAL_PART_WHOLE)
+                calculateEnergy(&transmitterTransmittingEnergyAccount);
+            else if (lastTransmittedSignalPart == IRadioSignal::SIGNAL_PART_PREAMBLE)
+                calculateEnergy(&transmitterTransmittingPreambleEnergyAccount);
+            else if (lastTransmittedSignalPart == IRadioSignal::SIGNAL_PART_HEADER)
+                calculateEnergy(&transmitterTransmittingHeaderEnergyAccount);
+            else if (lastTransmittedSignalPart == IRadioSignal::SIGNAL_PART_DATA)
+                calculateEnergy(&transmitterTransmittingDataEnergyAccount);
             else
                 throw cRuntimeError("Unknown transmitted signal part");
         }
-        else if (transmissionState != IRadio::TRANSMISSION_STATE_UNDEFINED)
+        else if (lastTransmissionState != IRadio::TRANSMISSION_STATE_UNDEFINED)
             throw cRuntimeError("Unknown radio transmission state");
     }
+}
 
-    currentEnergyAccount = &offEnergyAccount;
+void StateBasedMonitoringEpEnergyConsumer::calculateEnergy(J* energyAccount)
+{
     simtime_t currentSimulationTime = simTime();
     if (currentSimulationTime != lastUpdate) {
         totalEnergyAccount += s((currentSimulationTime - lastUpdate).dbl()) * (powerConsumption);
-        *currentEnergyAccount += s((currentSimulationTime - lastUpdate).dbl()) * (powerConsumption);
+        *energyAccount += s((currentSimulationTime - lastUpdate).dbl()) * (powerConsumption);
         lastUpdate = currentSimulationTime;
     }
 }
