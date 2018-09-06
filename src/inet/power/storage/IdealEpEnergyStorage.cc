@@ -25,6 +25,7 @@ Define_Module(IdealEpEnergyStorage);
 
 void IdealEpEnergyStorage::initialize(int stage)
 {
+    EpEnergyStorageBase::initialize(stage);
     if (stage == INITSTAGE_LOCAL) {
         energyBalance = J(0);
         WATCH(energyBalance);

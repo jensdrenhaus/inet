@@ -330,8 +330,11 @@ const char* ExternalAppTrampoline::getNodeTypeName()
     case UNDEFINED:
         return "undefined";
         break;
-    case PHYNODE:
-        return "PhyNode";
+    case PHYNODE_RESPONDING:
+        return "PhyNode_responding";
+        break;
+    case PHYNODE_IGNORING:
+        return "PhyNode_ignoring";
         break;
     case ACCESSPOINT:
         return "AccessPoint";

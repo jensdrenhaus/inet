@@ -47,8 +47,9 @@ namespace OmnetServices
 		public const ulong BROADCAST_ADDR = 0x0000ffffffffffff;
 		
 		public const int UNDEFINED_TYPE = 0;
-		public const int PHYNODE_TYPE = 1;
-		public const int ACCESSPOINT_TYPE = 2;
+		public const int ACCESSPOINT_TYPE = 1;
+		public const int PHYNODE_RESPONDING_TYPE = 2;
+		public const int PHYNODE_IGNORING_TYPE = 3;
 
 		private OmnetSimulation()
 		{

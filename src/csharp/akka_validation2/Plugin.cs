@@ -143,8 +143,19 @@ namespace PhyNetFlow.OMNeT
                     // Setup nodes/agents for omnet++ and phynetflow.
                     // One that broadcasts, one that responds with echo, one that does nothing.
                     _echoBroadcaster = CreateOMNeTActor(Props.Create<EchoBroadcaster>().WithDispatcher("calling-thread-dispatcher"), "broadcaster");
-                    CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo");
-                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo");
+                    CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo1");
+                    CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo2");
+                    CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"), "receiver-and-reply-echo3");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo1");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo2");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo3");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo4");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo5");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo6");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo7");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo8");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo9");
+                    CreateOMNeTActor(EchoActor.Props(true).WithDispatcher("calling-thread-dispatcher"), "receive-and-no-reply-echo10");
                 }
             });
 

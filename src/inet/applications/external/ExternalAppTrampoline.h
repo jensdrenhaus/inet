@@ -43,9 +43,10 @@ class ExternalAppTrampoline : public cSimpleModule, public ILifecycle, public cL
 {
   public:
     typedef enum nodeType_enum {
-        UNDEFINED   = 0,
-        PHYNODE     = 1,
-        ACCESSPOINT = 2,
+        UNDEFINED          = 0,
+        ACCESSPOINT        = 1,
+        PHYNODE_RESPONDING = 2,
+        PHYNODE_IGNORING   = 3,
     } NodeType;
 
   protected:
