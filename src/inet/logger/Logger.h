@@ -36,6 +36,7 @@ class Logger : public cSimpleModule, public cListener
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void handleMessage(cMessage *msg) override;
     virtual void receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details) override;
+    virtual void receiveSignal(cComponent* src, simsignal_t id, long value, cObject* details) override;
     virtual void finish() override;
 
   private:
@@ -51,6 +52,7 @@ class Logger : public cSimpleModule, public cListener
         int receivedOk = 0;
         int receivedIgnoring = 0;
         int receivedCorrupted = 0;
+        double energyAccounts[15] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     };
 
     std::unordered_map<int,PacketStat> nodeMap;

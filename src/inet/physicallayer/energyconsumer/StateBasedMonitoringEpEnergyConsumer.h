@@ -62,6 +62,28 @@ class INET_API StateBasedMonitoringEpEnergyConsumer : public StateBasedEpEnergyC
 
   public:
     virtual void receiveSignal(cComponent *source, simsignal_t signal, long value, cObject *details) override;
+
+    enum EnergyAccount{
+        TOTAL_ACCOUNT = 0,
+        OFF_ACCOUNT,
+        SLEEP_ACCOUNT,
+        SWITCHING_ACCOUNT,
+        RECEIVER_IDLE_ACCOUNT,
+        RECEIVER_BUSY_ACCOUNT,
+        RECEIVER_RECEIVING_ACCOUNT,
+        RECEIVER_RECEIVING_PREAMBLE_ACCOUNT,
+        RECEIVER_RECEIVING_HEADER_ACCOUNT,
+        RECEIVER_RECEIVING_DATA_ACCOUNT,
+        TRANSMITTER_IDLE_ACCOUNT,
+        TRANSMITTER_TRANSMITTING_ACCOUNT,
+        TRANSMITTER_TRANSMITTING_PREAMBLE_ACCOUNT,
+        TRANSMITTER_TRANSMITTING_HEADER_ACCOUNT,
+        TRANSMITTER_TRANSMITTING_DATA_ACCOUNT,
+    };
+
+    virtual double getEnergyFromAccount(EnergyAccount energyAccount);
+
+    static simsignal_t energyAccountChangedSignal;
 };
 
 } //namespace physicallayer

@@ -23,4 +23,6 @@ import inet.physicallayer.energyconsumer.StateBasedEpEnergyConsumer;
 simple StateBasedMonitoringEpEnergyConsumer extends StateBasedEpEnergyConsumer
 {
     @class(StateBasedMonitoringEpEnergyConsumer);
+    
+    @signal[EnergyAccountChanged](type=long);
 }

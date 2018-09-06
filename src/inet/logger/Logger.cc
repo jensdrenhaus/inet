@@ -20,8 +20,11 @@
 #include <string>
 
 #include "inet/applications/external/ExternalAppTrampoline.h"
+#include "inet/physicallayer/energyconsumer/StateBasedMonitoringEpEnergyConsumer.h"
 
 namespace inet {
+
+using namespace physicallayer;
 
 Define_Module(Logger);
 
@@ -33,6 +36,7 @@ void Logger::initialize(int stage)
         getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetReceivedOkSignal, this);
         getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetReceivedIgnoringSignal, this);
         getSimulation()->getSystemModule()->subscribe(ExternalAppTrampoline::packetReceivedCorruptedSignal, this);
+        getSimulation()->getSystemModule()->subscribe(StateBasedMonitoringEpEnergyConsumer::energyAccountChangedSignal, this);
 
         //open result file
         auto t = std::time(nullptr);
@@ -47,7 +51,28 @@ void Logger::initialize(int stage)
         //printf("%s \n", filename.c_str());
         resultFile.open(filename, ios::out | ios::app);
         if(resultFile.is_open()){
-            resultFile << "Id,Node,Type,NrSent,NrReceivedOk,NrReceivedIgnoring,NrReceivedCorrupted" << endl;
+            resultFile << "Id,"
+                    "Node,"
+                    "Type,"
+                    "NrSent,"
+                    "NrReceivedOk,"
+                    "NrReceivedIgnoring,"
+                    "NrReceivedCorrupted,"
+                    "totalEnergy,"
+                    "ReceiverIdleEnergy,"
+                    "ReceiverRecievingEnergy,"
+                    "TransmitterIdealEnergy,"
+                    "TransmitterTransmittingEnergy,"
+                    "ReceiverBusyEnergy,"
+                    "ReceiverReceivingPreambleEnergy,"
+                    "ReceiverReceivingHeaderEnergy,"
+                    "ReceiverReceivingDataEnergy,"
+                    "TransmitterTransmittingPreambleEnergy,"
+                    "TransmitterTransmittingHeaderEnergy,"
+                    "TransmitterTransmittingDataEnergy,"
+                    "OffEnergy,"
+                    "SleepEnergy,"
+                    "SwitchingEnergy" << endl;
         }
         else
             throw cRuntimeError("Logger: Unable to open the result file! Does the 'log' folder exist?");
@@ -68,7 +93,7 @@ void Logger::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObj
                     nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].receivedOk++;
     }
-    if (id == ExternalAppTrampoline::packetReceivedIgnoringSignal) {
+    else if (id == ExternalAppTrampoline::packetReceivedIgnoringSignal) {
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
@@ -76,7 +101,7 @@ void Logger::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObj
             nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].receivedIgnoring++;
     }
-    if (id == ExternalAppTrampoline::packetReceivedCorruptedSignal) {
+    else if (id == ExternalAppTrampoline::packetReceivedCorruptedSignal) {
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
@@ -84,7 +109,7 @@ void Logger::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObj
             nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].receivedCorrupted++;
     }
-    if (id == ExternalAppTrampoline::packetSentSignal) {
+    else if (id == ExternalAppTrampoline::packetSentSignal) {
         int nodeId = src->getParentModule()->getId();
         if (!nodeMap[nodeId].nodeName)
             nodeMap[nodeId].nodeName = src->getParentModule()->getName();
@@ -92,7 +117,21 @@ void Logger::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObj
             nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].sent++;
     }
+}
 
+void Logger::receiveSignal(cComponent* src, simsignal_t id, long value, cObject* details)
+{
+    if (id == StateBasedMonitoringEpEnergyConsumer::energyAccountChangedSignal) {
+        double energy = check_and_cast<StateBasedMonitoringEpEnergyConsumer*>(src)->getEnergyFromAccount((StateBasedMonitoringEpEnergyConsumer::EnergyAccount)value);
+        printf("XXXXXXX account %ld energyVal %f\n",value,energy);
+        int nodeId = src->getParentModule()->getParentModule()->getParentModule()->getId();
+//        if (!nodeMap[nodeId].nodeName)
+//            nodeMap[nodeId].nodeName = src->getParentModule()->getParentModule()->getParentModule()->getName();
+//        if (!nodeMap[nodeId].type)
+//            nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
+        nodeMap[nodeId].energyAccounts[value] += energy;
+        nodeMap[nodeId].energyAccounts[StateBasedMonitoringEpEnergyConsumer::TOTAL_ACCOUNT] += energy;
+    }
 }
 
 void Logger::handleMessage(cMessage *msg)
@@ -105,7 +144,28 @@ void Logger::finish()
     for (auto it : nodeMap){
         int id = it.first;
         PacketStat stat = it.second;
-        resultFile << id << sep << stat.nodeName << sep << stat.type << sep << stat.sent << sep << stat.receivedOk << sep << stat.receivedIgnoring << sep << stat.receivedCorrupted << endl;
+        resultFile << id << sep \
+                << stat.nodeName << sep \
+                << stat.type << sep \
+                << stat.sent << sep \
+                << stat.receivedOk << sep \
+                << stat.receivedIgnoring << sep \
+                << stat.receivedCorrupted << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::TOTAL_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::RECEIVER_IDLE_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::RECEIVER_RECEIVING_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::TRANSMITTER_IDLE_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::TRANSMITTER_TRANSMITTING_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::RECEIVER_BUSY_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::RECEIVER_RECEIVING_PREAMBLE_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::RECEIVER_RECEIVING_HEADER_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::RECEIVER_RECEIVING_DATA_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::TRANSMITTER_TRANSMITTING_PREAMBLE_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::TRANSMITTER_TRANSMITTING_HEADER_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::TRANSMITTER_TRANSMITTING_DATA_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::OFF_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::SLEEP_ACCOUNT] << sep \
+                << stat.energyAccounts[StateBasedMonitoringEpEnergyConsumer::SWITCHING_ACCOUNT] << endl;
     }
 }
 
