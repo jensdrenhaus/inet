@@ -51,6 +51,15 @@ namespace OmnetServices
 		public const int NODE_RESPONDING_TYPE = 2;
 		public const int NODE_IGNORING_TYPE = 3;
 		
+		// NOTE: It is generally better to use enums, just for type safety and code clarity. Type int doesn't say much.
+		public enum NodeType
+		{
+			Undefined = 0,
+			AccessPoint = 1,
+			Responding = 2,
+			Ignoring = 3
+		}
+		
 		private OmnetSimulation()
 		{
 			NativeLibrary runtimehost = new NativeLibrary(null);
@@ -70,14 +79,14 @@ namespace OmnetServices
 			_Test("C# is calling back into the runtime");
 		}
 
-		public ulong CreateNodeAndId(int type = OmnetSimulation.UNDEFINED_TYPE)
+		public ulong CreateNodeAndId(NodeType type = NodeType.Undefined)
         {
-			return _CreateNodeAndId(type);
+			return _CreateNodeAndId((int) type); // Casting an enum to int will return the int value.
         }
         
-		public void CreateNode(ulong id, int type = OmnetSimulation.UNDEFINED_TYPE)
+		public void CreateNode(ulong id, NodeType type = NodeType.Undefined)
         {
-			_CreateNode(id, type);
+			_CreateNode(id, (int) type);
         }
 
 		public void Send(ulong srcId, ulong destId, int numBytes, int msgId)
