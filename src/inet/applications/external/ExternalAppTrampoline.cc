@@ -150,12 +150,14 @@ void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObje
     cPacket* pkg = check_and_cast<cPacket*>(value);
     ExternalAppPayload* msg = check_and_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
     if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
-        if(id == physicallayer::Radio::receptionEndedIgnoringSignal)
+        if(id == physicallayer::Radio::receptionEndedIgnoringSignal){
             emit(packetReceivedIgnoringSignal, msg);
             adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
-        if(id == LayeredProtocolBase::packetFromLowerDroppedSignal)
+        }
+        if(id == LayeredProtocolBase::packetFromLowerDroppedSignal){
             emit(packetReceivedCorruptedSignal, msg);
             adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
+        }
     }
 
 }
