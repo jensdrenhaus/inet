@@ -56,9 +56,9 @@ namespace SampleApp
             _actor.Tell(new NetworkActor.Subscribe(subscriber, type));
         }
 
-        public void CreateOmnetNode(IActorRef node)
+        public void CreateOmnetNode(IActorRef node, OmnetSimulation.NodeType nodeType = OmnetSimulation.NodeType.Undefined)
         {
-            _actor.Tell(new NetworkActor.CreateOmnetNode(node));
+            _actor.Tell(new NetworkActor.CreateOmnetNode(node, nodeType));
         }
         
         /// <summary>
@@ -86,10 +86,12 @@ namespace SampleApp
         public class CreateOmnetNode
         {
             public readonly IActorRef Node;
+            public readonly OmnetSimulation.NodeType NodeType;
 
-            public CreateOmnetNode(IActorRef node)
+            public CreateOmnetNode(IActorRef node, OmnetSimulation.NodeType nodeType)
             {
                 Node = node;
+                NodeType = nodeType;
             }
         }
         
@@ -134,7 +136,7 @@ namespace SampleApp
             }
         }
 
-        private ILoggingAdapter _log = Context.System.Log;
+        private readonly ILoggingAdapter _log = Context.System.Log;
         private ImmutableDictionary<ulong, IActorRef> _idToRef = ImmutableDictionary<ulong, IActorRef>.Empty;
         private ImmutableDictionary<IActorRef, ulong> _refToId = ImmutableDictionary<IActorRef, ulong>.Empty;
         private int _nextMessageId;
@@ -165,7 +167,7 @@ namespace SampleApp
             if (message is CreateOmnetNode create)
             {
                 var actorRef = create.Node;
-                var id = OmnetSimulation.Instance().CreateNodeAndId();
+                var id = OmnetSimulation.Instance().CreateNodeAndId(create.NodeType);
                 _idToRef = _idToRef.Add(id, actorRef);
                 _refToId = _refToId.Add(actorRef, id);
             }
