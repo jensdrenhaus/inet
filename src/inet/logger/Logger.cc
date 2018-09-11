@@ -123,12 +123,8 @@ void Logger::receiveSignal(cComponent* src, simsignal_t id, long value, cObject*
 {
     if (id == StateBasedMonitoringEpEnergyConsumer::energyAccountChangedSignal) {
         double energy = check_and_cast<StateBasedMonitoringEpEnergyConsumer*>(src)->getEnergyFromAccount((StateBasedMonitoringEpEnergyConsumer::EnergyAccount)value);
-        printf("XXXXXXX account %ld energyVal %f\n",value,energy);
+        //printf("XXXXXXX account %ld energyVal %f\n",value,energy);
         int nodeId = src->getParentModule()->getParentModule()->getParentModule()->getId();
-//        if (!nodeMap[nodeId].nodeName)
-//            nodeMap[nodeId].nodeName = src->getParentModule()->getParentModule()->getParentModule()->getName();
-//        if (!nodeMap[nodeId].type)
-//            nodeMap[nodeId].type = check_and_cast<ExternalAppTrampoline*>(src)->getNodeTypeName();
         nodeMap[nodeId].energyAccounts[value] += energy;
         nodeMap[nodeId].energyAccounts[StateBasedMonitoringEpEnergyConsumer::TOTAL_ACCOUNT] += energy;
     }
