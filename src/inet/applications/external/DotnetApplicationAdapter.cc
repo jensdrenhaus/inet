@@ -235,6 +235,8 @@ unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeTy
 
 void DotnetApplicationAdapter::call_initSimulation()
 {
+    //Enter_Method("call_initSimulation");
+
     static initSimulation_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("initSimulation", (void**)&delegate);
@@ -243,6 +245,8 @@ void DotnetApplicationAdapter::call_initSimulation()
 
 void DotnetApplicationAdapter::call_simulationReady()
 {
+    //Enter_Method("call_simulataionReady");
+
     static simulationReady_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("simulationReady", (void**)&delegate);
@@ -251,6 +255,8 @@ void DotnetApplicationAdapter::call_simulationReady()
 
 void DotnetApplicationAdapter::call_simulationFinished()
 {
+    //Enter_Method("calll_simiulationFinished");
+
     static simulationFinished_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("simulationFinished", (void**)&delegate);
@@ -259,6 +265,8 @@ void DotnetApplicationAdapter::call_simulationFinished()
 
 void DotnetApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
 {
+    //Enter_Method("call_receptionNotify");
+
     static receptionNotify_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("receptionNotify", (void**)&delegate);
@@ -267,6 +275,8 @@ void DotnetApplicationAdapter::call_receptionNotify(unsigned long destId, unsign
 
 void DotnetApplicationAdapter::call_timerNotify(unsigned long nodeId)
 {
+    //Enter_Method("call_timerNotify");
+
     static timerNotify_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("timerNotify", (void**)&delegate);
@@ -275,6 +285,8 @@ void DotnetApplicationAdapter::call_timerNotify(unsigned long nodeId)
 
 void DotnetApplicationAdapter::call_globalTimerNotify()
 {
+    //Enter_Method("call_globalTimerNotify");
+
     static globalTimerNotify_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("globalTimerNotify", (void**)&delegate);
@@ -291,6 +303,8 @@ void DotnetApplicationAdapter::call_globalTimerNotify()
 
 unsigned long DotnetApplicationAdapter::getUniqueId()
 {
+    //Enter_Method_Silent();
+
     unsigned long id = 0;
     while (id == 0) {
         id = getSimulation()->getUniqueNumber();
@@ -300,6 +314,8 @@ unsigned long DotnetApplicationAdapter::getUniqueId()
 
 void DotnetApplicationAdapter::addNodeToList(unsigned long id, ExternalAppTrampoline* nodeApp)
 {
+    //Enter_Method_Silent();
+
     using namespace std;
     pair<unordered_map<unsigned long, ExternalAppTrampoline*>::iterator, bool> retVal;
     retVal = nodeMap.insert(pair<unsigned long,ExternalAppTrampoline*>(id, nodeApp));
@@ -309,6 +325,8 @@ void DotnetApplicationAdapter::addNodeToList(unsigned long id, ExternalAppTrampo
 
 ExternalAppTrampoline* DotnetApplicationAdapter::findNode(unsigned long handle)
 {
+    //Enter_Method_Silent();
+
     if (nodeMap.find(handle) == nodeMap.end())
         throw cRuntimeError("cannot find node accociatied with Id %ld", handle);
     else if (nodeMap[handle] == NULL)

@@ -295,7 +295,7 @@ unsigned long ExternalAppTrampoline::getNodeId()
 
 void ExternalAppTrampoline::sendMsg(unsigned long dest, int numBytes, int msgId)
 {
-    Enter_Method("send");
+    Enter_Method_Silent("send");
 
     char name[32];
     sprintf(name, "msg%ld", sendSeqNo);
@@ -322,12 +322,15 @@ void ExternalAppTrampoline::sendMsg(unsigned long dest, int numBytes, int msgId)
 
 void ExternalAppTrampoline::wait(simtime_t duration)
 {
-    Enter_Method("wait");
+    //Enter_Method("wait");
+
     scheduleAt(simTime()+duration, timer);
 }
 
 const char* ExternalAppTrampoline::getNodeTypeName()
 {
+    //Enter_Method_Silent();
+
     switch(nodeType){
     case UNDEFINED:
         return "undefined";
