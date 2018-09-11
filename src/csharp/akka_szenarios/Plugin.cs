@@ -6,12 +6,24 @@ using Akka.Actor;
 using OmnetServices;
 using PhyNetFlow.Core.Actors;
 using PhyNetFlow.Core.Akka;
+using SampleApp;
 
 // ReSharper disable once CheckNamespace
 namespace PhyNetFlow.OMNeT
 {
 
-    public class Plugin : FSM<Plugin.State, Plugin.Data>, ILogReceive, ISimulationMessageDelegate
+    /**
+     *
+     *
+     *
+     * IMPORTANT:
+     * Because there was no easy way to implement broadcasts, we now use the Network.
+     * The new scenario creates 3 actors, one that broadcasts, one that replies and one that does nothing.
+     * The plugin should only setup now, but not handle messages in omnet anymore. This is now done within the network.
+     *
+     * 
+     */
+    public class Plugin : FSM<Plugin.State, Plugin.Data>, ILogReceive
     {
         // ReSharper disable once InconsistentNaming
         private class OMNeTReady
@@ -43,18 +55,13 @@ namespace PhyNetFlow.OMNeT
         private readonly IActorRef _selfRef;
         private ImmutableDictionary<ulong, IActorRef> _idToRef;
         private ImmutableDictionary<IActorRef, ulong> _refToId;
-        private IActorRef _echo1;
-        private IActorRef _echo2;
+        private IActorRef _echoBroadcaster;
+        private readonly INetwork _network;
 
         public Plugin()
         {
+            _network = Context.System.GetNetwork();
             Context.System.Log.Info("Started " + typeof(Plugin).Name);
-
-            // Configure self as the delegate.
-            if (Context.System is ExtendedActorSystem system && system.Provider is OmnetActorRefProvider provider)
-            {
-                provider.SimulationMessageDelegate = this;
-            }
 
             // Save a reference to be able to send messages from within OMNeT calls.
             _selfRef = Self;
@@ -66,7 +73,6 @@ namespace PhyNetFlow.OMNeT
             // Register OMNeT events.
             _omnet = OmnetInterface.Instance;
             _omnet.OMNeTBeforeStart += OmnetOnOmneTBeforeStart;
-            _omnet.OMNeTReceive += OmnetOnOmneTReceive;
             _omnet.OMNeTStart += OmnetOnOmneTStart;
 
             // Subscribe to ready events.
@@ -120,16 +126,31 @@ namespace PhyNetFlow.OMNeT
             // Since everything should be scheduled to execute synchronously, the Actors/Nodes will be created
             // while in the init method.
             // After this we wait for the omnet simulation to start.
-            OnTransition(((state, nextState) =>
+            OnTransition((state, nextState) =>
             {
                 if (nextState == State.WaitingForSimulationStart)
                 {
                     Console.WriteLine("Creating actors/nodes in omnet and phynetflow.");
                     // Setup nodes/agents for omnet++ and phynetflow.
-                    _echo1 = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"));
-                    _echo2 = CreateOMNeTActor(EchoActor.Props().WithDispatcher("calling-thread-dispatcher"));
+                    // One that broadcasts, one that responds with echo, one that does nothing.
+                    _echoBroadcaster = CreateOMNeTActor(
+                        props: Props.Create<EchoBroadcaster>(), 
+                        name: "broadcaster",
+                        nodeType: OmnetSimulation.NodeType.AccessPoint);
+                    
+                    CreateOMNeTActor(
+                        //props: Props.Create(() => new EchoActor(shouldIgnore: false)),
+                        props: Props.Create(() => new EchoActor(false)), 
+                        name: "receiver-and-reply-echo",
+                        nodeType: OmnetSimulation.NodeType.Responding);
+                    
+                    CreateOMNeTActor(
+                        //props: Props.Create(() => new EchoActor(shouldIgnore: true)),
+                        props: Props.Create(() => new EchoActor(true)), 
+                        name: "receive-and-no-reply-echo",
+                        nodeType: OmnetSimulation.NodeType.Ignoring);
                 }
-            }));
+            });
 
             When(State.WaitingForSimulationStart, e =>
             {
@@ -149,7 +170,7 @@ namespace PhyNetFlow.OMNeT
                 if (nextState == State.Running)
                 {
                     Console.WriteLine("Setting state to running, sending message.");
-                    _echo1.Tell(new EchoActor.Echo(), _echo2);
+                    _echoBroadcaster.Tell(new SendEcho(), _echoBroadcaster);
                 }
             });
 
@@ -173,31 +194,22 @@ namespace PhyNetFlow.OMNeT
         /// Creates an actor in the actorsystem and in omnet++.
         /// </summary>
         /// <param name="props"></param>
+        /// <param name="name"></param>
+        /// <param name="nodeType"></param>
         /// <returns></returns>
         // ReSharper disable once InconsistentNaming
-        private IActorRef CreateOMNeTActor(Props props)
+        private IActorRef CreateOMNeTActor(Props props, string name = null, OmnetSimulation.NodeType nodeType = OmnetSimulation.NodeType.Undefined)
         {
-            var id = OmnetSimulation.Instance().CreateNodeAndId();
-            var actorRef = Context.ActorOf(props);
-            
-            _idToRef = _idToRef.Add(id, actorRef);
-            _refToId = _refToId.Add(actorRef, id);
-
+            // IMPORTANT: We MUST create all actors with the calling thread dispatcher, otherwise code will not be
+            //            executed in a blocking manner.
+            var actorRef = Context.ActorOf(props.WithDispatcher("calling-thread-dispatcher"), name);
+            (_network as Network)?.CreateOmnetNode(actorRef, nodeType);
             return actorRef;
         } 
 
         private void OmnetOnOmneTStart()
         {
             _selfRef.Tell(new OMNeTStared());
-        }
-
-        private void OmnetOnOmneTReceive(ulong dest, ulong source, int id, int statusFlag)
-        {
-            Console.WriteLine("Handled omnet receive and continue to deliver message to actor.");
-            if (_waitingForOmnetToDelvierMessage.TryRemove(id, out var task))
-            {
-                task.Start();
-            }
         }
 
         private void OmnetOnOmneTBeforeStart()
@@ -211,40 +223,6 @@ namespace PhyNetFlow.OMNeT
 
             _omnet.OMNeTBeforeStart -= OmnetOnOmneTBeforeStart;
             _omnet.OMNeTStart -= OmnetOnOmneTStart;
-            _omnet.OMNeTReceive -= OmnetOnOmneTReceive;
-
-            if (Context.System is ExtendedActorSystem system && system.Provider is SimulationActorRefProvider provider)
-            {
-                provider.SimulationMessageDelegate = null;
-            }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="receiver"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public Task DelayMessageDelivery(IActorRef sender, IActorRef receiver, object message)
-        {
-            Console.WriteLine("Sending {0} from {1} to {2}", message.GetType(), sender?.Path.Name, receiver?.Path.Name);
-            var task = new Task(() => { });
-            if (_refToId.TryGetValue(sender, out var senderId) && _refToId.TryGetValue(receiver, out var receiverId))
-            {
-                Console.WriteLine("Sending message to omnet.");
-                var msgId = _nextMessageId++;
-                // Add to the dictionary first, since omnet might invoce the callback immediately.
-                _waitingForOmnetToDelvierMessage.TryAdd(msgId, task);
-                // TODO: Number of bytes!
-                var numberOfBytes = 10;
-                OmnetSimulation.Instance().Send(senderId, receiverId, numberOfBytes, msgId);
-            }
-
-            return task;
-        }
-
-        private int _nextMessageId;
-        private readonly ConcurrentDictionary<int, Task> _waitingForOmnetToDelvierMessage = new ConcurrentDictionary<int, Task>();
     }
 }

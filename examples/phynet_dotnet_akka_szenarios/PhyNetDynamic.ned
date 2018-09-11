@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.phynet_dotnet_akka_validation2;
+package inet.examples.phynet_dotnet_akka_szenarios;
 
 import inet.node.wsn.TrampolineNode;
 import inet.physicallayer.idealradio.IdealRadioMedium;
@@ -49,7 +49,7 @@ network Net
         adapter: DotnetApplicationAdapter {
         	parameters:
         	    @display("p=-100,150");
-        	    assembly      = "akka_validation2/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
+        	    assembly      = "akka_szenarios/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
         	    clrFilesPath  = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"; // absolut path to the dotnet CLR files
         }
 //        node[numNodes]: PhyNode {
