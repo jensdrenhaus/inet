@@ -35,21 +35,20 @@ network Net
 //        }
 		logger: Logger {
 			parameters:
-			    @display("p=0.5,-0.8;is=s");
+			    @display("p=1.5,-0.8;is=s");
 		}
         radioMedium: IdealRadioMedium {
             parameters:
-                @display("p=-100,250");
+                @display("p=0.5,-0.8;is=s");
         }
         mobilityCoordinator: StorageHallCoordinator {
         	parameters:
         	    @display("p=2.5,-0.8;is=s");
-        	    numItems = 20;
         }  
         adapter: DotnetApplicationAdapter {
         	parameters:
-        	    @display("p=-100,150");
-        	    assembly      = "akka_szenarios/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
+        	    @display("p=3.5,-0.8;is=s");
+        	    assembly      = "akka_validation/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
         	    clrFilesPath  = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"; // absolut path to the dotnet CLR files
         }
 //        node[numNodes]: PhyNode {

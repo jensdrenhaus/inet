@@ -141,15 +141,9 @@ namespace PhyNetFlow.OMNeT
                     CreateOMNeTActor(
                         //props: Props.Create(() => new EchoActor(shouldIgnore: false)),
                         props: Props.Create(() => new EchoActor(false)), 
-                        name: "receiver-and-reply-echo1",
+                        name: "receiver-and-reply-echo",
                         nodeType: OmnetSimulation.NodeType.Responding);
 
-                    CreateOMNeTActor(
-                        //props: Props.Create(() => new EchoActor(shouldIgnore: false)),
-                        props: Props.Create(() => new EchoActor(false)), 
-                        name: "receiver-and-reply-echo2",
-                        nodeType: OmnetSimulation.NodeType.Responding);
-                    
                     CreateOMNeTActor(
                         //props: Props.Create(() => new EchoActor(shouldIgnore: true)),
                         props: Props.Create(() => new EchoActor(true)), 
