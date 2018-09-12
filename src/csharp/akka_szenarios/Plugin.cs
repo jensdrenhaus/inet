@@ -135,20 +135,26 @@ namespace PhyNetFlow.OMNeT
                     // One that broadcasts, one that responds with echo, one that does nothing.
                     _echoBroadcaster = CreateOMNeTActor(
                         props: Props.Create<EchoBroadcaster>(), 
-                        name: "broadcaster",
+                        name: "AccessPoint",
                         nodeType: OmnetSimulation.NodeType.AccessPoint);
                     
                     CreateOMNeTActor(
                         //props: Props.Create(() => new EchoActor(shouldIgnore: false)),
                         props: Props.Create(() => new EchoActor(false)), 
-                        name: "receiver-and-reply-echo",
+                        name: "Replyer1",
                         nodeType: OmnetSimulation.NodeType.Responding);
                     
                     CreateOMNeTActor(
                         //props: Props.Create(() => new EchoActor(shouldIgnore: true)),
-                        props: Props.Create(() => new EchoActor(true)), 
-                        name: "receive-and-no-reply-echo",
-                        nodeType: OmnetSimulation.NodeType.Ignoring);
+                        props: Props.Create(() => new EchoActor(false)), 
+                        name: "Replyer2",
+                        nodeType: OmnetSimulation.NodeType.Responding);
+
+                    CreateOMNeTActor(
+                        //props: Props.Create(() => new EchoActor(shouldIgnore: true)),
+                        props: Props.Create(() => new EchoActor(false)), 
+                        name: "Replyer3",
+                        nodeType: OmnetSimulation.NodeType.Responding);
                 }
             });
 

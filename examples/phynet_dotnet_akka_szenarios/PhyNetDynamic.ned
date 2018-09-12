@@ -48,7 +48,7 @@ network Net
         adapter: DotnetApplicationAdapter {
         	parameters:
         	    @display("p=3.5,-0.8;is=s");
-        	    assembly      = "akka_validation/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
+        	    assembly      = "akka_szenarios/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
         	    clrFilesPath  = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"; // absolut path to the dotnet CLR files
         }
 //        node[numNodes]: PhyNode {
