@@ -146,20 +146,22 @@ void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
 
 void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details)
 {
-    Enter_Method_Silent();
-    cPacket* pkg = check_and_cast<cPacket*>(value);
-    ExternalAppPayload* msg = check_and_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
-    if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
-        if(id == physicallayer::Radio::receptionEndedIgnoringSignal){
-            emit(packetReceivedIgnoringSignal, msg);
-            adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
-        }
-        if(id == LayeredProtocolBase::packetFromLowerDroppedSignal){
-            emit(packetReceivedCorruptedSignal, msg);
-            adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
+    if(id == physicallayer::Radio::receptionEndedIgnoringSignal || id == LayeredProtocolBase::packetFromLowerDroppedSignal){
+        cPacket* pkg = dynamic_cast<cPacket*>(value);
+        if(!pkg) return;
+        ExternalAppPayload* msg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
+        if(!msg) return;
+        if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
+            if(id == physicallayer::Radio::receptionEndedIgnoringSignal){
+                emit(packetReceivedIgnoringSignal, msg);
+                adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
+            }
+            if(id == LayeredProtocolBase::packetFromLowerDroppedSignal){
+                emit(packetReceivedCorruptedSignal, msg);
+                adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
+            }
         }
     }
-
 }
 
 //void ExternalApp::refreshDisplay() const
