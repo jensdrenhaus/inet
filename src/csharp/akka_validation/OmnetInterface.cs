@@ -72,8 +72,8 @@ namespace OmnetServices
 	        {
 		        var context = new SynchronizationContext();
 		        SynchronizationContext.SetSynchronizationContext(context);
-		        OmnetSimulation.SynchronizationContext = context;
 	        }
+		        OmnetSimulation.SynchronizationContext = SynchronizationContext.Current;
             Console.WriteLine("C# : initSimulation is called");
 
 	        Instance.TimeAtStart = OmnetSimulation.Instance().GetGlobalTime();
