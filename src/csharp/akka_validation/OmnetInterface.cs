@@ -5,6 +5,7 @@ using Akka.Actor;
 using Akka.Configuration;
 using PhyNetFlow.Core.Actors;
 using PhyNetFlow.OMNeT;
+using SampleApp;
 
 // ReSharper disable InconsistentNaming
 
@@ -70,10 +71,10 @@ namespace OmnetServices
         {
 	        if (SynchronizationContext.Current == null)
 	        {
-		        var context = new SynchronizationContext();
+		        var context = new ExecuteNowSynchronizationContext();
 		        SynchronizationContext.SetSynchronizationContext(context);
 	        }
-		        OmnetSimulation.SynchronizationContext = SynchronizationContext.Current;
+		    OmnetSimulation.SynchronizationContext = SynchronizationContext.Current;
             Console.WriteLine("C# : initSimulation is called");
 
 	        Instance.TimeAtStart = OmnetSimulation.Instance().GetGlobalTime();
