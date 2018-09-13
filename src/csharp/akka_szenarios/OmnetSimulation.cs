@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using NativeLibraryLoader;
 
 // ReSharper disable once CheckNamespace
@@ -36,6 +37,7 @@ namespace OmnetServices
 
 		// ReSharper disable once InconsistentNaming
 		private static readonly OmnetSimulation instance = new OmnetSimulation();
+		public static SynchronizationContext SynchronizationContext { get; set; }
 
 		public static OmnetSimulation Instance() => instance;
 

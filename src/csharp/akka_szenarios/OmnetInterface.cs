@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
 using PhyNetFlow.Core.Actors;
@@ -67,6 +68,12 @@ namespace OmnetServices
 	    
         public static void initSimulation()
         {
+	        if (SynchronizationContext.Current == null)
+	        {
+		        var context = new SynchronizationContext();
+		        SynchronizationContext.SetSynchronizationContext(context);
+	        }
+		        OmnetSimulation.SynchronizationContext = SynchronizationContext.Current;
             Console.WriteLine("C# : initSimulation is called");
 
 	        Instance.TimeAtStart = OmnetSimulation.Instance().GetGlobalTime();

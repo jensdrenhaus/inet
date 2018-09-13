@@ -89,7 +89,7 @@ namespace OmnetServices
 			cnt++;
             Console.WriteLine("C# : globalTimerNotify is called");
             Console.WriteLine("Count: " + cnt);
-            if(cnt < 10) {
+            if(cnt < 200) {
             	OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
 	            Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
 	            OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
