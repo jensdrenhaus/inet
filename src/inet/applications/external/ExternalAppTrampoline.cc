@@ -22,6 +22,7 @@
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 #include "inet/applications/external/ExternalAppPayload_m.h"
+#include "inet/applications/external/AdapterMsg_m.h"
 #include "inet/applications/external/ApplicationAdapterBase.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/linklayer/common/SimpleLinkLayerControlInfo.h"
@@ -130,39 +131,90 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
         else
             throw cRuntimeError("Unexpeced self message");
     }
-    else {
-        //SimplePayload* payload = check_and_cast<SimplePayload *>(msg);
+    else if (msg->arrivedOn("adapterIn")){
+        AdapterMsg* sendReq = check_and_cast<AdapterMsg*>(msg);
+        if(msg->getKind() == ApplicationAdapterBase::SendRequest){
+            unsigned long destId = sendReq->getDestId();
+            int numBytes = sendReq->getNumBytes();
+            int msgId = sendReq->getMsgId();
+            delete(sendReq);
+            sendMsg(destId, numBytes, msgId);
+        }
+    }
+    else if (msg->arrivedOn("bypass")) {
+        ExternalAppPayload* ignoredMsg = check_and_cast<ExternalAppPayload*>(msg);
+        if(ignoredMsg->getDestinationId() == nodeId || ignoredMsg->getDestinationId() == 0xFFFFFFFFFFFF){
+            emit(packetReceivedIgnoringSignal, msg);
+            AdapterMsg* ind = new AdapterMsg("indication");
+            ind->setKind(ApplicationAdapterBase::ReceptionIndication);
+            ind->setDestId(nodeId);
+            ind->setSrcId(ignoredMsg->getOriginatorId());
+            ind->setMsgId(ignoredMsg->getExtMsgId());
+            ind->setStatus((int)IGNORED);
+            delete(ignoredMsg);
+            sendDirect(ind, adapter->gate("appsIn"));
+        }
+    }
+    else if (msg->arrivedOn("appIn")){
         ExternalAppPayload* receivedMsg = check_and_cast<ExternalAppPayload*>(msg);
         processMsg(receivedMsg);
+    }
+    else {
+        throw cRuntimeError("unknown Message in ExternalAppTrampoline");
     }
 }
 
 void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
 {
     emit(packetReceivedOkSignal, msg);
-    adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), OK);
+    //adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), OK);
+
+    AdapterMsg* ind = new AdapterMsg("indication");
+    ind->setKind(ApplicationAdapterBase::ReceptionIndication);
+    ind->setDestId(nodeId);
+    ind->setSrcId(msg->getOriginatorId());
+    ind->setMsgId(msg->getExtMsgId());
+    ind->setStatus((int)OK);
     delete msg;
+    sendDirect(ind, adapter->gate("appsIn"));
+    printf("######### sent App --> Adapter ###########\n");
 }
 
-void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details)
-{
-    if(id == physicallayer::Radio::receptionEndedIgnoringSignal || id == LayeredProtocolBase::packetFromLowerDroppedSignal){
-        cPacket* pkg = dynamic_cast<cPacket*>(value);
-        if(!pkg) return;
-        ExternalAppPayload* msg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
-        if(!msg) return;
-        if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
-            if(id == physicallayer::Radio::receptionEndedIgnoringSignal){
-                emit(packetReceivedIgnoringSignal, msg);
-                adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
-            }
-            if(id == LayeredProtocolBase::packetFromLowerDroppedSignal){
-                emit(packetReceivedCorruptedSignal, msg);
-                adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
-            }
-        }
-    }
-}
+//void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details)
+//{
+//    if(id == physicallayer::Radio::receptionEndedIgnoringSignal || id == LayeredProtocolBase::packetFromLowerDroppedSignal){
+//        cPacket* pkg = dynamic_cast<cPacket*>(value);
+//        if(!pkg) return;
+//        ExternalAppPayload* msg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
+//        if(!msg) return;
+//        if(msg->getDestinationId() == nodeId || msg->getDestinationId() == 0xFFFFFFFFFFFF){
+////            if(id == physicallayer::Radio::receptionEndedIgnoringSignal){
+////                emit(packetReceivedIgnoringSignal, msg);
+////                //adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), IGNORED);
+////
+////                AdapterMsg* ind = new AdapterMsg("indication");
+////                ind->setKind(ApplicationAdapterBase::ReceptionIndication);
+////                ind->setDestId(nodeId);
+////                ind->setSrcId(msg->getOriginatorId());
+////                ind->setMsgId(msg->getExtMsgId());
+////                ind->setStatus((int)IGNORED);
+////                sendDirect(ind, adapter->gate("appsIn"));
+////            }
+//            if(id == LayeredProtocolBase::packetFromLowerDroppedSignal){
+//                emit(packetReceivedCorruptedSignal, msg);
+//                //adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), BITERROR);
+//
+//                AdapterMsg* ind = new AdapterMsg("indication");
+//                ind->setKind(ApplicationAdapterBase::ReceptionIndication);
+//                ind->setDestId(nodeId);
+//                ind->setSrcId(msg->getOriginatorId());
+//                ind->setMsgId(msg->getExtMsgId());
+//                ind->setStatus((int)BITERROR);
+//                sendDirect(ind, adapter->gate("appsIn"));
+//            }
+//        }
+//    }
+//}
 
 //void ExternalApp::refreshDisplay() const
 //{
@@ -297,7 +349,7 @@ unsigned long ExternalAppTrampoline::getNodeId()
 
 void ExternalAppTrampoline::sendMsg(unsigned long dest, int numBytes, int msgId)
 {
-    Enter_Method_Silent("send");
+    //Enter_Method_Silent("send");
 
     char name[32];
     sprintf(name, "msg%ld", sendSeqNo);

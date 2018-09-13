@@ -39,6 +39,8 @@ class DotnetApplicationAdapter : public ApplicationAdapterBase
     void setGlobalTimer_ms(int duration);
     unsigned long getGlobalTime();
 
+
+
     // to be called by omnet core
   protected:
     virtual void initialize(int stage) override;

@@ -12,6 +12,7 @@
 #include <set>
 
 #include "inet/applications/external/assert.h"
+#include "inet/applications/external/AdapterMsg_m.h"
 
 #ifndef SUCCEEDED
 #define SUCCEEDED(Status) ((Status) >= 0)
@@ -124,6 +125,21 @@ void DotnetApplicationAdapter::handleMessage(cMessage *msg)
             call_simulationReady();
         }
     }
+    else if (msg->arrivedOn("appsIn")) {
+        AdapterMsg* ind = check_and_cast<AdapterMsg*>(msg);
+        if(msg->getKind() == ReceptionIndication){
+            unsigned long destId = ind->getDestId();
+            unsigned long srcId = ind->getSrcId();
+            int msgId = ind->getMsgId();
+            int status = ind->getStatus();
+            delete(ind);
+            call_receptionNotify(destId, srcId, msgId, status);
+            printf("######### Adapter: call_receptionNotify ###########\n");
+//            send(destId, srcId, 10, msgId+100);
+//            printf("######### Adapter: call send directly ###########\n");
+
+        }
+    }
     else
         throw cRuntimeError("ApplicationAdapter does not expect messages from other modules!");
 }
@@ -145,13 +161,23 @@ void DotnetApplicationAdapter::finish()
 
 void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, int numBytes, int msgId)
 {
+    Enter_Method_Silent();
     ExternalAppTrampoline* app = findNode(srcId);
-    //app->sendPing();
-    app->sendMsg(destId, numBytes, msgId);
+    //app->sendMsg(destId, numBytes, msgId);
+
+    AdapterMsg* msg = new AdapterMsg("sendRequest");
+    msg->setKind(SendRequest);
+    msg->setDestId(destId);
+    msg->setNumBytes(numBytes);
+    msg->setMsgId(msgId);
+    printf("######### Adapter: send ###########\n");
+    sendDirect(msg, app->gate("adapterIn"));
+    printf("######### sent Adapter --> App ###########\n");
 }
 
 void DotnetApplicationAdapter::wait_ms(unsigned long id, int duration)
 {
+    Enter_Method_Silent();
     simtime_t t = SimTime(duration, SIMTIME_MS);
     ExternalAppTrampoline* app = findNode(id);
     app->wait(t);
@@ -159,6 +185,7 @@ void DotnetApplicationAdapter::wait_ms(unsigned long id, int duration)
 
 void DotnetApplicationAdapter::wait_s(unsigned long id, int duration)
 {
+    Enter_Method_Silent();
     simtime_t t = SimTime(duration, SIMTIME_S);
     ExternalAppTrampoline* app = findNode(id);
     app->wait(t);
@@ -166,6 +193,7 @@ void DotnetApplicationAdapter::wait_s(unsigned long id, int duration)
 
 void DotnetApplicationAdapter::setGlobalTimer_ms(int duration)
 {
+    Enter_Method_Silent();
     simtime_t t = SimTime(duration, SIMTIME_MS);
     if (!timer->isScheduled())
         scheduleAt(simTime()+t, timer);
@@ -175,6 +203,7 @@ void DotnetApplicationAdapter::setGlobalTimer_ms(int duration)
 
 void DotnetApplicationAdapter::setGlobalTimer_s(int duration)
 {
+    Enter_Method_Silent();
     simtime_t t = SimTime(duration, SIMTIME_S);
     if (!timer->isScheduled()){
         cancelEvent(timer);
@@ -186,6 +215,7 @@ void DotnetApplicationAdapter::setGlobalTimer_s(int duration)
 
 unsigned long DotnetApplicationAdapter::getGlobalTime()
 {
+    Enter_Method_Silent();
     simtime_t time = simTime();
     int scaleExpo = time.getScaleExp();
     int64_t raw = time.raw();
@@ -199,6 +229,7 @@ unsigned long DotnetApplicationAdapter::getGlobalTime()
 
 void DotnetApplicationAdapter::createNode(unsigned long id, ExternalAppTrampoline::NodeType type)
 {
+    Enter_Method_Silent();
     if (id == 0 || id == 0xFFFFFFFFFFFF)
         throw cRuntimeError("invalid node id %x!", id);
     ExternalAppTrampoline* appPtr = factory->getNode(id);
@@ -213,6 +244,7 @@ void DotnetApplicationAdapter::createNode(unsigned long id, ExternalAppTrampolin
 
 unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeType type)
 {
+    Enter_Method_Silent();
     ExternalAppTrampoline* appPtr = factory->getNode(0); // auto generate MAC address
     unsigned long id = appPtr->getNodeId();
     addNodeToList(id, appPtr);
@@ -235,8 +267,7 @@ unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeTy
 
 void DotnetApplicationAdapter::call_initSimulation()
 {
-    //Enter_Method("call_initSimulation");
-
+    Enter_Method_Silent();
     static initSimulation_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("initSimulation", (void**)&delegate);
@@ -245,8 +276,7 @@ void DotnetApplicationAdapter::call_initSimulation()
 
 void DotnetApplicationAdapter::call_simulationReady()
 {
-    //Enter_Method("call_simulataionReady");
-
+    Enter_Method_Silent();
     static simulationReady_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("simulationReady", (void**)&delegate);
@@ -255,8 +285,7 @@ void DotnetApplicationAdapter::call_simulationReady()
 
 void DotnetApplicationAdapter::call_simulationFinished()
 {
-    //Enter_Method("calll_simiulationFinished");
-
+    Enter_Method_Silent();
     static simulationFinished_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("simulationFinished", (void**)&delegate);
@@ -265,8 +294,6 @@ void DotnetApplicationAdapter::call_simulationFinished()
 
 void DotnetApplicationAdapter::call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status)
 {
-    //Enter_Method("call_receptionNotify");
-
     static receptionNotify_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("receptionNotify", (void**)&delegate);
@@ -275,8 +302,7 @@ void DotnetApplicationAdapter::call_receptionNotify(unsigned long destId, unsign
 
 void DotnetApplicationAdapter::call_timerNotify(unsigned long nodeId)
 {
-    //Enter_Method("call_timerNotify");
-
+    Enter_Method_Silent();
     static timerNotify_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("timerNotify", (void**)&delegate);
@@ -285,8 +311,6 @@ void DotnetApplicationAdapter::call_timerNotify(unsigned long nodeId)
 
 void DotnetApplicationAdapter::call_globalTimerNotify()
 {
-    //Enter_Method("call_globalTimerNotify");
-
     static globalTimerNotify_fptr delegate = nullptr;
     if (delegate == nullptr)
         getExternalFunctionPtr("globalTimerNotify", (void**)&delegate);

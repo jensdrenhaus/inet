@@ -91,7 +91,7 @@ class ExternalAppTrampoline : public cSimpleModule, public ILifecycle, public cL
     virtual void initialize(int stage) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void handleMessage(cMessage *msg) override;
-    virtual void receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details) override;
+    //virtual void receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details) override;
     virtual void finish() override;
     //virtual void refreshDisplay() const override;
 

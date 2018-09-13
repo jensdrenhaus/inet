@@ -32,4 +32,7 @@ simple DotnetApplicationAdapter extends ApplicationAdapterBase
         string clrFilesPath = default("/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"); // absolut path to the dotnet installations' CLR files
         
         string nodeType = default("inet.node.wsn.TrampolineNode"); // fully qualified NED type name of the module which is to be dynamically instanciated
+        
+    gates:
+        input appsIn @directIn;
 }

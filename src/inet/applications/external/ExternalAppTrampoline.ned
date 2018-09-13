@@ -45,4 +45,7 @@ simple ExternalAppTrampoline like IMACApp
     gates:
 	    input appIn @labels(AppPayload/up);
 	    output appOut @labels(AppPayload/down);
+	    
+	    input adapterIn @directIn;
+	    input bypass @directIn;
 }

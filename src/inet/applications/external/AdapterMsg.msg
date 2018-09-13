@@ -13,34 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __INET_APPLICATIONADAPTERBASE_H_
-#define __INET_APPLICATIONADAPTERBASE_H_
-
+cplusplus {{
 #include "inet/common/INETDefs.h"
+}}
 
+namespace inet;
 
-namespace inet {
-
-/**
- * TODO - Generated class
- */
-class ApplicationAdapterBase : public cSimpleModule
+//
+// TODO
+packet AdapterMsg
 {
-  protected:
-    virtual void initialize(int stage) override;
-    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
-    virtual void handleMessage(cMessage *msg) override;
-
-  public:
-    virtual void call_receptionNotify(unsigned long destId, unsigned long srcId, int msgId, int status) = 0;
-    virtual void call_timerNotify(unsigned long nodeId) = 0;
-
-    enum MsgKind {
-        SendRequest = 991,
-        ReceptionIndication = 992,
-    };
-};
-
-} //namespace
-
-#endif
+	unsigned long srcId; 
+	unsigned long destId; 
+	int msgId;
+	int numBytes;
+	int status;
+}
