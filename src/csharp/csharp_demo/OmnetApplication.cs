@@ -21,15 +21,16 @@ namespace OmnetServices
             //Example
 
             OmnetSimulation.Instance().CreateNode(1, OmnetSimulation.ACCESSPOINT_TYPE);
-            // OmnetSimulation.Instance().CreateNode(2, OmnetSimulation.PHYNODE_IGNORING_TYPE);
-			// OmnetSimulation.Instance().CreateNode(3, OmnetSimulation.PHYNODE_IGNORING_TYPE);
-			// OmnetSimulation.Instance().CreateNode(4, OmnetSimulation.PHYNODE_IGNORING_TYPE);
-			// OmnetSimulation.Instance().CreateNode(5, OmnetSimulation.PHYNODE_IGNORING_TYPE);
-			// OmnetSimulation.Instance().CreateNode(6, OmnetSimulation.PHYNODE_IGNORING_TYPE);
+            OmnetSimulation.Instance().CreateNode(2, OmnetSimulation.PHYNODE_IGNORING_TYPE);
+			OmnetSimulation.Instance().CreateNode(3, OmnetSimulation.PHYNODE_IGNORING_TYPE);
+			OmnetSimulation.Instance().CreateNode(4, OmnetSimulation.PHYNODE_IGNORING_TYPE);
+			OmnetSimulation.Instance().CreateNode(5, OmnetSimulation.PHYNODE_IGNORING_TYPE);
+			OmnetSimulation.Instance().CreateNode(6, OmnetSimulation.PHYNODE_IGNORING_TYPE);
 			OmnetSimulation.Instance().CreateNode(7, OmnetSimulation.PHYNODE_RESPONDING_TYPE);
 			OmnetSimulation.Instance().CreateNode(8, OmnetSimulation.PHYNODE_RESPONDING_TYPE);
 			OmnetSimulation.Instance().CreateNode(9, OmnetSimulation.PHYNODE_RESPONDING_TYPE);
 			OmnetSimulation.Instance().CreateNode(10, OmnetSimulation.PHYNODE_RESPONDING_TYPE);
+			OmnetSimulation.Instance().CreateNode(11, OmnetSimulation.PHYNODE_RESPONDING_TYPE);
 			
             OmnetSimulation.Instance().GetGlobalTime();
         }

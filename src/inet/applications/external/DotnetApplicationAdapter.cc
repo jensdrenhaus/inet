@@ -240,6 +240,12 @@ void DotnetApplicationAdapter::createNode(unsigned long id, ExternalAppTrampolin
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with Id %ld and type %s \n", name, id, appPtr->getNodeTypeName());
+    if(type == ExternalAppTrampoline::ACCESSPOINT) {
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 0, "device/accesspoint");
+    }
+    else if (type == ExternalAppTrampoline::PHYNODE_RESPONDING){
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 1, "blue");
+    }
 }
 
 unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeType type)
@@ -252,6 +258,12 @@ unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeTy
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with auto-Id %ld and type %s\n", name, id, appPtr->getNodeTypeName());
+    if(type == ExternalAppTrampoline::ACCESSPOINT) {
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 0, "device/accesspoint");
+    }
+    else if (type == ExternalAppTrampoline::PHYNODE_RESPONDING){
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 1, "blue");
+    }
 
     return id;
 }

@@ -35,19 +35,19 @@ network Net
 //        }
 		logger: Logger {
 			parameters:
-			    @display("p=1.5,-0.8;is=s");
+			    @display("p=1.5,-0.4;is=s");
 		}
         radioMedium: IdealRadioMedium {
             parameters:
-                @display("p=0.5,-0.8;is=s");
+                @display("p=0.5,-0.4;is=s");
         }
         mobilityCoordinator: StorageHallCoordinator {
         	parameters:
-        	    @display("p=2.5,-0.8;is=s");
+        	    @display("p=2.5,-0.4;is=s");
         }  
         adapter: DotnetApplicationAdapter {
         	parameters:
-        	    @display("p=3.5,-0.8;is=s");
+        	    @display("p=3.5,-0.4;is=s");
         	    assembly      = "csharp_demo/bin/Debug/netcoreapp2.0/publish/SampleApp.dll"; // path to assambly relative to src/csharp/
         	    clrFilesPath  = "/usr/share/dotnet/shared/Microsoft.NETCore.App/2.1.2"; // absolut path to the dotnet CLR files
         }
