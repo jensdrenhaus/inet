@@ -42,7 +42,7 @@ namespace OmnetServices
 			//Example
             OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
             Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
-            OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
+            OmnetSimulation.Instance().SetGlobalTimerSeconds(5);
         }
 
 		public static void simulationFinished()
@@ -93,7 +93,7 @@ namespace OmnetServices
             if(cnt < 200) {
             	OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
 	            Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
-	            OmnetSimulation.Instance().SetGlobalTimerSeconds(2);
+	            OmnetSimulation.Instance().SetGlobalTimerSeconds(5);
 				Console.WriteLine("Count: " + cnt);
             }
         }
