@@ -485,7 +485,7 @@ void Radio::endReception(cMessage *timer)
 //        delete ignoredMacFrame;                                         //HACK
         cModule* app = this->getParentModule()->getParentModule()->getSubmodule("app"); //HACK
         if(app == nullptr) throw cRuntimeError("Radio: connot find app module");        //HACK
-        sendDirect(ignoredMacFrame->decapsulate(), app->gate("bypass"));                //HACK
+        sendDirect(ignoredMacFrame, app->gate("bypass"));                //HACK
         if (timer == receptionTimer)
             receptionTimer = nullptr;
     }

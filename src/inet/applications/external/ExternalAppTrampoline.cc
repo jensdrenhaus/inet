@@ -142,7 +142,8 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
         }
     }
     else if (msg->arrivedOn("bypass")) {
-        ExternalAppPayload* ignoredMsg = check_and_cast<ExternalAppPayload*>(msg);
+        cPacket* pkg = check_and_cast<cPacket*>(msg);
+        ExternalAppPayload* ignoredMsg = check_and_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
         if(ignoredMsg->getDestinationId() == nodeId || ignoredMsg->getDestinationId() == 0xFFFFFFFFFFFF){
             emit(packetReceivedIgnoringSignal, msg);
             AdapterMsg* ind = new AdapterMsg("indication");
@@ -151,9 +152,9 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
             ind->setSrcId(ignoredMsg->getOriginatorId());
             ind->setMsgId(ignoredMsg->getExtMsgId());
             ind->setStatus((int)IGNORED);
-            delete(ignoredMsg);
             sendDirect(ind, adapter->gate("appsIn"));
         }
+        delete(msg);
     }
     else if (msg->arrivedOn("appIn")){
         ExternalAppPayload* receivedMsg = check_and_cast<ExternalAppPayload*>(msg);
