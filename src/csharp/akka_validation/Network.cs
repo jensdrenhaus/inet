@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
@@ -74,7 +75,11 @@ namespace SampleApp
             {
                 if (!Cache.ContainsKey(sys))
                 {
-                    Cache[sys] = sys.ActorOf(Props.Create<NetworkActor>().WithDispatcher("calling-thread-dispatcher"));
+                    if (OmnetSimulation.SynchronizationContext != null)
+                    {
+                        SynchronizationContext.SetSynchronizationContext(OmnetSimulation.SynchronizationContext);
+                    }
+                    Cache[sys] = sys.ActorOf(Props.Create<NetworkActor>().WithDispatcher("synchronized-dispatcher"));
                 }
                 return new Network(Cache[sys]);
             }
