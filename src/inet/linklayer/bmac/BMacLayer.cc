@@ -198,7 +198,7 @@ void BMacLayer::handleUpperPacket(cPacket *msg)
  */
 void BMacLayer::sendPreamble()
 {
-    BMacFrame *preamble = new BMacFrame();
+    BMacFrame *preamble = new BMacFrame("Preamble");
     preamble->setSrcAddr(address);
     preamble->setDestAddr(MACAddress::BROADCAST_ADDRESS);
     preamble->setKind(BMAC_PREAMBLE);
