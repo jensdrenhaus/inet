@@ -23,7 +23,7 @@ import inet.linklayer.csma.CSMA;
 simple Ieee802154NarrowbandMac extends CSMA
 {
     parameters:
-        useMACAcks = true;
+        useMACAcks = default(true);
 
         // Time needed to switch from sleep to rx.
         // TODO This is probabily wrong, since it is used to compute

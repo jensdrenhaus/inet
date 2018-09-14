@@ -141,10 +141,10 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
             sendMsg(destId, numBytes, msgId);
         }
     }
-    else if (msg->arrivedOn("bypass")) {
+    else if (msg->arrivedOn("bypass_radio")) {
         cPacket* pkg = check_and_cast<cPacket*>(msg);
-        ExternalAppPayload* ignoredMsg = check_and_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
-        if(ignoredMsg->getDestinationId() == nodeId || ignoredMsg->getDestinationId() == 0xFFFFFFFFFFFF){
+        ExternalAppPayload* ignoredMsg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
+        if(ignoredMsg && (ignoredMsg->getDestinationId() == nodeId || ignoredMsg->getDestinationId() == 0xFFFFFFFFFFFF)){
             emit(packetReceivedIgnoringSignal, msg);
             AdapterMsg* ind = new AdapterMsg("indication");
             ind->setKind(ApplicationAdapterBase::ReceptionIndication);
@@ -152,6 +152,21 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
             ind->setSrcId(ignoredMsg->getOriginatorId());
             ind->setMsgId(ignoredMsg->getExtMsgId());
             ind->setStatus((int)IGNORED);
+            sendDirect(ind, adapter->gate("appsIn"));
+        }
+        delete(msg);
+    }
+    else if (msg->arrivedOn("bypass_mac")) {
+        cPacket* pkg = check_and_cast<cPacket*>(msg);
+        ExternalAppPayload* corruptedMsg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
+        if(corruptedMsg && (corruptedMsg->getDestinationId() == nodeId || corruptedMsg->getDestinationId() == 0xFFFFFFFFFFFF)){
+            emit(packetReceivedCorruptedSignal, msg);
+            AdapterMsg* ind = new AdapterMsg("indication");
+            ind->setKind(ApplicationAdapterBase::ReceptionIndication);
+            ind->setDestId(nodeId);
+            ind->setSrcId(corruptedMsg->getOriginatorId());
+            ind->setMsgId(corruptedMsg->getExtMsgId());
+            ind->setStatus((int)BITERROR);
             sendDirect(ind, adapter->gate("appsIn"));
         }
         delete(msg);
@@ -178,7 +193,6 @@ void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
     ind->setStatus((int)OK);
     delete msg;
     sendDirect(ind, adapter->gate("appsIn"));
-    printf("######### sent App --> Adapter ###########\n");
 }
 
 //void ExternalAppTrampoline::receiveSignal(cComponent* src, simsignal_t id, cObject* value, cObject* details)

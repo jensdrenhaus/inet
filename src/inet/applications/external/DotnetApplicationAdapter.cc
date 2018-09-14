@@ -133,8 +133,9 @@ void DotnetApplicationAdapter::handleMessage(cMessage *msg)
             int msgId = ind->getMsgId();
             int status = ind->getStatus();
             delete(ind);
+            if(destId == 1)
+                printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
             call_receptionNotify(destId, srcId, msgId, status);
-            printf("######### Adapter: call_receptionNotify ###########\n");
 //            send(destId, srcId, 10, msgId+100);
 //            printf("######### Adapter: call send directly ###########\n");
 
@@ -170,9 +171,7 @@ void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, i
     msg->setDestId(destId);
     msg->setNumBytes(numBytes);
     msg->setMsgId(msgId);
-    printf("######### Adapter: send ###########\n");
     sendDirect(msg, app->gate("adapterIn"));
-    printf("######### sent Adapter --> App ###########\n");
 }
 
 void DotnetApplicationAdapter::wait_ms(unsigned long id, int duration)

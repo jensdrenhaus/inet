@@ -589,8 +589,15 @@ void XMacLayer::handleLowerPacket(cPacket *msg)
 {
     if (msg->hasBitError()) {
         EV << "Received " << msg << " contains bit errors or collision, dropping it\n";
+        XMacFrame* mac  = dynamic_cast<XMacFrame *>(msg);                                   //HACK
+        if(mac){                                                                            //HACK
+            cModule* app = this->getParentModule()->getParentModule()->getSubmodule("app"); //HACK
+            if(app == nullptr) throw cRuntimeError("Mac: connot find app module");          //HACK
+            sendDirect(mac, app->gate("bypass_mac"));                                       //HACK
+        }                                                                                   //HACK
+        else {delete(msg);}                                                                 //HACK
+        //delete msg;                                                                       //HACK
         nbRxBrokenDataPackets++;
-        delete msg;
         return;
     }
 	// simply pass the massage as self message, to be processed by the FSM.

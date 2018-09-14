@@ -480,12 +480,12 @@ void Radio::endReception(cMessage *timer)
     }
     else {
         EV_INFO << "Reception ended: ignoring " << (IRadioFrame *)radioFrame << " " << IRadioSignal::getSignalPartName(part) << " as " << reception << endl;
-        auto ignoredMacFrame = medium->receivePacket(this, radioFrame); //HACK
-//        emit(receptionEndedIgnoringSignal, ignoredMacFrame);            //HACK
-//        delete ignoredMacFrame;                                         //HACK
+        auto ignoredMacFrame = medium->receivePacket(this, radioFrame);                 //HACK
+//        emit(receptionEndedIgnoringSignal, ignoredMacFrame);                          //HACK old
+//        delete ignoredMacFrame;                                                       //HACK old
         cModule* app = this->getParentModule()->getParentModule()->getSubmodule("app"); //HACK
         if(app == nullptr) throw cRuntimeError("Radio: connot find app module");        //HACK
-        sendDirect(ignoredMacFrame, app->gate("bypass"));                //HACK
+        sendDirect(ignoredMacFrame, app->gate("bypass_radio"));                         //HACK
         if (timer == receptionTimer)
             receptionTimer = nullptr;
     }
