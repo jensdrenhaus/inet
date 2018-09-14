@@ -60,19 +60,23 @@ namespace OmnetServices
 
 			//Example
             Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
-			if (destId == 7){
-				OmnetSimulation.Instance().Send(7, srcId, 10, 123);
+			if (status == OmnetSimulation.RECEPTION_OK){
+				if (destId == 7){
+					OmnetSimulation.Instance().Send(7, srcId, 10, 123);
+				}
+				if (destId == 8){
+					OmnetSimulation.Instance().Send(8, srcId, 10, 123);
+				}
+				if (destId == 9){
+					OmnetSimulation.Instance().Send(9, srcId, 10, 123);
+				}
+				if (destId == 10){
+					OmnetSimulation.Instance().Send(10, srcId, 10, 123);
+				}
+				if (destId == 11){
+					OmnetSimulation.Instance().Send(11, srcId, 10, 123);
+				}
 			}
-			if (destId == 8){
-				OmnetSimulation.Instance().Send(8, srcId, 10, 123);
-			}
-			if (destId == 9){
-				OmnetSimulation.Instance().Send(9, srcId, 10, 123);
-			}
-			if (destId == 10){
-				OmnetSimulation.Instance().Send(10, srcId, 10, 123);
-			}
-
         }
 
 		public static void timerNotify(ulong nodeId)
@@ -90,7 +94,7 @@ namespace OmnetServices
 			cnt++;
             Console.WriteLine("C# : globalTimerNotify is called");
             Console.WriteLine("Count: " + cnt);
-            if(cnt < 200) {
+            if(cnt < 100) {
             	OmnetSimulation.Instance().Send(1, OmnetSimulation.BROADCAST_ADDR, 10, 123);
 	            Console.WriteLine("Time: " + OmnetSimulation.Instance().GetGlobalTime() + "ps");
 	            OmnetSimulation.Instance().SetGlobalTimerSeconds(5);

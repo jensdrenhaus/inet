@@ -35,7 +35,8 @@ module CsmaPhyNetNic like IWirelessNic
         string interfaceTableModule;
         string energySourceModule = default("");
         double bitrate @unit("bps");
-        string macType = default("CSMA");
+        //string macType = default("CSMA");
+        string macType = default("Ieee802154NarrowbandMac");
         string radioType = default("IdealRadio");
         *.interfaceTableModule = default(absPath(interfaceTableModule));
         *.energySourceModule = default(absPath(energySourceModule));

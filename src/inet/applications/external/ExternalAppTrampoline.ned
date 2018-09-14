@@ -47,5 +47,6 @@ simple ExternalAppTrampoline like IMACApp
 	    output appOut @labels(AppPayload/down);
 	    
 	    input adapterIn @directIn;
-	    input bypass @directIn;
+	    input bypass_radio @directIn;
+	    input bypass_mac @directIn;
 }
