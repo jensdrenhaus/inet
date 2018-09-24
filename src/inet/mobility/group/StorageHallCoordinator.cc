@@ -58,7 +58,7 @@ void StorageHallCoordinator::initialize(int stage)
 
         numSpots = zLevels*columns*rows;
         numFreeSpots = numSpots-numItems;
-        numExtraSpots = 2;
+        numExtraSpots = 1;
         spots = vector<Coord>(numSpots);
         spots.reserve(numSpots+numExtraSpots);
         free = list<int>();
@@ -122,7 +122,7 @@ void StorageHallCoordinator::calculateSpots()
     }
     for(int i = 0; i < numExtraSpots; i++) {
         double x = itemXdim/2+side2sideDist/2;
-        double y = itemYdim/2+back2backDist/2 + i*(itemYdim+back2backDist);
+        double y = itemYdim/2+back2backDist/2 + (i+5)*(itemYdim+back2backDist);
         double z = itemZdim/2;
 
         Coord spot = Coord(x,y,z);
@@ -132,7 +132,7 @@ void StorageHallCoordinator::calculateSpots()
 
 Coord StorageHallCoordinator::getFreeSpot(int* spotIndex)
 {
-    Enter_Method("get free spot");
+    Enter_Method_Silent();
 
     int x = free.size()-1;
     int i = intuniform(0, x);

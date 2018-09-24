@@ -835,7 +835,11 @@ void CSMA::handleLowerPacket(cPacket *msg)
 {
     if (msg->hasBitError()) {
         EV << "Received " << msg << " contains bit errors or collision, dropping it\n";
-        delete msg;
+        CSMAFrame *macPkt = check_and_cast<CSMAFrame *>(msg);                           //HACK
+        cModule* app = this->getParentModule()->getParentModule()->getSubmodule("app"); //HACK
+        if(app == nullptr) throw cRuntimeError("Mac: connot find app module");          //HACK
+        sendDirect(macPkt, app->gate("bypass_mac"));                                     //HACK
+        //delete msg;                                                                   //HACK
         return;
     }
     CSMAFrame *macPkt = check_and_cast<CSMAFrame *>(msg);

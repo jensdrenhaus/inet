@@ -198,7 +198,7 @@ void BMacLayer::handleUpperPacket(cPacket *msg)
  */
 void BMacLayer::sendPreamble()
 {
-    BMacFrame *preamble = new BMacFrame();
+    BMacFrame *preamble = new BMacFrame("Preamble");
     preamble->setSrcAddr(address);
     preamble->setDestAddr(MACAddress::BROADCAST_ADDRESS);
     preamble->setKind(BMAC_PREAMBLE);
@@ -549,7 +549,14 @@ void BMacLayer::handleLowerPacket(cPacket *msg)
 {
     if (msg->hasBitError()) {
         EV << "Received " << msg << " contains bit errors or collision, dropping it\n";
-        delete msg;
+        BMacFrame* mac  = dynamic_cast<BMacFrame *>(msg);                                   //HACK
+        if(mac){                                                                            //HACK
+            cModule* app = this->getParentModule()->getParentModule()->getSubmodule("app"); //HACK
+            if(app == nullptr) throw cRuntimeError("Mac: connot find app module");          //HACK
+            sendDirect(mac, app->gate("bypass_mac"));                                       //HACK
+        }                                                                                   //HACK
+        else {delete(msg);}                                                                 //HACK
+        //delete msg;                                                                       //HACK
         return;
     }
     else

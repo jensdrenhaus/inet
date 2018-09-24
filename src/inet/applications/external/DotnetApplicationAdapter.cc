@@ -133,8 +133,9 @@ void DotnetApplicationAdapter::handleMessage(cMessage *msg)
             int msgId = ind->getMsgId();
             int status = ind->getStatus();
             delete(ind);
+//            if(destId == 1)
+//                printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
             call_receptionNotify(destId, srcId, msgId, status);
-            printf("######### Adapter: call_receptionNotify ###########\n");
 //            send(destId, srcId, 10, msgId+100);
 //            printf("######### Adapter: call send directly ###########\n");
 
@@ -165,14 +166,12 @@ void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, i
     ExternalAppTrampoline* app = findNode(srcId);
     //app->sendMsg(destId, numBytes, msgId);
 
-    AdapterMsg* msg = new AdapterMsg("sendRequest");
+    AdapterMsg* msg = new AdapterMsg();
     msg->setKind(SendRequest);
     msg->setDestId(destId);
     msg->setNumBytes(numBytes);
     msg->setMsgId(msgId);
-    printf("######### Adapter: send ###########\n");
     sendDirect(msg, app->gate("adapterIn"));
-    printf("######### sent Adapter --> App ###########\n");
 }
 
 void DotnetApplicationAdapter::wait_ms(unsigned long id, int duration)
@@ -240,6 +239,12 @@ void DotnetApplicationAdapter::createNode(unsigned long id, ExternalAppTrampolin
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with Id %ld and type %s \n", name, id, appPtr->getNodeTypeName());
+    if(type == ExternalAppTrampoline::ACCESSPOINT) {
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 0, "device/accesspoint");
+    }
+    else if (type == ExternalAppTrampoline::PHYNODE_RESPONDING){
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 1, "blue");
+    }
 }
 
 unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeType type)
@@ -252,6 +257,12 @@ unsigned long DotnetApplicationAdapter::createNode(ExternalAppTrampoline::NodeTy
 
     const char* name = appPtr->getParentModule()->getName();
     printf("%s created with auto-Id %ld and type %s\n", name, id, appPtr->getNodeTypeName());
+    if(type == ExternalAppTrampoline::ACCESSPOINT) {
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 0, "device/accesspoint");
+    }
+    else if (type == ExternalAppTrampoline::PHYNODE_RESPONDING){
+        appPtr->getParentModule()->getDisplayString().setTagArg("i", 1, "blue");
+    }
 
     return id;
 }

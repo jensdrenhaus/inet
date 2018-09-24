@@ -200,8 +200,11 @@ void SimpleMac::handleLowerPacket(cPacket *msg)
     if (frame->hasBitError()) {
         EV << "Received " << frame << " contains bit errors or collision, dropping it\n";
         // TODO: add reason? emit(LayeredProtocolBase::packetFromLowerDroppedSignal, frame);
-        emit(LayeredProtocolBase::packetFromLowerDroppedSignal, frame); //HACK
-        delete frame;
+        //emit(LayeredProtocolBase::packetFromLowerDroppedSignal, frame);               //HACK old
+        cModule* app = this->getParentModule()->getParentModule()->getSubmodule("app"); //HACK
+        if(app == nullptr) throw cRuntimeError("Mac: connot find app module");          //HACK
+        sendDirect(frame, app->gate("bypass_mac"));                                     //HACK
+        //delete frame;                                                                 //HACK
         return;
     }
 
