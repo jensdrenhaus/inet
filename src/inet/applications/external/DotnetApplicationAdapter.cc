@@ -133,8 +133,8 @@ void DotnetApplicationAdapter::handleMessage(cMessage *msg)
             int msgId = ind->getMsgId();
             int status = ind->getStatus();
             delete(ind);
-            if(destId == 1)
-                printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+//            if(destId == 1)
+//                printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
             call_receptionNotify(destId, srcId, msgId, status);
 //            send(destId, srcId, 10, msgId+100);
 //            printf("######### Adapter: call send directly ###########\n");
@@ -166,7 +166,7 @@ void DotnetApplicationAdapter::send(unsigned long srcId, unsigned long destId, i
     ExternalAppTrampoline* app = findNode(srcId);
     //app->sendMsg(destId, numBytes, msgId);
 
-    AdapterMsg* msg = new AdapterMsg("sendRequest");
+    AdapterMsg* msg = new AdapterMsg();
     msg->setKind(SendRequest);
     msg->setDestId(destId);
     msg->setNumBytes(numBytes);

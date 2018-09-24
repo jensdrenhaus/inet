@@ -146,7 +146,7 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
         ExternalAppPayload* ignoredMsg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
         if(ignoredMsg && (ignoredMsg->getDestinationId() == nodeId || ignoredMsg->getDestinationId() == 0xFFFFFFFFFFFF)){
             emit(packetReceivedIgnoringSignal, msg);
-            AdapterMsg* ind = new AdapterMsg("indication");
+            AdapterMsg* ind = new AdapterMsg();
             ind->setKind(ApplicationAdapterBase::ReceptionIndication);
             ind->setDestId(nodeId);
             ind->setSrcId(ignoredMsg->getOriginatorId());
@@ -161,7 +161,7 @@ void ExternalAppTrampoline::handleMessage(cMessage *msg)
         ExternalAppPayload* corruptedMsg = dynamic_cast<ExternalAppPayload*>(pkg->getEncapsulatedPacket());
         if(corruptedMsg && (corruptedMsg->getDestinationId() == nodeId || corruptedMsg->getDestinationId() == 0xFFFFFFFFFFFF)){
             emit(packetReceivedCorruptedSignal, msg);
-            AdapterMsg* ind = new AdapterMsg("indication");
+            AdapterMsg* ind = new AdapterMsg();
             ind->setKind(ApplicationAdapterBase::ReceptionIndication);
             ind->setDestId(nodeId);
             ind->setSrcId(corruptedMsg->getOriginatorId());
@@ -185,7 +185,7 @@ void ExternalAppTrampoline::processMsg(ExternalAppPayload* msg)
     emit(packetReceivedOkSignal, msg);
     //adapter->call_receptionNotify(nodeId, msg->getOriginatorId(), msg->getExtMsgId(), OK);
 
-    AdapterMsg* ind = new AdapterMsg("indication");
+    AdapterMsg* ind = new AdapterMsg();
     ind->setKind(ApplicationAdapterBase::ReceptionIndication);
     ind->setDestId(nodeId);
     ind->setSrcId(msg->getOriginatorId());
